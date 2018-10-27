@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <TextBlock Width="120" Margin="30,55,642,335" Background="#FFF9C12B" Text="{Binding FilePath}"/>
+        <Button Width="60" Height="30" Background="Azure" Content="Open" Command="{Binding GetFilePathCommand}" Margin="205,54,527,335"/>
+        <TreeView >
+        </TreeView>
     </Grid>
 </Window>

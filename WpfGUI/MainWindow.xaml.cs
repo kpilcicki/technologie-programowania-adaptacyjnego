@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BusinessLogic.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,8 @@ namespace WpfGUI
         public MainWindow()
         {
             InitializeComponent();
+
+            DataContext = new MainViewModel(new FileDialog());
         }
     }
 }
