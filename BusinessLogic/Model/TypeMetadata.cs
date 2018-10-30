@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BusinessLogic.Model.Enums;
+using DataContract.Model.Enums;
 
 namespace BusinessLogic.Model
 {

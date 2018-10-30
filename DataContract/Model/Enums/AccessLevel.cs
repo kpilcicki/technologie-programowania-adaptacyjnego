@@ -1,7 +1,7 @@
 ﻿
-namespace BusinessLogic.Model.Enums
+namespace DataContract.Model.Enums
 {
-  internal enum AccessLevel
+  public enum AccessLevel
   {
       IsPublic, IsProtected, IsProtectedInternal, IsPrivate
   }

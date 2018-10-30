@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{860A43E1-C86E-48CE-BC74-9C51C207CA30}</ProjectGuid>
+    <ProjectGuid>{20E38279-9ABB-49CF-89E9-7ADA6A88C494}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BusinessLogic</RootNamespace>
-    <AssemblyName>BusinessLogic</AssemblyName>
+    <RootNamespace>DataContract</RootNamespace>
+    <AssemblyName>DataContract</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,7 +32,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -41,25 +41,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\RelayCommand.cs" />
-    <Compile Include="Model\AssemblyMetadata.cs" />
-    <Compile Include="Model\ExtensionMethods.cs" />
-    <Compile Include="Model\MethodMetadata.cs" />
-    <Compile Include="Model\NamespaceMetadata.cs" />
-    <Compile Include="Model\ParameterMetadata.cs" />
-    <Compile Include="Model\PropertyMetadata.cs" />
-    <Compile Include="Model\TypeMetadata.cs" />
+    <Compile Include="Model\AssemblyMetadataDto.cs" />
+    <Compile Include="Model\Enums\AbstractENum.cs" />
+    <Compile Include="Model\Enums\AccessLevel.cs" />
+    <Compile Include="Model\Enums\TypeKind.cs" />
+    <Compile Include="Model\Enums\SealedEnum.cs" />
+    <Compile Include="Model\Enums\StaticEnum.cs" />
+    <Compile Include="Model\Enums\VirtualEnum.cs" />
+    <Compile Include="Model\MethodMetadataDto.cs" />
+    <Compile Include="Model\NamespaceMetadataDto.cs" />
+    <Compile Include="Model\ParameterMetadataDto.cs" />
+    <Compile Include="Model\PropertyMetadataDto.cs" />
+    <Compile Include="Model\TypeMetadataDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\IFilePathGetter.cs" />
-    <Compile Include="Base\BindableBase.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="Base\ValidatableBindableBase.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DataContract\DataContract.csproj">
-      <Project>{20e38279-9abb-49cf-89e9-7ada6a88c494}</Project>
-      <Name>DataContract</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
