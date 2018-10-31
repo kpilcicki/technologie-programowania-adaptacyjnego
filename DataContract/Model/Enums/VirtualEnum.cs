@@ -1,8 +1,7 @@
-﻿
-namespace DataContract.Model.Enums
+﻿namespace DataContract.Model.Enums
 {
-  public enum  VirtualEnum
+  public enum VirtualEnum
   {
-    NotVirtual, Virtual 
+    NotVirtual, Virtual
   }
 }

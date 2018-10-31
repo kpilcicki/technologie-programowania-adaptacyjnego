@@ -1,27 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DataContract.Model.Enums;
 
 namespace DataContract.Model
 {
     public class TypeMetadataDto
     {
-        public Guid  Id { get; set; }
-        public string MTypeName { get; set; }
-        public string MNamespaceName { get; set; }
-        public TypeMetadataDto MBaseType { get; set; }
-        public IEnumerable<TypeMetadataDto> MGenericArguments { get; set; }
-        public Tuple<AccessLevel, SealedEnum, AbstractENum> MModifiers { get; set; }
-        public TypeKind MTypeKind { get; set; }
-        public IEnumerable<Attribute> MAttributes { get; set; }
-        public IEnumerable<TypeMetadataDto> MImplementedInterfaces { get; set; }
-        public IEnumerable<TypeMetadataDto> MNestedTypes { get; set; }
-        public IEnumerable<PropertyMetadataDto> MProperties { get; set; }
-        public TypeMetadataDto MDeclaringType { get; set; }
-        public IEnumerable<MethodMetadataDto> MMethods { get; set; }
-        public IEnumerable<MethodMetadataDto> MConstructors { get; set; }
+        public Guid Id { get; set; }
+
+        public string TypeName { get; set; }
+
+        public string NamespaceName { get; set; }
+
+        public TypeMetadataDto BaseType { get; set; }
+
+        public IEnumerable<TypeMetadataDto> GenericArguments { get; set; }
+
+        public Tuple<AccessLevel, SealedEnum, AbstractEnum> Modifiers { get; set; }
+
+        public TypeKind TypeKind { get; set; }
+
+        public IEnumerable<Attribute> Attributes { get; set; }
+
+        public IEnumerable<TypeMetadataDto> ImplementedInterfaces { get; set; }
+
+        public IEnumerable<TypeMetadataDto> NestedTypes { get; set; }
+
+        public IEnumerable<PropertyMetadataDto> Properties { get; set; }
+
+        public TypeMetadataDto DeclaringType { get; set; }
+
+        public IEnumerable<MethodMetadataDto> Methods { get; set; }
+
+        public IEnumerable<MethodMetadataDto> Constructors { get; set; }
     }
 }

@@ -5,123 +5,151 @@ using DataContract.Model.Enums;
 
 namespace BusinessLogic.Model
 {
-  internal class TypeMetadata
-  {
+    internal class TypeMetadata
+    {
+        private static TypeKind GetTypeKind(Type type) // #80 TPA: Reflection - Invalid return value of GetTypeKind()
+        {
+            return type.IsEnum ? TypeKind.EnumType :
+                type.IsValueType ? TypeKind.StructType :
+                type.IsInterface ? TypeKind.InterfaceType :
+                TypeKind.ClassType;
+        }
 
-    #region constructors
-    internal TypeMetadata(Type type)
-    {
-      m_typeName = type.Name;
-      m_DeclaringType = EmitDeclaringType(type.DeclaringType);
-      m_Constructors = MethodMetadata.EmitMethods(type.GetConstructors());
-      m_Methods = MethodMetadata.EmitMethods(type.GetMethods());
-      m_NestedTypes = EmitNestedTypes(type.GetNestedTypes());
-      m_ImplementedInterfaces = EmitImplements(type.GetInterfaces());
-      m_GenericArguments = !type.IsGenericTypeDefinition ? null : TypeMetadata.EmitGenericArguments(type.GetGenericArguments());
-      m_Modifiers = EmitModifiers(type);
-      m_BaseType = EmitExtends(type.BaseType);
-      m_Properties = PropertyMetadata.EmitProperties(type.GetProperties());
-      m_TypeKind = GetTypeKind(type);
-      m_Attributes = type.GetCustomAttributes(false).Cast<Attribute>();
-    }
-    #endregion
+        private static Tuple<AccessLevel, SealedEnum, AbstractEnum> EmitModifiers(Type type)
+        {
+            // set defaults
+            AccessLevel access = AccessLevel.IsPrivate;
+            AbstractEnum isAbstract = AbstractEnum.NotAbstract;
+            SealedEnum isSealed = SealedEnum.NotSealed;
 
-    #region API
-    internal enum TypeKind
-    {
-      EnumType, StructType, InterfaceType, ClassType
-    }
-    internal static TypeMetadata EmitReference(Type type)
-    {
-      if (!type.IsGenericType)
-        return new TypeMetadata(type.Name, type.GetNamespace());
-      else
-        return new TypeMetadata(type.Name, type.GetNamespace(), EmitGenericArguments(type.GetGenericArguments()));
-    }
-    internal static IEnumerable<TypeMetadata> EmitGenericArguments(IEnumerable<Type> arguments)
-    {
-      return from Type _argument in arguments select EmitReference(_argument);
-    }
-    #endregion
+            // check if not default
+            if (type.IsPublic)
+                access = AccessLevel.IsPublic;
+            else if (type.IsNestedPublic)
+                access = AccessLevel.IsPublic;
+            else if (type.IsNestedFamily)
+                access = AccessLevel.IsProtected;
+            else if (type.IsNestedFamANDAssem)
+                access = AccessLevel.IsProtectedInternal;
+            if (type.IsSealed)
+                isSealed = SealedEnum.Sealed;
+            if (type.IsAbstract)
+                isAbstract = AbstractEnum.Abstract;
+            return new Tuple<AccessLevel, SealedEnum, AbstractEnum>(access, isSealed, isAbstract);
+        }
 
-    #region private
-    //vars
-    private string m_typeName;
-    private string m_NamespaceName;
-    private TypeMetadata m_BaseType;
-    private IEnumerable<TypeMetadata> m_GenericArguments;
-    private Tuple<AccessLevel, SealedEnum, AbstractENum> m_Modifiers;
-    private TypeKind m_TypeKind;
-    private IEnumerable<Attribute> m_Attributes;
-    private IEnumerable<TypeMetadata> m_ImplementedInterfaces;
-    private IEnumerable<TypeMetadata> m_NestedTypes;
-    private IEnumerable<PropertyMetadata> m_Properties;
-    private TypeMetadata m_DeclaringType;
-    private IEnumerable<MethodMetadata> m_Methods;
-    private IEnumerable<MethodMetadata> m_Constructors;
-    //constructors
-    private TypeMetadata(string typeName, string namespaceName)
-    {
-      m_typeName = typeName;
-      m_NamespaceName = namespaceName;
-    }
-    private TypeMetadata(string typeName, string namespaceName, IEnumerable<TypeMetadata> genericArguments) : this(typeName, namespaceName)
-    {
-      m_GenericArguments = genericArguments;
-    }
-    //methods
-    private TypeMetadata EmitDeclaringType(Type declaringType)
-    {
-      if (declaringType == null)
-        return null;
-      return EmitReference(declaringType);
-    }
-    private IEnumerable<TypeMetadata> EmitNestedTypes(IEnumerable<Type> nestedTypes)
-    {
-      return from _type in nestedTypes
-             where _type.GetVisible()
-             select new TypeMetadata(_type);
-    }
-    private IEnumerable<TypeMetadata> EmitImplements(IEnumerable<Type> interfaces)
-    {
-      return from currentInterface in interfaces
-             select EmitReference(currentInterface);
-    }
-    private static TypeKind GetTypeKind(Type type) //#80 TPA: Reflection - Invalid return value of GetTypeKind() 
-    {
-      return type.IsEnum ? TypeKind.EnumType :
-             type.IsValueType ? TypeKind.StructType :
-             type.IsInterface ? TypeKind.InterfaceType :
-             TypeKind.ClassType;
-    }
-    static Tuple<AccessLevel, SealedEnum, AbstractENum> EmitModifiers(Type type)
-    {
-      //set defaults 
-      AccessLevel _access = AccessLevel.IsPrivate;
-      AbstractENum _abstract = AbstractENum.NotAbstract;
-      SealedEnum _sealed = SealedEnum.NotSealed;
-      // check if not default 
-      if (type.IsPublic)
-        _access = AccessLevel.IsPublic;
-      else if (type.IsNestedPublic)
-        _access = AccessLevel.IsPublic;
-      else if (type.IsNestedFamily)
-        _access = AccessLevel.IsProtected;
-      else if (type.IsNestedFamANDAssem)
-        _access = AccessLevel.IsProtectedInternal;
-      if (type.IsSealed)
-        _sealed = SealedEnum.Sealed;
-      if (type.IsAbstract)
-        _abstract = AbstractENum.Abstract;
-      return new Tuple<AccessLevel, SealedEnum, AbstractENum>(_access, _sealed, _abstract);
-    }
-    private static TypeMetadata EmitExtends(Type baseType)
-    {
-      if (baseType == null || baseType == typeof(Object) || baseType == typeof(ValueType) || baseType == typeof(Enum))
-        return null;
-      return EmitReference(baseType);
-    }
-    #endregion
+        private static TypeMetadata EmitExtends(Type baseType)
+        {
+            if (baseType == null || baseType == typeof(object) || baseType == typeof(ValueType) ||
+                baseType == typeof(Enum))
+                return null;
+            return EmitReference(baseType);
+        }
+        #region constructors
 
-  }
+        internal TypeMetadata(Type type)
+        {
+            _typeName = type.Name;
+            _declaringType = EmitDeclaringType(type.DeclaringType);
+            _constructors = MethodMetadata.EmitMethods(type.GetConstructors());
+            _methods = MethodMetadata.EmitMethods(type.GetMethods());
+            _nestedTypes = EmitNestedTypes(type.GetNestedTypes());
+            _implementedInterfaces = EmitImplements(type.GetInterfaces());
+            _genericArguments = !type.IsGenericTypeDefinition
+                ? null
+                : TypeMetadata.EmitGenericArguments(type.GetGenericArguments());
+            _modifiers = EmitModifiers(type);
+            _baseType = EmitExtends(type.BaseType);
+            _properties = PropertyMetadata.EmitProperties(type.GetProperties());
+            _typeKind = GetTypeKind(type);
+            _attributes = type.GetCustomAttributes(false).Cast<Attribute>();
+        }
+
+        #endregion
+
+        #region API
+
+        internal enum TypeKind
+        {
+            EnumType,
+            StructType,
+            InterfaceType,
+            ClassType
+        }
+
+        internal static TypeMetadata EmitReference(Type type)
+        {
+            if (!type.IsGenericType)
+            {
+                return new TypeMetadata(type.Name, type.GetNamespace());
+            }
+            else
+            {
+                return new TypeMetadata(
+                    type.Name,
+                    type.GetNamespace(),
+                    EmitGenericArguments(type.GetGenericArguments()));
+            }
+        }
+
+        internal static IEnumerable<TypeMetadata> EmitGenericArguments(IEnumerable<Type> arguments)
+        {
+            return from Type argument in arguments select EmitReference(argument);
+        }
+
+        #endregion
+
+        #region private
+
+        // vars
+        private string _typeName;
+        private string _namespaceName;
+        private TypeMetadata _baseType;
+        private IEnumerable<TypeMetadata> _genericArguments;
+        private Tuple<AccessLevel, SealedEnum, AbstractEnum> _modifiers;
+        private TypeKind _typeKind;
+        private IEnumerable<Attribute> _attributes;
+        private IEnumerable<TypeMetadata> _implementedInterfaces;
+        private IEnumerable<TypeMetadata> _nestedTypes;
+        private IEnumerable<PropertyMetadata> _properties;
+        private TypeMetadata _declaringType;
+        private IEnumerable<MethodMetadata> _methods;
+
+        private IEnumerable<MethodMetadata> _constructors;
+
+        // constructors
+        private TypeMetadata(string typeName, string namespaceName)
+        {
+            _typeName = typeName;
+            _namespaceName = namespaceName;
+        }
+
+        private TypeMetadata(string typeName, string namespaceName, IEnumerable<TypeMetadata> genericArguments)
+            : this(typeName, namespaceName)
+        {
+            _genericArguments = genericArguments;
+        }
+
+        // methods
+        private TypeMetadata EmitDeclaringType(Type declaringType)
+        {
+            if (declaringType == null)
+                return null;
+            return EmitReference(declaringType);
+        }
+
+        private IEnumerable<TypeMetadata> EmitNestedTypes(IEnumerable<Type> nestedTypes)
+        {
+            return from type in nestedTypes
+                where type.GetVisible()
+                select new TypeMetadata(type);
+        }
+
+        private IEnumerable<TypeMetadata> EmitImplements(IEnumerable<Type> interfaces)
+        {
+            return from currentInterface in interfaces
+                select EmitReference(currentInterface);
+        }
+        #endregion
+    }
 }

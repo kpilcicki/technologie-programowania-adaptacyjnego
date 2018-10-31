@@ -1,18 +1,15 @@
-﻿
-namespace BusinessLogic.Model
+﻿namespace BusinessLogic.Model
 {
-  internal class ParameterMetadata
-  {
-
-    public ParameterMetadata(string name, TypeMetadata typeMetadata)
+    internal class ParameterMetadata
     {
-      this.m_Name = name;
-      this.m_TypeMetadata = typeMetadata;
-    }
-    
-    //private vars
-    private string m_Name;
-    private TypeMetadata m_TypeMetadata;
+        public string Name { get; }
 
-  }
+        public TypeMetadata Metadata { get; }
+
+        public ParameterMetadata(string name, TypeMetadata typeMetadata)
+        {
+            Name = name;
+            Metadata = typeMetadata;
+        }
+    }
 }

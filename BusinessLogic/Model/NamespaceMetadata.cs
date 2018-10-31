@@ -4,17 +4,16 @@ using System.Linq;
 
 namespace BusinessLogic.Model
 {
-  internal class NamespaceMetadata
-  {
-
-    internal NamespaceMetadata(string name, IEnumerable<Type> types)
+    internal class NamespaceMetadata
     {
-      m_NamespaceName = name;
-      m_Types = from type in types orderby type.Name select new TypeMetadata(type);
+        public string NamespaceName { get; }
+
+        public IEnumerable<TypeMetadata> Types { get; }
+
+        internal NamespaceMetadata(string name, IEnumerable<Type> types)
+        {
+            NamespaceName = name;
+            Types = from type in types orderby type.Name select new TypeMetadata(type);
+        }
     }
-
-    private string m_NamespaceName;
-    private IEnumerable<TypeMetadata> m_Types;
-
-  }
 }

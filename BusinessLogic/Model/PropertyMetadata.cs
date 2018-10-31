@@ -6,7 +6,6 @@ namespace BusinessLogic.Model
 {
   internal class PropertyMetadata
   {
-
     internal static IEnumerable<PropertyMetadata> EmitProperties(IEnumerable<PropertyInfo> props)
     {
       return from prop in props
@@ -15,12 +14,13 @@ namespace BusinessLogic.Model
     }
 
     #region private
-    private string m_Name;
-    private TypeMetadata m_TypeMetadata;
+    private string _name;
+    private TypeMetadata _typeMetadata;
+
     private PropertyMetadata(string propertyName, TypeMetadata propertyType)
     {
-      m_Name = propertyName;
-      m_TypeMetadata = propertyType;
+      _name = propertyName;
+      _typeMetadata = propertyType;
     }
     #endregion
 

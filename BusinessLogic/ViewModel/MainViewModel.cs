@@ -1,13 +1,14 @@
-﻿using BusinessLogic.Base;
+﻿using System.Windows.Input;
+using BusinessLogic.Base;
 using BusinessLogic.Services;
-using System.Windows.Input;
 
 namespace BusinessLogic.ViewModel
 {
     public class MainViewModel : ValidatableBindableBase
     {
         private readonly IFilePathGetter _filePathGetter;
-        public MainViewModel(IFilePathGetter filePathGetter) 
+
+        public MainViewModel(IFilePathGetter filePathGetter)
         {
             _filePathGetter = filePathGetter;
 
@@ -15,10 +16,9 @@ namespace BusinessLogic.ViewModel
         }
 
         private string _filePath;
+
         public string FilePath { get => _filePath; set => SetPropertyAndValidate(ref _filePath, value); }
 
         public ICommand GetFilePathCommand { get; private set; }
-
-
     }
 }

@@ -5,21 +5,21 @@ using System.Reflection;
 
 namespace BusinessLogic.Model
 {
-  public class AssemblyMetadata
-  {
-
-    internal AssemblyMetadata(Assembly assembly)
+    internal class AssemblyMetadata
     {
-      m_Name = assembly.ManifestModule.Name;
-      m_Namespaces = from Type _type in assembly.GetTypes()
-                     where _type.GetVisible()
-                     group _type by _type.GetNamespace() into _group
-                     orderby _group.Key
-                     select new NamespaceMetadata(_group.Key, _group);
+        public string Name { get; }
+
+        public IEnumerable<NamespaceMetadata> Namespaces { get; }
+
+        internal AssemblyMetadata(Assembly assembly)
+        {
+            Name = assembly.ManifestModule.Name;
+            Namespaces = from Type type in assembly.GetTypes()
+                where type.GetVisible()
+                group type by type.GetNamespace()
+                into namespaceGroup
+                orderby namespaceGroup.Key
+                select new NamespaceMetadata(namespaceGroup.Key, namespaceGroup);
+        }
     }
-
-    private string m_Name;
-    private IEnumerable<NamespaceMetadata> m_Namespaces;
-
-  }
 }

@@ -8,6 +8,8 @@ namespace BusinessLogic.Base
         private readonly Action _targetExecuteMethod;
         private readonly Func<bool> _targetCanExecuteMethod;
 
+        public event EventHandler CanExecuteChanged = delegate { };
+
         public RelayCommand(Action executeMethod)
         {
             _targetExecuteMethod = executeMethod;
@@ -32,10 +34,9 @@ namespace BusinessLogic.Base
             {
                 return _targetCanExecuteMethod();
             }
+
             return _targetExecuteMethod != null;
         }
-
-        public event EventHandler CanExecuteChanged = delegate { };
 
         void ICommand.Execute(object parameter)
         {

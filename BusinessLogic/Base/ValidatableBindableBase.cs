@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System;
 
 namespace BusinessLogic.Base
 {
@@ -27,7 +27,7 @@ namespace BusinessLogic.Base
 
         protected void SetPropertyAndValidate<T>(ref T member, T val, [CallerMemberName] string propertyName = null)
         {
-            if(base.SetProperty<T>(ref member, val, propertyName))
+            if (base.SetProperty<T>(ref member, val, propertyName))
             {
                 ValidateProperty(propertyName, val);
             }
@@ -47,6 +47,7 @@ namespace BusinessLogic.Base
             {
                 _errors.Remove(propertyName);
             }
+
             ErrorsChanged(this, new DataErrorsChangedEventArgs(propertyName));
         }
     }

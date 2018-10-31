@@ -1,7 +1,6 @@
-﻿
-namespace DataContract.Model.Enums
+﻿namespace DataContract.Model.Enums
 {
-  public enum AbstractENum
+  public enum AbstractEnum
   {
     NotAbstract, Abstract
   }

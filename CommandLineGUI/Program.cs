@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CommandLineGUI
+﻿namespace CommandLineGUI
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        internal static void Main()
         {
         }
     }

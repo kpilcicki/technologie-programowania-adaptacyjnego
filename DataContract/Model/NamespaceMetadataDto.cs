@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace DataContract.Model
 {
   public class NamespaceMetadataDto
   {
-      public string MNamespaceName { get; set; }
-      public IEnumerable<TypeMetadataDto> MTypes { get; set; }
+      public string NamespaceName { get; set; }
+
+      public IEnumerable<TypeMetadataDto> Types { get; set; }
   }
 }

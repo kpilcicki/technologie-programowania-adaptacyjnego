@@ -8,12 +8,7 @@ namespace WpfGUI
         public string GetFilePath()
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
-            if (fileDialog.ShowDialog() == true)
-            {
-                // Assign the cursor in the Stream to the Form's Cursor property.
-                return fileDialog.FileName;
-            }
-            else return "";
+            return fileDialog.ShowDialog() == true ? fileDialog.FileName : string.Empty;
         }
     }
 }

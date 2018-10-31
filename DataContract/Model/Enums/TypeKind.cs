@@ -1,6 +1,4 @@
-﻿
-
-namespace DataContract.Model.Enums
+﻿namespace DataContract.Model.Enums
 {
     public enum TypeKind
     {
