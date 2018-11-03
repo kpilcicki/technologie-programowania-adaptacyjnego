@@ -12,8 +12,8 @@ namespace Reflector.Model
         {
             NamespaceMetadataDto namespaceMetadata = new NamespaceMetadataDto()
             {
-                Id = name.AddNamespacePrefix(),
-                NamespaceName = name.AddNamespacePrefix()
+                Id = name,
+                NamespaceName = name
             };
 
             metaStore.NamespacesDictionary.Add(namespaceMetadata.NamespaceName, namespaceMetadata);

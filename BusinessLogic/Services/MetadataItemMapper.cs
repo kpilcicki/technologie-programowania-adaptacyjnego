@@ -3,12 +3,13 @@ using System.Linq;
 using BusinessLogic.Model;
 using DataContract.API;
 using DataContract.Model;
+using Reflector.ExtensionMethods;
 
 namespace BusinessLogic.Services
 {
-    public class MetadataItemMapper : IMapper<AssemblyMetadataStorage, Dictionary<string, MetadataItem>>
+    public class MetadataItemMapper : IMapper<AssemblyMetadataStorage, MetadataItem>
     {
-        public Dictionary<string, MetadataItem> Map(AssemblyMetadataStorage objectToMAp)
+        public MetadataItem Map(AssemblyMetadataStorage objectToMAp)
         {
             Dictionary<string, MetadataItem> instances = new Dictionary<string, MetadataItem>();
 
@@ -50,7 +51,7 @@ namespace BusinessLogic.Services
 
                 relations.Add(new Relation(assemblyItem.Name, item.Name));
 
-                instances.Add(namespaceMetadataDto.Key, item);
+                instances.Add(item.Name, item);
             }
 
             foreach (var parameterMetadataDto in objectToMAp.ParametersDictionary)
@@ -73,7 +74,7 @@ namespace BusinessLogic.Services
                 instances[relation.Parent].Children.Add(instances[relation.Child]);
             }
 
-            return instances;
+            return assemblyItem;
         }
 
         private Relation GetRelation(PropertyMetadataDto value)
@@ -83,7 +84,7 @@ namespace BusinessLogic.Services
 
         private MetadataItem MapItem(PropertyMetadataDto value)
         {
-            return new MetadataItem(value.Name, true);
+            return new MetadataItem($"Property: {value.Name}", true);
         }
 
         private Relation GetRelation(ParameterMetadataDto value)
@@ -93,20 +94,20 @@ namespace BusinessLogic.Services
 
         private MetadataItem MapItem(ParameterMetadataDto value)
         {
-            return new MetadataItem(value.Name, true);
+            return new MetadataItem($"Parameter: {value.Name}", true);
         }
 
         private IEnumerable<Relation> GetRelations(NamespaceMetadataDto value)
         {
             foreach (var item in value.Types)
             {
-                yield return new Relation(value.Id, item.Id);
+                yield return new Relation(value.Id.AddNamespacePrefix(), item.Id);
             }
         }
 
         private MetadataItem MapItem(NamespaceMetadataDto value)
         {
-            return new MetadataItem(value.NamespaceName, true);
+            return new MetadataItem(value.Id.AddNamespacePrefix(), true);
         }
 
         private IEnumerable<Relation> GetRelations(TypeMetadataDto value)
@@ -150,7 +151,7 @@ namespace BusinessLogic.Services
 
         private MetadataItem MapItem(TypeMetadataDto objectToMap)
         {
-            return new MetadataItem(objectToMap.TypeName, true);
+            return new MetadataItem($"{objectToMap.TypeKind.ToString().Replace("Type", string.Empty)}: {objectToMap.TypeName}", true);
         }
 
         private IEnumerable<Relation> GetRelations(MethodMetadataDto parent)
@@ -172,9 +173,12 @@ namespace BusinessLogic.Services
         {
             bool hasChildren =
                 objectToMap.GenericArguments.Any() ||
-                objectToMap.Parameters.Any() ||
-                objectToMap.ReturnType?.TypeName == "TODO"; // TODO check
-            return new MetadataItem(objectToMap.Name, hasChildren);
+                objectToMap.Parameters.Any();
+
+            return new MetadataItem($"{objectToMap.Modifiers.Item1} " +
+                                    $"{objectToMap.ReturnType?.TypeName ?? "void"} " +
+                                    $"{objectToMap.Name} ",
+                hasChildren);
         }
     }
 }

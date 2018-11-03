@@ -25,7 +25,11 @@ namespace Reflector.Model
                     metadataType = new TypeMetadataDto()
                     {
                         Id = type.FullName,
-                        TypeName = type.Name
+                        TypeName = type.Name,
+                        NamespaceName = type.Namespace,
+                        Modifiers = EmitModifiers(type),
+                        TypeKind = GetTypeKind(type),
+                        Attributes = type.GetCustomAttributes(false).Cast<Attribute>()
                     };
                     metadataType.Properties = new List<PropertyMetadataDto>();
                     metadataType.Attributes = new List<Attribute>();
@@ -63,13 +67,7 @@ namespace Reflector.Model
                         ? new List<TypeMetadataDto>()
                         : TypeLoader.EmitGenericArguments(type.GetGenericArguments(), metaStore);
                     metadataType.BaseType = EmitExtends(type.BaseType, metaStore);
-                    metadataType.Properties = PropertyLoader.EmitProperties(type.GetProperties(BindingFlags.DeclaredOnly), metaStore);
-
-                    foreach (var property in metadataType.Properties)
-                    {
-                        property.Id = $"{type.FullName}.{property.Name}";
-                        metaStore.PropertiesDictionary.Add(property.Id, property);
-                    }
+                    metadataType.Properties = PropertyLoader.EmitProperties(type.GetProperties(), metaStore);
                 }
 
                 return metadataType;

@@ -10,7 +10,7 @@ namespace Reflector.ExtensionMethods
     {
         public static string AddNamespacePrefix(this string namespaceName)
         {
-            return $"Namespace_{namespaceName}";
+            return $"Namespace: {namespaceName}";
         }
     }
 }
