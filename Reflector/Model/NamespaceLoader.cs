@@ -11,6 +11,7 @@ namespace Reflector.Model
         {
             NamespaceMetadataDto namespaceMetadata = new NamespaceMetadataDto()
             {
+                Id = name,
                 NamespaceName = name
             };
 

@@ -4,9 +4,8 @@ using System.Linq;
 using DataContract.Model;
 using DataContract.Model.Enums;
 using Reflector.ExtensionMethods;
-using Reflector.Model;
 
-namespace AssemblyReflection.Model
+namespace Reflector.Model
 {
     internal static class TypeLoader
     {
@@ -34,10 +33,11 @@ namespace AssemblyReflection.Model
             {
                 TypeMetadataDto typeMetadataDto = new TypeMetadataDto()
                 {
-                    Name = type.Name,
+                    Id = type.FullName,
+                    TypeName = type.Name,
                     NamespaceName = type.Namespace,
                     Modifiers = EmitModifiers(type),
-                    Kind = GetTypeKind(type),
+                    TypeKind = GetTypeKind(type),
                     Attributes = type.GetCustomAttributes(false).Cast<Attribute>()
                 };
 
@@ -45,7 +45,15 @@ namespace AssemblyReflection.Model
 
                 typeMetadataDto.DeclaringType = EmitDeclaringType(type.DeclaringType);
                 typeMetadataDto.Constructors = MethodLoader.EmitMethods(type.GetConstructors(), metaStore);
+                foreach (var method in typeMetadataDto.Constructors)
+                {
+                    method.Id = $"{type.FullName}.{method.Name}";
+                }
                 typeMetadataDto.Methods = MethodLoader.EmitMethods(type.GetMethods(), metaStore);
+                foreach (var method in typeMetadataDto.Methods)
+                {
+                    method.Id = $"{type.FullName}.{method.Name}";
+                }
                 typeMetadataDto.NestedTypes = EmitNestedTypes(type.GetNestedTypes(), metaStore);
                 typeMetadataDto.ImplementedInterfaces = EmitImplements(type.GetInterfaces());
                 typeMetadataDto.GenericArguments = !type.IsGenericTypeDefinition
@@ -53,6 +61,10 @@ namespace AssemblyReflection.Model
                     : TypeLoader.EmitGenericArguments(type.GetGenericArguments());
                 typeMetadataDto.BaseType = EmitExtends(type.BaseType);
                 typeMetadataDto.Properties = PropertyLoader.EmitProperties(type.GetProperties());
+                foreach (var property in typeMetadataDto.Properties)
+                {
+                    property.Id = $"{type.FullName}.{property.Name}";
+                }
 
                 return typeMetadataDto;
             }
@@ -66,7 +78,7 @@ namespace AssemblyReflection.Model
         {
             return new TypeMetadataDto()
             {
-                Name = typeName,
+                TypeName = typeName,
                 NamespaceName = namespaceName
             };
         }

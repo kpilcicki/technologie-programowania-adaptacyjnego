@@ -1,9 +1,9 @@
 ﻿namespace DataContract.Model
 {
-  public class PropertyMetadataDto
-  {
-      public string Name { get; set; }
+    public class PropertyMetadataDto : BaseMetadataDto
+    {
+        public string Name { get; set; }
 
-      public TypeMetadataDto TypeMetadata { get; set; }
-  }
+        public TypeMetadataDto TypeMetadata { get; set; }
+    }
 }

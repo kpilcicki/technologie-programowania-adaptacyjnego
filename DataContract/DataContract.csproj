@@ -48,7 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\IMapper.cs" />
+    <Compile Include="Model\AssemblyMetadataStorage.cs" />
     <Compile Include="Model\AssemblyMetadataDto.cs" />
+    <Compile Include="Model\BaseMetadataDto.cs" />
     <Compile Include="Model\Enums\AbstractEnum.cs" />
     <Compile Include="Model\Enums\AccessLevel.cs" />
     <Compile Include="Model\Enums\TypeKind.cs" />

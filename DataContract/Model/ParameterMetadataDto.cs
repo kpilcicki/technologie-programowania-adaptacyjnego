@@ -1,6 +1,6 @@
 ﻿namespace DataContract.Model
 {
-    public class ParameterMetadataDto
+    public class ParameterMetadataDto : BaseMetadataDto
     {
         public string Name { get; set; }
 

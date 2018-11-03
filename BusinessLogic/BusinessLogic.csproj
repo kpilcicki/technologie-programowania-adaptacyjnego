@@ -49,16 +49,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\RelayCommand.cs" />
-    <Compile Include="Model\AssemblyMetadata.cs" />
-    <Compile Include="Model\ExtensionMethods.cs" />
-    <Compile Include="Model\MethodMetadata.cs" />
-    <Compile Include="Model\NamespaceMetadata.cs" />
-    <Compile Include="Model\ParameterMetadata.cs" />
-    <Compile Include="Model\PropertyMetadata.cs" />
-    <Compile Include="Model\TypeMetadata.cs" />
+    <Compile Include="Model\MetadataItem.cs" />
+    <Compile Include="Model\Relation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\IFilePathGetter.cs" />
+    <Compile Include="API\IFilePathGetter.cs" />
     <Compile Include="Base\BindableBase.cs" />
+    <Compile Include="Services\MetadataItemMapper.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="Base\ValidatableBindableBase.cs" />
   </ItemGroup>

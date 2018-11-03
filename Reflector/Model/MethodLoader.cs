@@ -22,6 +22,7 @@ namespace Reflector.Model
             methodMetadataDto.GenericArguments = !method.IsGenericMethodDefinition ? null : TypeLoader.EmitGenericArguments(method.GetGenericArguments());
             methodMetadataDto.ReturnType = EmitReturnType(method);
             methodMetadataDto.Parameters = EmitParameters(method.GetParameters());
+            methodMetadataDto.Id = $"{method.Name} args {methodMetadataDto.Parameters.Select(methodInstance => methodInstance.Name).Aggregate((current, next) => current+ ", " + next)}";
 
             return methodMetadataDto;
         }

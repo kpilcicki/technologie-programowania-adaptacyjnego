@@ -72,7 +72,7 @@ namespace BusinessLogic.Services
 
         private Relation GetRelation(PropertyMetadataDto value)
         {
-            return new Relation(value.Identificator, value.TypeMetadata.Identificator);
+            return new Relation(value.Id, value.TypeMetadata.Id);
         }
 
         private MetadataItem MapItem(PropertyMetadataDto value)
@@ -82,7 +82,7 @@ namespace BusinessLogic.Services
 
         private Relation GetRelation(ParameterMetadataDto value)
         {
-            return new Relation(value.Identificator, value.TypeMetadata.Identificator);
+            return new Relation(value.Id, value.TypeMetadata.Id);
         }
 
         private MetadataItem MapItem(ParameterMetadataDto value)
@@ -94,7 +94,7 @@ namespace BusinessLogic.Services
         {
             foreach (var item in value.Types)
             {
-                yield return new Relation(value.Identificator, item.Identificator);
+                yield return new Relation(value.Id, item.Id);
             }
         }
 
@@ -107,38 +107,38 @@ namespace BusinessLogic.Services
         {
             foreach (var item in value.Constructors)
             {
-                yield return new Relation(value.Identificator, item.Identificator);
+                yield return new Relation(value.Id, item.Id);
             }
 
             foreach (var item in value.Methods)
             {
-                yield return new Relation(value.Identificator, item.Identificator);
+                yield return new Relation(value.Id, item.Id);
             }
 
             foreach (var item in value.Properties)
             {
-                yield return new Relation(value.Identificator, item.Identificator);
+                yield return new Relation(value.Id, item.Id);
             }
 
             // foreach (var item in value.Attributes)
             // {
-            //    yield return new Relation(value.Identificator, );
+            //    yield return new Relation(value.Id, );
             // }
             // TODO check attributes
 
             foreach (var item in value.GenericArguments)
             {
-                yield return new Relation(value.Identificator, item.Identificator);
+                yield return new Relation(value.Id, item.Id);
             }
 
             foreach (var item in value.ImplementedInterfaces)
             {
-                yield return new Relation(value.Identificator, item.Identificator);
+                yield return new Relation(value.Id, item.Id);
             }
 
             foreach (var item in value.NestedTypes)
             {
-                yield return new Relation(value.Identificator, item.Identificator);
+                yield return new Relation(value.Id, item.Id);
             }
         }
 
@@ -151,15 +151,15 @@ namespace BusinessLogic.Services
         {
             foreach (var argument in parent.GenericArguments)
             {
-                yield return new Relation(parent.Identificator, argument.Identificator);
+                yield return new Relation(parent.Id, argument.Id);
             }
 
             foreach (var parameter in parent.Parameters)
             {
-                yield return new Relation(parent.Identificator, parameter.Identificator);
+                yield return new Relation(parent.Id, parameter.Id);
             }
 
-            yield return new Relation(parent.Identificator, parent.ReturnType.Identificator);
+            yield return new Relation(parent.Id, parent.ReturnType.Id);
         }
 
         private MetadataItem MapItem(MethodMetadataDto objectToMap)

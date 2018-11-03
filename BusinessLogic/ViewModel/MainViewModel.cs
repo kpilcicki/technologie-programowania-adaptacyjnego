@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
+using BusinessLogic.API;
 using BusinessLogic.Base;
-using BusinessLogic.Services;
+using BusinessLogic.Model;
 
 namespace BusinessLogic.ViewModel
 {
@@ -20,5 +21,7 @@ namespace BusinessLogic.ViewModel
         public string FilePath { get => _filePath; set => SetPropertyAndValidate(ref _filePath, value); }
 
         public ICommand GetFilePathCommand { get; private set; }
+
+        public MetadataItem RootMetadataItem { get; private set; }
     }
 }

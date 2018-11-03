@@ -6,7 +6,6 @@ namespace DataContract.Model
 {
     public class TypeMetadataDto : BaseMetadataDto
     {
-
         public string TypeName { get; set; }
 
         public string NamespaceName { get; set; }

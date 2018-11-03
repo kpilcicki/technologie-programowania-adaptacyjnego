@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataContract.API
+﻿namespace DataContract.API
 {
-    class IMapper
+    public interface IMapper<TSource, TTarget>
     {
+        TTarget Map(TSource objectToMAp);
     }
 }

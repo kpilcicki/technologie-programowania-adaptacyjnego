@@ -2,6 +2,6 @@
 {
     public class BaseMetadataDto
     {
-        public string Identificator { get; set; }
+        public string Id { get; set; }
     }
 }

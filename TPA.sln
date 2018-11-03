@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogicTests", "Busin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataContract", "DataContract\DataContract.csproj", "{20E38279-9ABB-49CF-89E9-7ADA6A88C494}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reflector", "Reflector\Reflector.csproj", "{0F44BF6A-2A53-4607-B0F6-FDDA2EAAFFDB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{20E38279-9ABB-49CF-89E9-7ADA6A88C494}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20E38279-9ABB-49CF-89E9-7ADA6A88C494}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20E38279-9ABB-49CF-89E9-7ADA6A88C494}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F44BF6A-2A53-4607-B0F6-FDDA2EAAFFDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F44BF6A-2A53-4607-B0F6-FDDA2EAAFFDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F44BF6A-2A53-4607-B0F6-FDDA2EAAFFDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F44BF6A-2A53-4607-B0F6-FDDA2EAAFFDB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
