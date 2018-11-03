@@ -4,9 +4,8 @@ using DataContract.Model.Enums;
 
 namespace DataContract.Model
 {
-    public class TypeMetadataDto
+    public class TypeMetadataDto : BaseMetadataDto
     {
-        public Guid Id { get; set; }
 
         public string TypeName { get; set; }
 
