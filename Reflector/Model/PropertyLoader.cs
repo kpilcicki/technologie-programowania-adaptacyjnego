@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using DataContract.Model;
 using Reflector.ExtensionMethods;
@@ -10,14 +9,32 @@ namespace Reflector.Model
     {
         internal static IEnumerable<PropertyMetadataDto> EmitProperties(IEnumerable<PropertyInfo> props, AssemblyMetadataStorage metaStore)
         {
-            return (from prop in props
-                where prop.GetGetMethod().IsVisible() || prop.GetSetMethod().IsVisible()
-                select new PropertyMetadataDto
-
+            List<PropertyMetadataDto> properties = new List<PropertyMetadataDto>();
+            foreach (PropertyInfo property in props)
+            {
+                if (property.GetGetMethod().IsVisible() || property.GetSetMethod().IsVisible())
                 {
-                    Name = prop.Name,
-                    TypeMetadata = TypeLoader.LoadTypeMetadataDto(prop.PropertyType, metaStore)
-                }).ToList();
+                    string id = $"{property.DeclaringType.FullName}.{property.Name}";
+                    if (metaStore.PropertiesDictionary.ContainsKey(id))
+                    {
+                        properties.Add(metaStore.PropertiesDictionary[id]);
+                    }
+                    else
+                    {
+                        PropertyMetadataDto newProperty = new PropertyMetadataDto()
+                        {
+                            Id = id,
+                            Name = property.Name
+                        };
+                        metaStore.PropertiesDictionary.Add(newProperty.Id, newProperty);
+                        properties.Add(newProperty);
+
+                        newProperty.TypeMetadata = TypeLoader.LoadTypeMetadataDto(property.PropertyType, metaStore);
+                    }
+                }
+            }
+
+            return properties;
         }
     }
 }

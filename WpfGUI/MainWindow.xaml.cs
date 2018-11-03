@@ -12,7 +12,7 @@ namespace WpfGUI
         {
             InitializeComponent();
 
-            DataContext = new MainViewModel(new FileDialog());
+             DataContext = new MainViewModel(new FileDialog());
         }
     }
 }
