@@ -9,7 +9,6 @@ namespace Reflector.Model
     internal static class AssemblyLoader
     {
 
-        //TODO dictionary existence checker
         internal static AssemblyMetadataStorage LoadAssemblyMetadata(Assembly assembly)
         {
             AssemblyMetadataDto assemblyMetadata = new AssemblyMetadataDto()

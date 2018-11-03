@@ -13,37 +13,74 @@ namespace Reflector.Model
     {
         internal static MethodMetadataDto LoadMethodMetadataDto(MethodBase method, AssemblyMetadataStorage metaStore)
         {
+
             MethodMetadataDto methodMetadataDto = new MethodMetadataDto()
             {
                 Name = method.Name,
                 Modifiers = EmitModifiers(method),
                 Extension = EmitExtension(method)
             };
-            methodMetadataDto.GenericArguments = !method.IsGenericMethodDefinition ? null : TypeLoader.EmitGenericArguments(method.GetGenericArguments());
-            methodMetadataDto.ReturnType = EmitReturnType(method);
-            methodMetadataDto.Parameters = EmitParameters(method.GetParameters());
-            methodMetadataDto.Id = $"{method.Name} args {methodMetadataDto.Parameters.Select(methodInstance => methodInstance.Name).Aggregate((current, next) => current+ ", " + next)}";
 
-            return methodMetadataDto;
+            methodMetadataDto.GenericArguments = !method.IsGenericMethodDefinition ? new List<TypeMetadataDto>() : TypeLoader.EmitGenericArguments(method.GetGenericArguments(), metaStore);
+            methodMetadataDto.ReturnType = EmitReturnType(method, metaStore);
+            methodMetadataDto.Parameters = EmitParameters(method.GetParameters(), metaStore).ToList();
+
+            string parameters = methodMetadataDto.Parameters.Any()
+                ? methodMetadataDto.Parameters.Select(methodInstance => methodInstance.Name)
+                    .Aggregate((current, next) => current + ", " + next)
+                : "none";
+
+            string generics = methodMetadataDto.GenericArguments.Any()
+                ? methodMetadataDto.GenericArguments.Select(typeInstance => typeInstance.Id)
+                    .Aggregate((c, n) => $"{c}, {n}")
+                : "none";
+
+            methodMetadataDto.Id = $"{method.DeclaringType.FullName}{method.Name} args {parameters} generics {generics} declaredBy {method.DeclaringType.FullName}";
+
+            if (!metaStore.MethodsDictionary.ContainsKey(methodMetadataDto.Id))
+            {
+                metaStore.MethodsDictionary.Add(methodMetadataDto.Id, methodMetadataDto);
+                return methodMetadataDto;
+            }
+            else
+            {
+                return metaStore.MethodsDictionary[methodMetadataDto.Id];
+            }
         }
 
         internal static IEnumerable<MethodMetadataDto> EmitMethods(IEnumerable<MethodBase> methods, AssemblyMetadataStorage metaStore)
         {
-            return from MethodBase currentMethod in methods
+            return (from MethodBase currentMethod in methods
                 where currentMethod.IsVisible()
-                select LoadMethodMetadataDto(currentMethod, metaStore);
+                select LoadMethodMetadataDto(currentMethod, metaStore)).ToList();
         }
 
-        private static IEnumerable<ParameterMetadataDto> EmitParameters(IEnumerable<ParameterInfo> parameters)
+        private static IEnumerable<ParameterMetadataDto> EmitParameters(IEnumerable<ParameterInfo> parameters, AssemblyMetadataStorage metaStore)
         {
-            return from parameter in parameters
-                   select new ParameterMetadataDto(parameter.Name, TypeLoader.EmitReference(parameter.ParameterType));
+            List<ParameterMetadataDto> parametersMetadata = new List<ParameterMetadataDto>();
+            foreach (var parameter in parameters)
+            {
+                string id = $"{parameter.ParameterType.FullName}.{parameter.Name}";
+                if (metaStore.ParametersDictionary.ContainsKey(id))
+                {
+                    parametersMetadata.Add(metaStore.ParametersDictionary[id]);
+                }
+                else
+                {
+                    ParameterMetadataDto newParameter = new ParameterMetadataDto(parameter.Name, TypeLoader.LoadTypeMetadataDto(parameter.ParameterType, metaStore));
+                    newParameter.Id = id;
+                    metaStore.ParametersDictionary.Add(id, newParameter);
+                    parametersMetadata.Add(newParameter);
+                }
+            }
+
+            return parametersMetadata;
         }
 
-        private static TypeMetadataDto EmitReturnType(MethodBase method)
+        private static TypeMetadataDto EmitReturnType(MethodBase method, AssemblyMetadataStorage metaStore)
         {
             MethodInfo methodInfo = method as MethodInfo;
-            return methodInfo == null ? null : TypeLoader.EmitReference(methodInfo.ReturnType);
+            return methodInfo == null ? null : TypeLoader.LoadTypeMetadataDto(methodInfo.ReturnType, metaStore);
         }
 
         private static bool EmitExtension(MethodBase method)

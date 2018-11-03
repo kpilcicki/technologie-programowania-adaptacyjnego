@@ -17,7 +17,8 @@
         </Grid.RowDefinitions>
         <TextBlock Background="#FFF9C12B" Text="{Binding FilePath}" Grid.Row="0" Grid.Column="0"/>
         <Button Width="60" Height="30" Background="Azure" Content="Open" Command="{Binding GetFilePathCommand}" Grid.Row="0" Grid.Column="1"/>
-        <TreeView Grid.Row="1" Grid.ColumnSpan="2">
-        </TreeView>
+        <Button Width="60" Height="30" Background="Azure" Content="Metadata" Command="{Binding GetMetadata}" Grid.Row="1" Grid.Column="1"/>
+        <!-- <TreeView Grid.Row="1" Grid.ColumnSpan="2"> -->
+        <!-- </TreeView> -->
     </Grid>
 </Window>

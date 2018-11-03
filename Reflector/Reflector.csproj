@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExtensionMethods\MethodBaseExtensions.cs" />
+    <Compile Include="ExtensionMethods\NamespaceExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeExtensions.cs" />
     <Compile Include="Model\AssemblyLoader.cs" />
     <Compile Include="Model\MethodLoader.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Model\PropertyLoader.cs" />
     <Compile Include="Model\TypeLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reflector.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataContract\DataContract.csproj">
