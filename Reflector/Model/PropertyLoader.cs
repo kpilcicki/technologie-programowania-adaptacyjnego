@@ -8,16 +8,16 @@ namespace Reflector.Model
 {
     internal class PropertyLoader
     {
-        internal static IEnumerable<PropertyMetadataDto> EmitProperties(IEnumerable<PropertyInfo> props)
+        internal static IEnumerable<PropertyMetadataDto> EmitProperties(IEnumerable<PropertyInfo> props, AssemblyMetadataStorage metaStore)
         {
-            return from prop in props
+            return (from prop in props
                 where prop.GetGetMethod().IsVisible() || prop.GetSetMethod().IsVisible()
                 select new PropertyMetadataDto
 
                 {
                     Name = prop.Name,
-                    TypeMetadata = TypeLoader.EmitReference(prop.PropertyType)
-                };
+                    TypeMetadata = TypeLoader.LoadTypeMetadataDto(prop.PropertyType, metaStore)
+                }).ToList();
         }
     }
 }

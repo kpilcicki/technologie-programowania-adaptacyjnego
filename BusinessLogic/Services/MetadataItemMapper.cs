@@ -14,6 +14,10 @@ namespace BusinessLogic.Services
 
             List<Relation> relations = new List<Relation>();
 
+            // assembly
+            MetadataItem assemblyItem = new MetadataItem(objectToMAp.AssemblyMetadata.Id, true); // TODO: check if has children
+            instances.Add(assemblyItem.Name, assemblyItem);
+
             foreach (var methodMetadataDto in objectToMAp.MethodsDictionary)
             {
                 MetadataItem item = MapItem(methodMetadataDto.Value);
@@ -43,6 +47,8 @@ namespace BusinessLogic.Services
                 {
                     relations.Add(relation);
                 }
+
+                relations.Add(new Relation(assemblyItem.Name, item.Name));
 
                 instances.Add(namespaceMetadataDto.Key, item);
             }
@@ -144,7 +150,7 @@ namespace BusinessLogic.Services
 
         private MetadataItem MapItem(TypeMetadataDto objectToMap)
         {
-            return new MetadataItem(objectToMap.NamespaceName, true);
+            return new MetadataItem(objectToMap.TypeName, true);
         }
 
         private IEnumerable<Relation> GetRelations(MethodMetadataDto parent)
@@ -159,7 +165,7 @@ namespace BusinessLogic.Services
                 yield return new Relation(parent.Id, parameter.Id);
             }
 
-            yield return new Relation(parent.Id, parent.ReturnType.Id);
+            if (parent.ReturnType != null) yield return new Relation(parent.Id, parent.ReturnType.Id);
         }
 
         private MetadataItem MapItem(MethodMetadataDto objectToMap)
@@ -167,7 +173,7 @@ namespace BusinessLogic.Services
             bool hasChildren =
                 objectToMap.GenericArguments.Any() ||
                 objectToMap.Parameters.Any() ||
-                objectToMap.ReturnType.TypeName == "TODO"; // TODO check
+                objectToMap.ReturnType?.TypeName == "TODO"; // TODO check
             return new MetadataItem(objectToMap.Name, hasChildren);
         }
     }

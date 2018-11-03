@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using DataContract.Model;
 using DataContract.Model.Enums;
 using Reflector.ExtensionMethods;
@@ -9,64 +10,69 @@ namespace Reflector.Model
 {
     internal static class TypeLoader
     {
-        internal static TypeMetadataDto EmitReference(Type type)
+        internal static IEnumerable<TypeMetadataDto> EmitGenericArguments(IEnumerable<Type> arguments, AssemblyMetadataStorage metaStore)
         {
-            if (!type.IsGenericType)
-            {
-                return LoadTypeMetadataDto(type.Name, type.Namespace);
-            }
-            else
-            {
-                return LoadTypeMetadataDto(type.Name, type.GetNamespace(),
-                    EmitGenericArguments(type.GetGenericArguments()));
-            }
-        }
-
-        internal static IEnumerable<TypeMetadataDto> EmitGenericArguments(IEnumerable<Type> arguments)
-        {
-            return from Type argument in arguments select EmitReference(argument);
+            return from Type argument in arguments select LoadTypeMetadataDto(argument, metaStore);
         }
 
         internal static TypeMetadataDto LoadTypeMetadataDto(Type type, AssemblyMetadataStorage metaStore)
         {
             if (!metaStore.TypesDictionary.ContainsKey(type.FullName))
             {
-                TypeMetadataDto typeMetadataDto = new TypeMetadataDto()
+                TypeMetadataDto metadataType;
+                if (type.Assembly.ManifestModule.FullyQualifiedName != metaStore.AssemblyMetadata.Id)
                 {
-                    Id = type.FullName,
-                    TypeName = type.Name,
-                    NamespaceName = type.Namespace,
-                    Modifiers = EmitModifiers(type),
-                    TypeKind = GetTypeKind(type),
-                    Attributes = type.GetCustomAttributes(false).Cast<Attribute>()
-                };
+                    metadataType = new TypeMetadataDto()
+                    {
+                        Id = type.FullName,
+                        TypeName = type.Name
+                    };
+                    metadataType.Properties = new List<PropertyMetadataDto>();
+                    metadataType.Attributes = new List<Attribute>();
+                    metadataType.Constructors = new List<MethodMetadataDto>();
+                    metadataType.GenericArguments = new List<TypeMetadataDto>();
+                    metadataType.ImplementedInterfaces = new List<TypeMetadataDto>();
+                    metadataType.Methods = new List<MethodMetadataDto>();
+                    metadataType.NestedTypes = new List<TypeMetadataDto>();
 
-                metaStore.TypesDictionary.Add(type.FullName, typeMetadataDto);
+                    metaStore.TypesDictionary.Add(type.FullName, metadataType);
+                }
+                else
+                {
+                    metadataType = new TypeMetadataDto()
+                    {
+                        Id = type.FullName,
+                        TypeName = type.Name,
+                        NamespaceName = type.Namespace,
+                        Modifiers = EmitModifiers(type),
+                        TypeKind = GetTypeKind(type),
+                        Attributes = type.GetCustomAttributes(false).Cast<Attribute>()
+                    };
 
-                typeMetadataDto.DeclaringType = EmitDeclaringType(type.DeclaringType);
-                typeMetadataDto.Constructors = MethodLoader.EmitMethods(type.GetConstructors(), metaStore);
-                foreach (var method in typeMetadataDto.Constructors)
-                {
-                    method.Id = $"{type.FullName}.{method.Name}";
-                }
-                typeMetadataDto.Methods = MethodLoader.EmitMethods(type.GetMethods(), metaStore);
-                foreach (var method in typeMetadataDto.Methods)
-                {
-                    method.Id = $"{type.FullName}.{method.Name}";
-                }
-                typeMetadataDto.NestedTypes = EmitNestedTypes(type.GetNestedTypes(), metaStore);
-                typeMetadataDto.ImplementedInterfaces = EmitImplements(type.GetInterfaces());
-                typeMetadataDto.GenericArguments = !type.IsGenericTypeDefinition
-                    ? null
-                    : TypeLoader.EmitGenericArguments(type.GetGenericArguments());
-                typeMetadataDto.BaseType = EmitExtends(type.BaseType);
-                typeMetadataDto.Properties = PropertyLoader.EmitProperties(type.GetProperties());
-                foreach (var property in typeMetadataDto.Properties)
-                {
-                    property.Id = $"{type.FullName}.{property.Name}";
+                    metaStore.TypesDictionary.Add(type.FullName, metadataType);
+
+                    metadataType.DeclaringType = EmitDeclaringType(type.DeclaringType, metaStore);
+                    metadataType.Constructors = MethodLoader.EmitMethods(type.GetConstructors(), metaStore);
+
+                    metadataType.Methods =
+                        MethodLoader.EmitMethods(type.GetMethods(BindingFlags.DeclaredOnly), metaStore);
+
+                    metadataType.NestedTypes = EmitNestedTypes(type.GetNestedTypes(), metaStore);
+                    metadataType.ImplementedInterfaces = EmitImplements(type.GetInterfaces(), metaStore);
+                    metadataType.GenericArguments = !type.IsGenericTypeDefinition
+                        ? new List<TypeMetadataDto>()
+                        : TypeLoader.EmitGenericArguments(type.GetGenericArguments(), metaStore);
+                    metadataType.BaseType = EmitExtends(type.BaseType, metaStore);
+                    metadataType.Properties = PropertyLoader.EmitProperties(type.GetProperties(BindingFlags.DeclaredOnly), metaStore);
+
+                    foreach (var property in metadataType.Properties)
+                    {
+                        property.Id = $"{type.FullName}.{property.Name}";
+                        metaStore.PropertiesDictionary.Add(property.Id, property);
+                    }
                 }
 
-                return typeMetadataDto;
+                return metadataType;
             }
             else
             {
@@ -74,24 +80,8 @@ namespace Reflector.Model
             }
         }
 
-        private static TypeMetadataDto LoadTypeMetadataDto(string typeName, string namespaceName)
-        {
-            return new TypeMetadataDto()
-            {
-                TypeName = typeName,
-                NamespaceName = namespaceName
-            };
-        }
 
-        private static TypeMetadataDto LoadTypeMetadataDto(string typeName, string namespaceName,
-            IEnumerable<TypeMetadataDto> genericArguments)
-        {
-            TypeMetadataDto typeMetadataDto = LoadTypeMetadataDto(typeName, namespaceName);
-            typeMetadataDto.GenericArguments = genericArguments;
-            return typeMetadataDto;
-        }
-
-        private static TypeMetadataDto EmitExtends(Type baseType)
+        private static TypeMetadataDto EmitExtends(Type baseType, AssemblyMetadataStorage metaStore)
         {
             if (baseType == null || baseType == typeof(Object) || baseType == typeof(ValueType) ||
                 baseType == typeof(Enum))
@@ -99,31 +89,31 @@ namespace Reflector.Model
                 return null;
             }
 
-            return EmitReference(baseType);
+            return LoadTypeMetadataDto(baseType, metaStore);
         }
 
-        private static TypeMetadataDto EmitDeclaringType(Type declaringType)
+        private static TypeMetadataDto EmitDeclaringType(Type declaringType, AssemblyMetadataStorage metaStore)
         {
             if (declaringType == null)
             {
                 return null;
             }
 
-            return EmitReference(declaringType);
+            return LoadTypeMetadataDto(declaringType, metaStore);
         }
 
         private static IEnumerable<TypeMetadataDto> EmitNestedTypes(IEnumerable<Type> nestedTypes,
             AssemblyMetadataStorage metaStore)
         {
-            return from type in nestedTypes
+            return (from type in nestedTypes
                 where type.IsVisible()
-                select LoadTypeMetadataDto(type, metaStore);
+                select LoadTypeMetadataDto(type, metaStore)).ToList();
         }
 
-        private static IEnumerable<TypeMetadataDto> EmitImplements(IEnumerable<Type> interfaces)
+        private static IEnumerable<TypeMetadataDto> EmitImplements(IEnumerable<Type> interfaces, AssemblyMetadataStorage metaStore)
         {
-            return from currentInterface in interfaces
-                select EmitReference(currentInterface);
+            return (from currentInterface in interfaces
+                select LoadTypeMetadataDto(currentInterface, metaStore)).ToList();
         }
 
         private static TypeKind GetTypeKind(Type type) // #80 TPA: Reflection - Invalid return value of GetTypeKind()
