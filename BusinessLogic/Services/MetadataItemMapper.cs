@@ -1,72 +1,35 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BusinessLogic.Model;
 using DataContract.API;
 using DataContract.Model;
-using Reflector.ExtensionMethods;
 
 namespace BusinessLogic.Services
 {
     public class MetadataItemMapper : IMapper<AssemblyMetadataStorage, MetadataItem>
     {
-        public MetadataItem Map(AssemblyMetadataStorage objectToMAp)
+        public MetadataItem Map(AssemblyMetadataStorage objectToMap)
         {
-            Dictionary<string, MetadataItem> instances = new Dictionary<string, MetadataItem>();
+            if (objectToMap == null)
+            {
+                throw new ArgumentNullException($"{nameof(objectToMap)} argument is null.");
+            }
 
+            Dictionary<string, MetadataItem> instances = new Dictionary<string, MetadataItem>();
             List<Relation> relations = new List<Relation>();
 
             // assembly
-            MetadataItem assemblyItem = new MetadataItem(objectToMAp.AssemblyMetadata.Id, true); // TODO: check if has children
+            bool hasChildren = objectToMap.AssemblyMetadata?.Namespaces.Any() == true;
+            MetadataItem assemblyItem = new MetadataItem(objectToMap.AssemblyMetadata.Id, hasChildren);
             instances.Add(assemblyItem.Name, assemblyItem);
 
-            foreach (var methodMetadataDto in objectToMAp.MethodsDictionary)
-            {
-                MetadataItem item = MapItem(methodMetadataDto.Value);
-                foreach (var relation in GetRelations(methodMetadataDto.Value))
-                {
-                    relations.Add(relation);
-                }
+            ProcessNamespaceItems(objectToMap, instances, relations, assemblyItem);
 
-                instances.Add(methodMetadataDto.Key, item);
-            }
-
-            foreach (var typeMetadataDto in objectToMAp.TypesDictionary)
-            {
-                MetadataItem item = MapItem(typeMetadataDto.Value);
-                foreach (var relation in GetRelations(typeMetadataDto.Value))
-                {
-                    relations.Add(relation);
-                }
-
-                instances.Add(typeMetadataDto.Key, item);
-            }
-
-            foreach (var namespaceMetadataDto in objectToMAp.NamespacesDictionary)
-            {
-                MetadataItem item = MapItem(namespaceMetadataDto.Value);
-                foreach (var relation in GetRelations(namespaceMetadataDto.Value))
-                {
-                    relations.Add(relation);
-                }
-
-                relations.Add(new Relation(assemblyItem.Name, item.Name));
-
-                instances.Add(item.Name, item);
-            }
-
-            foreach (var parameterMetadataDto in objectToMAp.ParametersDictionary)
-            {
-                MetadataItem item = MapItem(parameterMetadataDto.Value);
-                relations.Add(GetRelation(parameterMetadataDto.Value));
-                instances.Add(parameterMetadataDto.Key, item);
-            }
-
-            foreach (var propertyMetadataDto in objectToMAp.PropertiesDictionary)
-            {
-                MetadataItem item = MapItem(propertyMetadataDto.Value);
-                relations.Add(GetRelation(propertyMetadataDto.Value));
-                instances.Add(propertyMetadataDto.Key, item);
-            }
+            ProcessMutlipleRelationItems(objectToMap.MethodsDictionary, instances, relations, GetRelations, MapItem);
+            ProcessMutlipleRelationItems(objectToMap.TypesDictionary, instances, relations, GetRelations, MapItem);
+            ProcessSingleRelationItems(objectToMap.ParametersDictionary, instances, relations, GetRelation, MapItem);
+            ProcessSingleRelationItems(objectToMap.PropertiesDictionary, instances, relations, GetRelation, MapItem);
 
             // lets get fornicating
             foreach (var relation in relations)
@@ -75,6 +38,59 @@ namespace BusinessLogic.Services
             }
 
             return assemblyItem;
+        }
+
+        private void ProcessNamespaceItems(
+            AssemblyMetadataStorage objectToMap,
+            Dictionary<string, MetadataItem> instances,
+            List<Relation> relations,
+            MetadataItem assemblyItem)
+        {
+            foreach (var namespaceMetadataDto in objectToMap.NamespacesDictionary)
+            {
+                MetadataItem item = MapItem(namespaceMetadataDto.Value);
+                foreach (var relation in GetRelations(namespaceMetadataDto.Value))
+                {
+                    relations.Add(relation);
+                }
+
+                relations.Add(new Relation(assemblyItem.Name, item.Name));
+                instances.Add(item.Name, item);
+            }
+        }
+
+        private void ProcessSingleRelationItems<T>(
+            Dictionary<string, T> itemsDictionary,
+            Dictionary<string, MetadataItem> instances,
+            List<Relation> relations,
+            Func<T, Relation> relationFunction,
+            Func<T, MetadataItem> mapFunction)
+        {
+            foreach (var dictItem in itemsDictionary)
+            {
+                MetadataItem item = mapFunction(dictItem.Value);
+                relations.Add(relationFunction(dictItem.Value));
+                instances.Add(dictItem.Key, item);
+            }
+        }
+
+        private void ProcessMutlipleRelationItems<T>(
+            Dictionary<string, T> itemsDictionary,
+            Dictionary<string, MetadataItem> instances,
+            List<Relation> relations,
+            Func<T, IEnumerable<Relation>> relationFunction,
+            Func<T, MetadataItem> mapFunction)
+        {
+            foreach (var dictItem in itemsDictionary)
+            {
+                MetadataItem item = mapFunction(dictItem.Value);
+                foreach (var relation in relationFunction(dictItem.Value))
+                {
+                    relations.Add(relation);
+                }
+
+                instances.Add(dictItem.Key, item);
+            }
         }
 
         private Relation GetRelation(PropertyMetadataDto value)
@@ -101,13 +117,13 @@ namespace BusinessLogic.Services
         {
             foreach (var item in value.Types)
             {
-                yield return new Relation(value.Id.AddNamespacePrefix(), item.Id);
+                yield return new Relation($"Namespace: {value.Id}", item.Id);
             }
         }
 
         private MetadataItem MapItem(NamespaceMetadataDto value)
         {
-            return new MetadataItem(value.Id.AddNamespacePrefix(), true);
+            return new MetadataItem($"Namespace: {value.Id}", true);
         }
 
         private IEnumerable<Relation> GetRelations(TypeMetadataDto value)
@@ -151,7 +167,8 @@ namespace BusinessLogic.Services
 
         private MetadataItem MapItem(TypeMetadataDto objectToMap)
         {
-            return new MetadataItem($"{objectToMap.TypeKind.ToString().Replace("Type", string.Empty)}: {objectToMap.TypeName}", true);
+            return new MetadataItem(
+                $"{objectToMap.TypeKind.ToString().Replace("Type", string.Empty)}: {objectToMap.TypeName}", true);
         }
 
         private IEnumerable<Relation> GetRelations(MethodMetadataDto parent)
@@ -175,9 +192,10 @@ namespace BusinessLogic.Services
                 objectToMap.GenericArguments.Any() ||
                 objectToMap.Parameters.Any();
 
-            return new MetadataItem($"{objectToMap.Modifiers.Item1} " +
-                                    $"{objectToMap.ReturnType?.TypeName ?? "void"} " +
-                                    $"{objectToMap.Name} ",
+            return new MetadataItem(
+                $"{objectToMap.Modifiers.Item1} " +
+                $"{objectToMap.ReturnType?.TypeName ?? "void"} " +
+                $"{objectToMap.Name} ",
                 hasChildren);
         }
     }
