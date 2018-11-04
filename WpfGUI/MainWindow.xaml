@@ -8,16 +8,23 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="16*"/>
-            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="9*"/>
         </Grid.RowDefinitions>
-        <TextBlock Background="#FFF9C12B" Text="{Binding FilePath}" Grid.Row="0" Grid.Column="0"/>
-        <Button Width="60" Height="30" Background="Azure" Content="Open" Command="{Binding GetFilePathCommand}" Grid.Row="0" Grid.Column="1"/>
-        <TreeView Grid.Row="1" Grid.ColumnSpan="2">
-        </TreeView>
+        <TextBlock Padding="7" Text="{Binding FilePath}" Grid.Row="0" Grid.Column="0"/>
+        <Button MinWidth="60" MinHeight="30" Background="Azure" Content="Search files" Command="{Binding GetFilePathCommand}" Grid.Row="0" Grid.Column="1"/>
+        <Button MinWidth="60" MinHeight="30" Background="Azure" Content="Load metadata" Command="{Binding LoadMetadataCommand}" Grid.Row="0" Grid.Column="2"/>
+        <TreeView Padding="20" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" ItemsSource="{Binding TreeItems}">
+            <TreeView.ItemTemplate>
+                 <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <TextBlock Text="{Binding Name}"></TextBlock>
+                </HierarchicalDataTemplate>
+             </TreeView.ItemTemplate>
+         </TreeView> 
     </Grid>
 </Window>

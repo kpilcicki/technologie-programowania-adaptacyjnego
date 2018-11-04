@@ -108,6 +108,14 @@
       <Project>{860a43e1-c86e-48ce-bc74-9c51c207ca30}</Project>
       <Name>BusinessLogic</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DataContract\DataContract.csproj">
+      <Project>{20e38279-9abb-49cf-89e9-7ada6a88c494}</Project>
+      <Name>DataContract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Reflector\Reflector.csproj">
+      <Project>{0F44BF6A-2A53-4607-B0F6-FDDA2EAAFFDB}</Project>
+      <Name>Reflector</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.6.2\analyzers\dotnet\cs\Microsoft.CodeQuality.Analyzers.dll" />

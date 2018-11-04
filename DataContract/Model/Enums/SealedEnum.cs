@@ -1,7 +1,8 @@
 ﻿namespace DataContract.Model.Enums
 {
-  public enum SealedEnum
-  {
-    Sealed, NotSealed
-  }
+    public enum SealedEnum
+    {
+        Sealed,
+        NotSealed
+    }
 }

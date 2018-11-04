@@ -2,10 +2,10 @@
 
 namespace DataContract.Model
 {
-  public class AssemblyMetadataDto
-  {
-      public string Name { get; set; }
+    public class AssemblyMetadataDto : BaseMetadataDto
+    {
+        public string Name { get; set; }
 
-      public IEnumerable<NamespaceMetadataDto> Namespaces { get; set; }
-  }
+        public IEnumerable<NamespaceMetadataDto> Namespaces { get; set; }
+    }
 }

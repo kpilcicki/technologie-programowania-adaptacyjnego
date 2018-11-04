@@ -1,4 +1,4 @@
-﻿using BusinessLogic.Services;
+﻿using BusinessLogic.API;
 using Microsoft.Win32;
 
 namespace WpfGUI
