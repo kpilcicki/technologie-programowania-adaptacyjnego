@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DataContract.Model;
-using Reflector.ExtensionMethods;
 
 namespace Reflector.Model
 {
@@ -10,6 +9,11 @@ namespace Reflector.Model
     {
         internal static NamespaceMetadataDto LoadNamespaceMetadata(string name, IEnumerable<Type> types, AssemblyMetadataStorage metaStore)
         {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"{nameof(name)} is null/empty/whitespace");
+            }
+
             NamespaceMetadataDto namespaceMetadata = new NamespaceMetadataDto()
             {
                 Id = name,
@@ -20,7 +24,7 @@ namespace Reflector.Model
 
             namespaceMetadata.Types = (from type in types orderby type.Name select TypeLoader.LoadTypeMetadataDto(type, metaStore)).ToList();
 
-            return namespaceMetadata;   
+            return namespaceMetadata;
         }
     }
 }

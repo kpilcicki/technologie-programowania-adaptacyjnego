@@ -4,8 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using DataContract.Model;
-using Reflector.ExtensionMethods;
 using DataContract.Model.Enums;
+using Reflector.ExtensionMethods;
 
 namespace Reflector.Model
 {
@@ -13,12 +13,16 @@ namespace Reflector.Model
     {
         internal static MethodMetadataDto LoadMethodMetadataDto(MethodBase method, AssemblyMetadataStorage metaStore)
         {
+            if (method == null)
+            {
+                throw new ArgumentNullException($"{nameof(method)} argument is null.");
+            }
 
             MethodMetadataDto methodMetadataDto = new MethodMetadataDto()
             {
                 Name = method.Name,
                 Modifiers = EmitModifiers(method),
-                Extension = EmitExtension(method)
+                Extension = IsExtension(method)
             };
 
             methodMetadataDto.GenericArguments = !method.IsGenericMethodDefinition ? new List<TypeMetadataDto>() : TypeLoader.EmitGenericArguments(method.GetGenericArguments(), metaStore);
@@ -51,8 +55,8 @@ namespace Reflector.Model
         internal static IEnumerable<MethodMetadataDto> EmitMethods(IEnumerable<MethodBase> methods, AssemblyMetadataStorage metaStore)
         {
             return (from MethodBase currentMethod in methods
-                where currentMethod.IsVisible()
-                select LoadMethodMetadataDto(currentMethod, metaStore)).ToList();
+                    where currentMethod.IsVisible()
+                    select LoadMethodMetadataDto(currentMethod, metaStore)).ToList();
         }
 
         private static IEnumerable<ParameterMetadataDto> EmitParameters(IEnumerable<ParameterInfo> parameters, AssemblyMetadataStorage metaStore)
@@ -83,7 +87,7 @@ namespace Reflector.Model
             return methodInfo == null ? null : TypeLoader.LoadTypeMetadataDto(methodInfo.ReturnType, metaStore);
         }
 
-        private static bool EmitExtension(MethodBase method)
+        private static bool IsExtension(MethodBase method)
         {
             return method.IsDefined(typeof(ExtensionAttribute), true);
         }
