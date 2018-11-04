@@ -1,12 +1,13 @@
 ﻿using System.Reflection;
+using DataContract.API;
 using DataContract.Model;
 using Reflector.Model;
 
 namespace Reflector
 {
-    public class Reflector
+    public class Reflector : IMetadataStorageProvider
     {
-        public AssemblyMetadataStorage GetAssemblyMetadata(string assemblyFile)
+        public AssemblyMetadataStorage GetMetadataStorage(string assemblyFile)
         {
             if (string.IsNullOrEmpty(assemblyFile))
             {

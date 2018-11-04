@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using BusinessLogic.Services;
 using BusinessLogic.ViewModel;
 
 namespace WpfGUI
@@ -12,7 +13,11 @@ namespace WpfGUI
         {
             InitializeComponent();
 
-             DataContext = new MainViewModel(new FileDialog());
+            DataContext = new MainViewModel(
+                new FileDialog(),
+                new Reflector.Reflector(),
+                new MetadataItemMapper()
+            );
         }
     }
 }
