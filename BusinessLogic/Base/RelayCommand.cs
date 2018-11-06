@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace BusinessLogic.Base
 {
-    public class RelayCommand : ICommand
+    public class RelayCommand : IControllableCommand
     {
         private readonly Action _targetExecuteMethod;
         private readonly Func<bool> _targetCanExecuteMethod;

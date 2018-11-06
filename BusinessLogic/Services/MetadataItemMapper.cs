@@ -148,7 +148,6 @@ namespace BusinessLogic.Services
             //    yield return new Relation(value.Id, );
             // }
             // TODO check attributes
-
             foreach (var item in value.GenericArguments)
             {
                 yield return new Relation(value.Id, item.Id);

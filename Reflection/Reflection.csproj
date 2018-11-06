@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\AssemblyBlockedException.cs" />
+    <Compile Include="Exceptions\ReflectionException.cs" />
     <Compile Include="ExtensionMethods\MethodBaseExtensions.cs" />
     <Compile Include="ExtensionMethods\TypeExtensions.cs" />
     <Compile Include="AssemblyLoader\AssemblyLoader.cs" />
@@ -56,5 +58,6 @@
       <Name>DataContract</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

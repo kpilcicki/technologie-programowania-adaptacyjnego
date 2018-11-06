@@ -22,7 +22,8 @@ namespace WpfGUI
             return new MainViewModel(
                 new FileDialog(),
                 new Reflector(logger),
-                new MetadataItemMapper());
+                new MetadataItemMapper(),
+                new InfoDialog());
         }
     }
 }

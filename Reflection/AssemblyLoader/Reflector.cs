@@ -1,6 +1,9 @@
-﻿using System.Reflection;
+﻿using System;
+using System.IO;
+using System.Reflection;
 using DataContract.API;
 using DataContract.Model;
+using Reflection.Exceptions;
 
 namespace Reflection.AssemblyLoader
 {
@@ -15,16 +18,26 @@ namespace Reflection.AssemblyLoader
 
         public AssemblyMetadataStorage GetMetadataStorage(string assemblyFile)
         {
-            
-            if (string.IsNullOrEmpty(assemblyFile))
+            try
             {
-                throw new System.ArgumentNullException($"Could not find assembly file such with path: {assemblyFile}");
+                if (string.IsNullOrEmpty(assemblyFile))
+                {
+                    throw new System.ArgumentNullException($"Could not find assembly file such with path: {assemblyFile}");
+                }
+
+                Assembly assembly = Assembly.LoadFrom(assemblyFile);
+                _logger.Trace("Opening assembly: " + assembly.FullName);
+
+                return LoadAssemblyMetadata(assembly);
             }
-
-            Assembly assembly = Assembly.LoadFrom(assemblyFile);
-            _logger.Trace("Opening assembly: " + assembly.FullName);
-
-            return LoadAssemblyMetadata(assembly);
+            catch (FileLoadException e)
+            {
+                throw new AssemblyBlockedException(e.Message);
+            }
+            catch (Exception e)
+            {
+                throw new ReflectionException(e.Message);
+            }
         }
     }
 }

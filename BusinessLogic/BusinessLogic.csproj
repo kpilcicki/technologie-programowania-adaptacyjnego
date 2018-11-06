@@ -49,8 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\IUserInfo.cs" />
     <Compile Include="Base\IAsyncCommand.cs" />
     <Compile Include="Base\IErrorHandler.cs" />
+    <Compile Include="Base\IControllableCommand.cs" />
     <Compile Include="Base\RelayCommand.cs" />
     <Compile Include="Base\SimpleAsyncCommand.cs" />
     <Compile Include="Base\TaskUtilities.cs" />
@@ -67,6 +69,10 @@
     <ProjectReference Include="..\DataContract\DataContract.csproj">
       <Project>{20e38279-9abb-49cf-89e9-7ada6a88c494}</Project>
       <Name>DataContract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Reflection\Reflection.csproj">
+      <Project>{0f44bf6a-2a53-4607-b0f6-fdda2eaaffdb}</Project>
+      <Name>Reflection</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
