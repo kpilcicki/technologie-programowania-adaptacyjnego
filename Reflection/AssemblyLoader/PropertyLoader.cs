@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using DataContract.Model;
-using Reflector.ExtensionMethods;
+using Reflection.ExtensionMethods;
 
-namespace Reflector.Model
+namespace Reflection.AssemblyLoader
 {
-    internal class PropertyLoader
+    public partial class Reflector
     {
-        internal static IEnumerable<PropertyMetadataDto> EmitProperties(IEnumerable<PropertyInfo> props, AssemblyMetadataStorage metaStore)
+        internal IEnumerable<PropertyMetadataDto> EmitProperties(IEnumerable<PropertyInfo> props, AssemblyMetadataStorage metaStore)
         {
             List<PropertyMetadataDto> properties = new List<PropertyMetadataDto>();
             foreach (PropertyInfo property in props)
@@ -17,6 +17,7 @@ namespace Reflector.Model
                     string id = $"{property.DeclaringType.FullName}.{property.Name}";
                     if (metaStore.PropertiesDictionary.ContainsKey(id))
                     {
+                        _logger.Trace("Using property already added to dictionary: Id =" + id);
                         properties.Add(metaStore.PropertiesDictionary[id]);
                     }
                     else
@@ -26,10 +27,11 @@ namespace Reflector.Model
                             Id = id,
                             Name = property.Name
                         };
+                        _logger.Trace("Adding new property to dictionary: " + newProperty.Id +" ;Name = " + newProperty.Name);
                         metaStore.PropertiesDictionary.Add(newProperty.Id, newProperty);
                         properties.Add(newProperty);
 
-                        newProperty.TypeMetadata = TypeLoader.LoadTypeMetadataDto(property.PropertyType, metaStore);
+                        newProperty.TypeMetadata = LoadTypeMetadataDto(property.PropertyType, metaStore);
                     }
                 }
             }

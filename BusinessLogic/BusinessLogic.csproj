@@ -68,10 +68,6 @@
       <Project>{20e38279-9abb-49cf-89e9-7ada6a88c494}</Project>
       <Name>DataContract</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Reflector\Reflector.csproj">
-      <Project>{0F44BF6A-2A53-4607-B0F6-FDDA2EAAFFDB}</Project>
-      <Name>Reflector</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
