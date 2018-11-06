@@ -3,26 +3,47 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         xmlns:local="clr-namespace:WpfGUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="ReflectorApp" Height="450" Width="800">
+    <Grid Margin="20 20 20 20">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="6*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="9*"/>
         </Grid.RowDefinitions>
-        <TextBlock Padding="7" Text="{Binding FilePath}" Grid.Row="0" Grid.Column="0"/>
-        <Button MinWidth="60" MinHeight="30" Background="Azure" Content="Search files" Command="{Binding GetFilePathCommand}" Grid.Row="0" Grid.Column="1"/>
-        <Button MinWidth="60" MinHeight="30" Background="Azure" Content="Load metadata" Command="{Binding LoadMetadataCommand}" Grid.Row="0" Grid.Column="2"/>
-        <TreeView Padding="20" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" ItemsSource="{Binding TreeItems}">
+        <TextBox 
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin ="10 5 10 5"
+            Text="{Binding FilePath}" 
+            materialDesign:HintAssist.Hint="Filepath"/>
+        <StackPanel
+            Grid.Row ="0"
+            Grid.Column="1"
+            Orientation="Horizontal">
+            <Button Content="Search files" Command="{Binding GetFilePathCommand}" Margin="5 0 5 0" />
+            <Button Content="Load metadata" Command="{Binding LoadMetadataCommand}" Margin="5 0 0 0" />
+        </StackPanel>
+
+        <TreeView Grid.Row="1"
+                  Grid.Column="0" 
+                  Margin="0 20 0 0"
+                  ItemsSource="{Binding TreeItems}">
             <TreeView.ItemTemplate>
                  <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                    <TextBlock Text="{Binding Name}"></TextBlock>
+                    <TextBlock Text="{Binding Name}"/>
                 </HierarchicalDataTemplate>
              </TreeView.ItemTemplate>
          </TreeView> 
