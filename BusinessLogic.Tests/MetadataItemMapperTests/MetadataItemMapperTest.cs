@@ -3,6 +3,7 @@ using DataContract.Model;
 using DataContract.Model.Enums;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace BusinessLogic.Tests.MetadataItemMapperTests
 {
@@ -25,6 +26,18 @@ namespace BusinessLogic.Tests.MetadataItemMapperTests
         {
             _context = new MetadataItemMapper();
         }
+
+         public static IEnumerable<> TestCases
+    {
+        get
+        {
+            yield return new TestCaseData(12, 3).Returns(4);
+            yield return new TestCaseData(12, 2).Returns(6);
+            yield return new TestCaseData(12, 4).Returns(3);
+        }
+    }  
+
+        [Test]
 
 
     }
