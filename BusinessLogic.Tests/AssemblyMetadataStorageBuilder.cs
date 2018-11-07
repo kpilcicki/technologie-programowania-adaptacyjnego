@@ -9,6 +9,11 @@ namespace BusinessLogic.Tests
     {
         private AssemblyMetadataStorage _storage;
 
+        public AssemblyMetadataStorage Build()
+        {
+            return _storage;
+        }
+
         public AssemblyMetadataStorageBuilder WithAssemblyMetadata(string assemblyName)
         {
             AssemblyMetadataDto assemblyMetadata = new AssemblyMetadataDto()
