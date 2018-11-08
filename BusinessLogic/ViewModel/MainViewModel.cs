@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using BusinessLogic.API;
 using BusinessLogic.Base;
@@ -15,7 +16,9 @@ namespace BusinessLogic.ViewModel
         private readonly IFilePathGetter _filePathGetter;
         private readonly ILogger _logger;
 
-        public ICommand LoadMetadataCommand { get; }
+        private bool _isExecuting;
+
+        public IControllableCommand LoadMetadataCommand { get; }
 
         private Reflector _reflector;
 
@@ -34,25 +37,43 @@ namespace BusinessLogic.ViewModel
             _logger = logger;
             _filePathGetter = filePathGetter;
             MetadataHierarchy = new ObservableCollection<TreeViewItem>();
-            LoadMetadataCommand = new RelayCommand(Open);
+            LoadMetadataCommand = new RelayCommand(Open, () => !_isExecuting);
         }
 
-        private void Open()
+        private async void Open()
         {
+            _isExecuting = true;
+            LoadMetadataCommand.RaiseCanExecuteChanged();
+            _logger.Trace($"Reading file path...");
             string filePath = _filePathGetter.GetFilePath();
-            if (string.IsNullOrEmpty(filePath) || !filePath.EndsWith(".dll", StringComparison.InvariantCulture)) return;
+            if (string.IsNullOrEmpty(filePath) || !filePath.EndsWith(".dll", StringComparison.InvariantCulture))
+            {
+                _logger.Trace($"Selected file was invalid!");
+                return;
+            }
+
+            _logger.Trace($"Read file path: {filePath}");
             FilePath = filePath;
-            try
+
+            await Task.Run(() =>
             {
-                _reflector = new Reflector(Assembly.LoadFrom(FilePath));
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
+                try
+                {
+                    _logger.Trace("Beginning reflection subroutine...");
+                    _reflector = new Reflector(Assembly.LoadFrom(FilePath));
+                    _logger.Trace("Reflection subroutine finished successfully!");
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+            }).ConfigureAwait(true);
 
             MetadataHierarchy.Clear();
             MetadataHierarchy.Add(new AssemblyTreeItem(_reflector.AssemblyModel));
+            _logger.Trace("Successfully loaded root metadata item.");
+            _isExecuting = false;
+            LoadMetadataCommand.RaiseCanExecuteChanged();
         }
     }
 }
