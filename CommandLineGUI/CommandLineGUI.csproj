@@ -49,6 +49,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\Binding.cs" />
+    <Compile Include="Base\DataContext.cs" />
+    <Compile Include="Base\IBindableTarget.cs" />
+    <Compile Include="Base\IDisplayable.cs" />
+    <Compile Include="ConsoleFilePathGetter.cs" />
+    <Compile Include="Framework\Elements\ConsoleTreeView.cs" />
+    <Compile Include="Framework\Elements\Menu.cs" />
+    <Compile Include="Framework\Elements\MenuItem.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="MainView.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -60,6 +70,18 @@
     <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj">
       <Project>{860a43e1-c86e-48ce-bc74-9c51c207ca30}</Project>
       <Name>BusinessLogic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataContract\DataContract.csproj">
+      <Project>{20E38279-9ABB-49CF-89E9-7ADA6A88C494}</Project>
+      <Name>DataContract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FileLogger\FileLogger.csproj">
+      <Project>{47266391-0D53-46AC-88B5-1F759CF153C2}</Project>
+      <Name>FileLogger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Reflection\Reflection.csproj">
+      <Project>{0F44BF6A-2A53-4607-B0F6-FDDA2EAAFFDB}</Project>
+      <Name>Reflection</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
