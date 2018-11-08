@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using DataContract.Enums;
+﻿using DataContract.Enums;
 using Reflection.Model;
 
 namespace BusinessLogic.Model
@@ -8,8 +7,8 @@ namespace BusinessLogic.Model
     {
         private readonly TypeModel _typeModel;
 
-        public TypeTreeItem(TypeModel typeModel, ItemTypeEnum type)
-            : base(GetModifiers(typeModel) + typeModel.Name, type)
+        public TypeTreeItem(TypeModel typeModel)
+            : base(GetModifiers(typeModel) + typeModel.Name)
         {
             _typeModel = typeModel;
         }
@@ -29,23 +28,23 @@ namespace BusinessLogic.Model
             return null;
         }
 
-        protected override void BuildTreeView(ObservableCollection<TreeViewItem> children)
+        protected override void BuildTreeView()
         {
             if (_typeModel.BaseType != null)
             {
-                children.Add(new TypeTreeItem(TypeModel.TypeDictionary[_typeModel.BaseType.Name], ItemTypeEnum.BaseType));
+                Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[_typeModel.BaseType.Name]));
             }
 
             if (_typeModel.DeclaringType != null)
             {
-                children.Add(new TypeTreeItem(TypeModel.TypeDictionary[_typeModel.DeclaringType.Name], ItemTypeEnum.Type));
+                Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[_typeModel.DeclaringType.Name]));
             }
 
             if (_typeModel.Properties != null)
             {
                 foreach (PropertyModel propertyModel in _typeModel.Properties)
                 {
-                    children.Add(new PropertyTreeItem(propertyModel, GetModifiers(propertyModel.Type) + propertyModel.Type.Name + " " + propertyModel.Name));
+                    Children.Add(new PropertyTreeItem(propertyModel, GetModifiers(propertyModel.Type) + propertyModel.Type.Name + " " + propertyModel.Name));
                 }
             }
 
@@ -53,7 +52,7 @@ namespace BusinessLogic.Model
             {
                 foreach (ParameterModel parameterModel in _typeModel.Fields)
                 {
-                    children.Add(new ParameterTreeItem(parameterModel, ItemTypeEnum.Field));
+                    Children.Add(new ParameterTreeItem(parameterModel));
                 }
             }
 
@@ -61,7 +60,7 @@ namespace BusinessLogic.Model
             {
                 foreach (TypeModel typeModel in _typeModel.GenericArguments)
                 {
-                    children.Add(new TypeTreeItem(TypeModel.TypeDictionary[typeModel.Name], ItemTypeEnum.GenericArgument));
+                    Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[typeModel.Name]));
                 }
             }
 
@@ -69,7 +68,7 @@ namespace BusinessLogic.Model
             {
                 foreach (TypeModel typeModel in _typeModel.ImplementedInterfaces)
                 {
-                    children.Add(new TypeTreeItem(TypeModel.TypeDictionary[typeModel.Name], ItemTypeEnum.InmplementedInterface));
+                    Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[typeModel.Name]));
                 }
             }
 
@@ -77,10 +76,7 @@ namespace BusinessLogic.Model
             {
                 foreach (TypeModel typeModel in _typeModel.NestedTypes)
                 {
-                    ItemTypeEnum type = typeModel.Type == TypeKind.Class ? ItemTypeEnum.NestedClass :
-                        typeModel.Type == TypeKind.Struct ? ItemTypeEnum.NestedStructure :
-                        typeModel.Type == TypeKind.Enum ? ItemTypeEnum.NestedEnum : ItemTypeEnum.NestedType;
-                    children.Add(new TypeTreeItem(TypeModel.TypeDictionary[typeModel.Name], type));
+                    Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[typeModel.Name]));
                 }
             }
 
@@ -88,7 +84,7 @@ namespace BusinessLogic.Model
             {
                 foreach (MethodModel methodModel in _typeModel.Methods)
                 {
-                    children.Add(new MethodTreeItem(methodModel, methodModel.Extension ? ItemTypeEnum.ExtensionMethod : ItemTypeEnum.Method));
+                    Children.Add(new MethodTreeItem(methodModel));
                 }
             }
 
@@ -96,7 +92,7 @@ namespace BusinessLogic.Model
             {
                 foreach (MethodModel methodModel in _typeModel.Constructors)
                 {
-                    children.Add(new MethodTreeItem(methodModel, ItemTypeEnum.Constructor));
+                    Children.Add(new MethodTreeItem(methodModel));
                 }
             }
         }

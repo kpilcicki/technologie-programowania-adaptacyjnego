@@ -9,16 +9,13 @@ namespace BusinessLogic.Model
 
         public string Name { get; set; }
 
-        public ItemTypeEnum ItemType { get; set; }
-
         public ObservableCollection<TreeViewItem> Children { get; }
 
-        protected TreeViewItem(string name, ItemTypeEnum itemType)
+        protected TreeViewItem(string name)
         {
             Children = new ObservableCollection<TreeViewItem>() { null };
             _wasBuilt = false;
             Name = name;
-            ItemType = itemType;
         }
 
         public bool IsExpanded
@@ -31,11 +28,11 @@ namespace BusinessLogic.Model
                 if (_wasBuilt)
                     return;
                 Children.Clear();
-                BuildTreeView(Children);
+                BuildTreeView();
                 _wasBuilt = true;
             }
         }
 
-        protected abstract void BuildTreeView(ObservableCollection<TreeViewItem> children);
+        protected abstract void BuildTreeView();
     }
 }

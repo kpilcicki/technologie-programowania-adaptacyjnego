@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using Reflection.Model;
+﻿using Reflection.Model;
 
 namespace BusinessLogic.Model
 {
@@ -7,17 +6,17 @@ namespace BusinessLogic.Model
     {
         public ParameterModel ParameterModel { get; set; }
 
-        public ParameterTreeItem(ParameterModel parameterModel, ItemTypeEnum type)
-            : base(parameterModel.Name, type)
+        public ParameterTreeItem(ParameterModel parameterModel)
+            : base(parameterModel.Name)
         {
             ParameterModel = parameterModel;
         }
 
-        protected override void BuildTreeView(ObservableCollection<TreeViewItem> children)
+        protected override void BuildTreeView()
         {
             if (ParameterModel.Type != null)
             {
-                children.Add(new TypeTreeItem(TypeModel.TypeDictionary[ParameterModel.Type.Name], ItemTypeEnum.Type));
+                Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[ParameterModel.Type.Name]));
             }
         }
     }

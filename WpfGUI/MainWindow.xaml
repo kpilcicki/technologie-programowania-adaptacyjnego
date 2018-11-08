@@ -16,7 +16,7 @@
         mc:Ignorable="d"
         Title="ReflectorApp" Height="450" Width="800">
     <Window.Resources>
-        <converters:ItemTypeEnumToStringConverter x:Key="TypeEnumConverter" />
+        <converters:ItemTypeToStringConverter x:Key="TypeConverter" />
     </Window.Resources>
     <Grid Margin="20 20 20 20">
         <Grid.ColumnDefinitions>
@@ -57,9 +57,9 @@
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Padding="0 0 10 0" FontWeight="ExtraBold"
-                                   Text="{Binding Path=ItemType, Converter={StaticResource TypeEnumConverter}}" />
-                        <TextBlock FontWeight="Bold" Text="{Binding Path=Name}" Margin="0 0 4 0" />
+                        <TextBlock Padding="0 0 10 0" FontWeight="ExtraBlack" FontStyle="Italic"
+                                   Text="{Binding Converter={StaticResource TypeConverter}}" />
+                        <TextBlock FontWeight="Medium" Text="{Binding Path=Name}" Margin="0 0 4 0" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>

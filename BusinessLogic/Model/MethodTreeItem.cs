@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using DataContract.Enums;
+﻿using DataContract.Enums;
 using Reflection.Model;
 
 namespace BusinessLogic.Model
@@ -8,8 +7,8 @@ namespace BusinessLogic.Model
     {
         public MethodModel MethodModel { get; set; }
 
-        public MethodTreeItem(MethodModel methodModel, ItemTypeEnum type)
-            : base(GetModifiers(methodModel) + methodModel.Name, type)
+        public MethodTreeItem(MethodModel methodModel)
+            : base(GetModifiers(methodModel) + methodModel.Name)
         {
             MethodModel = methodModel;
         }
@@ -24,13 +23,13 @@ namespace BusinessLogic.Model
             return type;
         }
 
-        protected override void BuildTreeView(ObservableCollection<TreeViewItem> children)
+        protected override void BuildTreeView()
         {
             if (MethodModel.GenericArguments != null)
             {
                 foreach (TypeModel genericArgument in MethodModel.GenericArguments)
                 {
-                    children.Add(new TypeTreeItem(TypeModel.TypeDictionary[genericArgument.Name], ItemTypeEnum.GenericArgument));
+                    Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[genericArgument.Name]));
                 }
             }
 
@@ -38,13 +37,13 @@ namespace BusinessLogic.Model
             {
                 foreach (ParameterModel parameter in MethodModel.Parameters)
                 {
-                    children.Add(new ParameterTreeItem(parameter, ItemTypeEnum.Parameter));
+                    Children.Add(new ParameterTreeItem(parameter));
                 }
             }
 
             if (MethodModel.ReturnType != null)
             {
-                children.Add(new TypeTreeItem(TypeModel.TypeDictionary[MethodModel.ReturnType.Name], ItemTypeEnum.ReturnType));
+                Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[MethodModel.ReturnType.Name]));
             }
         }
     }

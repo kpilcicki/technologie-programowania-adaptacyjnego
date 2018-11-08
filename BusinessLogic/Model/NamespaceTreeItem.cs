@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using DataContract.Enums;
-using Reflection.Model;
+﻿using Reflection.Model;
 
 namespace BusinessLogic.Model
 {
@@ -9,23 +7,18 @@ namespace BusinessLogic.Model
         private readonly NamespaceModel _namespaceModel;
 
         public NamespaceTreeItem(NamespaceModel namespaceModel)
-            : base(namespaceModel.Name, ItemTypeEnum.Namespace)
+            : base(namespaceModel.Name)
         {
             _namespaceModel = namespaceModel;
         }
 
-        protected override void BuildTreeView(ObservableCollection<TreeViewItem> children)
+        protected override void BuildTreeView()
         {
             if (_namespaceModel?.Types != null)
             {
                 foreach (TypeModel typeModel in _namespaceModel?.Types)
                 {
-                    ItemTypeEnum typeEnum = typeModel.Type == TypeKind.Class ?
-                        ItemTypeEnum.Class : typeModel.Type == TypeKind.Enum ?
-                            ItemTypeEnum.Enum : typeModel.Type == TypeKind.Interface ?
-                                ItemTypeEnum.Interface : ItemTypeEnum.Struct;
-
-                    children.Add(new TypeTreeItem(TypeModel.TypeDictionary[typeModel.Name], typeEnum));
+                    Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[typeModel.Name]));
                 }
             }
         }
