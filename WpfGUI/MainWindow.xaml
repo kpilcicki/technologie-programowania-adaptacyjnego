@@ -12,40 +12,63 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         xmlns:local="clr-namespace:WpfGUI"
+        xmlns:converters="clr-namespace:WpfGUI.Converters"
         mc:Ignorable="d"
         Title="ReflectorApp" Height="450" Width="800">
+    <Window.Resources>
+        <converters:ItemTypeEnumToStringConverter x:Key="TypeEnumConverter" />
+    </Window.Resources>
     <Grid Margin="20 20 20 20">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="6*" />
+            <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="9*"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="9*" />
         </Grid.RowDefinitions>
-        <TextBox 
+        <StackPanel
             Grid.Row="0"
             Grid.Column="0"
-            Margin ="10 5 10 5"
-            Text="{Binding FilePath}" 
-            materialDesign:HintAssist.Hint="Filepath"/>
-        <StackPanel
-            Grid.Row ="0"
-            Grid.Column="1"
-            Orientation="Horizontal">
-            <Button Content="Search files" Command="{Binding GetFilePathCommand}" Margin="5 0 5 0" />
-            <Button Content="Load metadata" Command="{Binding LoadMetadataCommand}" Margin="5 0 0 0" />
+            Orientation="Horizontal"
+            VerticalAlignment="Center"
+            Margin="10 5 10 5">
+
+            <TextBlock FontSize="17" 
+                       FontWeight="DemiBold" 
+                       Text="FilePath:"/>
+            <TextBlock FontSize="17"
+                       HorizontalAlignment="Stretch"
+                       Text="{Binding FilePath}"/>
         </StackPanel>
 
+        <Button Grid.Row="0"
+                Grid.Column="1"
+                Content="Load metadata"
+                Command="{Binding LoadMetadataCommand}"
+                MaxWidth="200175"
+                Margin="10 0 0 0" />
+
         <TreeView Grid.Row="1"
-                  Grid.Column="0" 
+                  Grid.Column="0"
+                  Grid.ColumnSpan="2"
                   Margin="0 20 0 0"
-                  ItemsSource="{Binding TreeItems}">
+                  ItemsSource="{Binding MetadataHierarchy}">
             <TreeView.ItemTemplate>
-                 <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                    <TextBlock Text="{Binding Name}"/>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Padding="0 0 10 0" FontWeight="ExtraBold"
+                                   Text="{Binding Path=ItemType, Converter={StaticResource TypeEnumConverter}}" />
+                        <TextBlock FontWeight="Bold" Text="{Binding Path=Name}" Margin="0 0 4 0" />
+                    </StackPanel>
                 </HierarchicalDataTemplate>
-             </TreeView.ItemTemplate>
-         </TreeView> 
+            </TreeView.ItemTemplate>
+
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                </Style>
+            </TreeView.ItemContainerStyle>
+        </TreeView>
     </Grid>
 </Window>

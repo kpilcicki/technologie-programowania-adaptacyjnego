@@ -1,9 +1,7 @@
 ﻿using System.Windows;
-using BusinessLogic.Services;
 using BusinessLogic.ViewModel;
 using DataContract.API;
 using FileLogger;
-using Reflection.AssemblyLoader;
 
 namespace WpfGUI
 {
@@ -19,10 +17,7 @@ namespace WpfGUI
         private MainViewModel InitializeViewModel()
         {
             ILogger logger = new Logger();
-            return new MainViewModel(
-                new FileDialog(),
-                new Reflector(logger),
-                new MetadataItemMapper());
+            return new MainViewModel(new FileDialog(), new Logger());
         }
     }
 }

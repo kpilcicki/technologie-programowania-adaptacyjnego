@@ -40,15 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExtensionMethods\MethodBaseExtensions.cs" />
-    <Compile Include="ExtensionMethods\TypeExtensions.cs" />
-    <Compile Include="AssemblyLoader\AssemblyLoader.cs" />
-    <Compile Include="AssemblyLoader\MethodLoader.cs" />
-    <Compile Include="AssemblyLoader\NamespaceLoader.cs" />
-    <Compile Include="AssemblyLoader\PropertyLoader.cs" />
-    <Compile Include="AssemblyLoader\TypeLoader.cs" />
+    <Compile Include="Model\AssemblyModel.cs" />
+    <Compile Include="Model\ExtensionMethods.cs" />
+    <Compile Include="Model\MethodModel.cs" />
+    <Compile Include="Model\NamespaceModel.cs" />
+    <Compile Include="Model\ParameterModel.cs" />
+    <Compile Include="Model\PropertyModel.cs" />
+    <Compile Include="Model\TypeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AssemblyLoader\Reflector.cs" />
+    <Compile Include="Reflector.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataContract\DataContract.csproj">

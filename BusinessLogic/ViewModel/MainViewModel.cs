@@ -1,67 +1,58 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Reflection;
 using System.Windows.Input;
 using BusinessLogic.API;
 using BusinessLogic.Base;
 using BusinessLogic.Model;
 using DataContract.API;
-using DataContract.Model;
+using Reflection;
 
 namespace BusinessLogic.ViewModel
 {
-    public class MainViewModel : ValidatableBindableBase
+    public class MainViewModel : BindableBase
     {
         private readonly IFilePathGetter _filePathGetter;
-        private readonly IMetadataStorageProvider _metadataProvider;
-        private readonly IMapper<AssemblyMetadataStorage, MetadataItem> _mapper;
+        private readonly ILogger _logger;
+
+        public ICommand LoadMetadataCommand { get; }
+
+        private Reflector _reflector;
+
+        public ObservableCollection<TreeViewItem> MetadataHierarchy { get; set; }
 
         private string _filePath;
 
         public string FilePath
         {
             get => _filePath;
-            set => SetPropertyAndValidate(ref _filePath, value);
+            set => SetProperty(ref _filePath, value);
         }
 
-        public ICommand GetFilePathCommand { get; }
-
-        public ICommand LoadMetadataCommand { get; }
-
-        private List<MetadataItem> _treeItems;
-
-        public List<MetadataItem> TreeItems
+        public MainViewModel(IFilePathGetter filePathGetter, ILogger logger)
         {
-            get => _treeItems;
-            set => SetProperty(ref _treeItems, value);
-        }
-
-        public MainViewModel(
-            IFilePathGetter filePathGetter,
-            IMetadataStorageProvider metadataProvider,
-            IMapper<AssemblyMetadataStorage, MetadataItem> mapper)
-        {
+            _logger = logger;
             _filePathGetter = filePathGetter;
-            _metadataProvider = metadataProvider;
-            _mapper = mapper;
-            GetFilePathCommand = new RelayCommand(GetFilePath);
-            LoadMetadataCommand = new SimpleAsyncCommand(LoadMetadata);
-            TreeItems = new List<MetadataItem>();
+            MetadataHierarchy = new ObservableCollection<TreeViewItem>();
+            LoadMetadataCommand = new RelayCommand(Open);
         }
 
-        private void GetFilePath()
+        private void Open()
         {
-            FilePath = _filePathGetter.GetFilePath();
-        }
-
-        private async Task LoadMetadata()
-        {
-            Task toDo = new Task(() =>
+            string filePath = _filePathGetter.GetFilePath();
+            if (string.IsNullOrEmpty(filePath) || !filePath.EndsWith(".dll", StringComparison.InvariantCulture)) return;
+            FilePath = filePath;
+            try
             {
-                AssemblyMetadataStorage storage = _metadataProvider.GetMetadataStorage(FilePath);
-                TreeItems = new List<MetadataItem>() { _mapper.Map(storage) };
-            });
-            toDo.Start();
-            await toDo.ConfigureAwait(false);
+                _reflector = new Reflector(Assembly.LoadFrom(FilePath));
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+
+            MetadataHierarchy.Clear();
+            MetadataHierarchy.Add(new AssemblyTreeItem(_reflector.AssemblyModel));
         }
     }
 }
