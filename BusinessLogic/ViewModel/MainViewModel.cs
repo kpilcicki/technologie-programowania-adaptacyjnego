@@ -19,6 +19,17 @@ namespace BusinessLogic.ViewModel
 
         private bool _isExecuting;
 
+        public bool IsExecuting
+        {
+            get { return _isExecuting; }
+
+            private set
+            {
+                _isExecuting = value;
+                LoadMetadataCommand.RaiseCanExecuteChanged();
+            }
+        }
+
         public IControllableCommand LoadMetadataCommand { get; }
 
         private Reflector _reflector;
@@ -50,13 +61,14 @@ namespace BusinessLogic.ViewModel
 
         private async void Open()
         {
-            _isExecuting = true;
-            LoadMetadataCommand.RaiseCanExecuteChanged();
+            IsExecuting = true;
             _logger.Trace($"Reading file path...");
             string filePath = _filePathGetter.GetFilePath();
             if (string.IsNullOrEmpty(filePath) || !filePath.EndsWith(".dll", StringComparison.InvariantCulture))
             {
+                _userInfo.PromptUser("Selected file was invalid!", "File Error");
                 _logger.Trace($"Selected file was invalid!");
+                IsExecuting = false;
                 return;
             }
 
@@ -85,15 +97,13 @@ namespace BusinessLogic.ViewModel
 
             if (_reflector == null)
             {
-                _isExecuting = false;
-                LoadMetadataCommand.RaiseCanExecuteChanged();
+                IsExecuting = false;
                 return;
             }
 
             MetadataHierarchy = new ObservableCollection<TreeViewItem>() { new AssemblyTreeItem(_reflector.AssemblyModel) };
             _logger.Trace("Successfully loaded root metadata item.");
-            _isExecuting = false;
-            LoadMetadataCommand.RaiseCanExecuteChanged();
+            IsExecuting = false;
         }
     }
 }

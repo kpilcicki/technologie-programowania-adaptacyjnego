@@ -10,5 +10,10 @@ namespace ExampleLibrary.Titleplane
         {
             throw new NotImplementedException();
         }
+
+        public void DoSomething(object different)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
