@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using Reflection.Model;
+﻿using Reflection.Model;
 
 namespace BusinessLogic.Model
 {
@@ -8,18 +7,18 @@ namespace BusinessLogic.Model
         private readonly AssemblyModel _assemblyModel;
 
         public AssemblyTreeItem(AssemblyModel assembly)
-            : base(assembly.Name, ItemTypeEnum.Assembly)
+            : base(assembly.Name)
         {
             _assemblyModel = assembly;
         }
 
-        protected override void BuildTreeView(ObservableCollection<TreeViewItem> children)
+        protected override void BuildTreeView()
         {
             if (_assemblyModel?.NamespaceModels != null)
             {
                 foreach (NamespaceModel namespaceModel in _assemblyModel.NamespaceModels)
                 {
-                    children.Add(new NamespaceTreeItem(namespaceModel));
+                    Children.Add(new NamespaceTreeItem(namespaceModel));
                 }
             }
         }

@@ -75,7 +75,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Converters\ItemTypeEnumToStringConverter.cs" />
+    <Compile Include="Converters\ItemTypeToStringConverter.cs" />
     <Compile Include="FileDialog.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MainWindow.xaml.cs">

@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace BusinessLogic.Base
 {
-    public interface IAsyncCommand : ICommand
+    public interface IAsyncCommand : IControllableCommand
     {
         Task ExecuteAsync();
 
