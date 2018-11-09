@@ -19,7 +19,13 @@ namespace BusinessLogic.ViewModel
 
         private Reflector _reflector;
 
-        public ObservableCollection<TreeViewItem> MetadataHierarchy { get; set; }
+        private ObservableCollection<TreeViewItem> _metadataHierarchy;
+
+        public ObservableCollection<TreeViewItem> MetadataHierarchy
+        {
+            get => _metadataHierarchy;
+            set => SetProperty(ref _metadataHierarchy, value);
+        }
 
         private string _filePath;
 
@@ -52,7 +58,7 @@ namespace BusinessLogic.ViewModel
             }
 
             MetadataHierarchy.Clear();
-            MetadataHierarchy.Add(new AssemblyTreeItem(_reflector.AssemblyModel));
+            MetadataHierarchy = new ObservableCollection<TreeViewItem>() { new AssemblyTreeItem(_reflector.AssemblyModel) };
         }
     }
 }

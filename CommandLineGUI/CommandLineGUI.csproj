@@ -50,6 +50,8 @@
     <Compile Include="MainView.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewTemplates\TreeViewConsole.cs" />
+    <Compile Include="ViewTemplates\TreeViewItemConsole.cs" />
     <Compile Include="ViewTemplates\Menu.cs" />
     <Compile Include="ViewTemplates\MenuItem.cs" />
   </ItemGroup>

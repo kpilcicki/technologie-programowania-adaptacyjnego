@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CommandLineGUI.Base;
 
 namespace CommandLineGUI.ViewTemplates
@@ -10,7 +11,7 @@ namespace CommandLineGUI.ViewTemplates
 
         public List<string> QuitKeywords { get; }
 
-        private bool _incorrectInput;
+        private string _message = string.Empty;
         private bool _continueExecuting;
 
         public Menu()
@@ -18,23 +19,21 @@ namespace CommandLineGUI.ViewTemplates
             MenuItems = new List<MenuItem>();
             QuitKeywords = new List<string>();
             _continueExecuting = true;
-            _incorrectInput = false;
         }
 
         public void Display()
         {
             while (_continueExecuting)
             {
-                if (_incorrectInput)
+                if (!string.IsNullOrEmpty(_message))
                 {
-                    Console.WriteLine("You have chosen incorrect option!!!");
-                    _incorrectInput = false;
+                    Console.WriteLine(_message);
                 }
-
-                Console.WriteLine("Choose option:");
+                Console.WriteLine($"Choose option or {string.Join("/", QuitKeywords)} to quit");
                 DisplayElements();
                 string choice = Console.ReadLine();
                 ProcessSelectedOption(choice);
+                Console.Clear();
             }        
         }
 
@@ -48,20 +47,30 @@ namespace CommandLineGUI.ViewTemplates
 
         private void ProcessSelectedOption(string choice)
         {
-            MenuItem selectedOption = MenuItems.Find(mi => mi.Header == choice);
+            MenuItem selectedOption = MenuItems.Find(mi => mi.Option == choice);
             if (selectedOption != null)
             {
-                _incorrectInput = false;
-                selectedOption.Command.Execute(null);
+                if (selectedOption.Command.CanExecute(null))
+                {
+                    _message = string.Empty;
+                    selectedOption.Command.Execute(null);
+                }
+                else
+                {
+                    _message = "Action is not allowed at the moment!!";
+                }
             }
             else
             {
                 if (QuitKeywords.Exists(keyword => keyword == choice))
                 {
-                    _incorrectInput = false;
                     _continueExecuting = false;
                 }
-                _incorrectInput = true;
+                else
+                {
+                    _message = "Incorrect option!!";
+                }
+                
             }
         }
     }
