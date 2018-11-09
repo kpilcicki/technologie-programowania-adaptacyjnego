@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\AssemblyBlockedException.cs" />
+    <Compile Include="Exceptions\ReflectionException.cs" />
     <Compile Include="Model\AssemblyModel.cs" />
     <Compile Include="Model\ExtensionMethods.cs" />
     <Compile Include="Model\MethodModel.cs" />

@@ -56,6 +56,7 @@
     <Compile Include="Base\RelayCommand.cs" />
     <Compile Include="Base\SimpleAsyncCommand.cs" />
     <Compile Include="Base\TaskUtilities.cs" />
+    <Compile Include="Constants\TypeToStringMap.cs" />
     <Compile Include="Model\AssemblyTreeItem.cs" />
     <Compile Include="Model\ItemTypeEnum.cs" />
     <Compile Include="Model\MethodTreeItem.cs" />
