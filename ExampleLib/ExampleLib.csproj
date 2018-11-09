@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{15C6CEE6-77B2-4445-A171-1216B93D8E3E}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>CommandLineGUI</RootNamespace>
-    <AssemblyName>CommandLineGUI</AssemblyName>
+    <ProjectGuid>{604260E1-1BB1-4E32-B736-0FDF6D1B6FFA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ExampleLib</RootNamespace>
+    <AssemblyName>ExampleLib</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,35 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\Binding.cs" />
-    <Compile Include="Base\DataContext.cs" />
-    <Compile Include="Base\IDisplayable.cs" />
-    <Compile Include="ConsoleFilePathGetter.cs" />
-    <Compile Include="ConsoleUserInfo.cs" />
-    <Compile Include="MainView.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Circle\A.cs" />
+    <Compile Include="Circle\B.cs" />
+    <Compile Include="Circle\C.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewTemplates\ConsoleTreeView.cs" />
-    <Compile Include="ViewTemplates\ConsoleTreeViewItem.cs" />
-    <Compile Include="ViewTemplates\Menu.cs" />
-    <Compile Include="ViewTemplates\MenuItem.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj">
-      <Project>{860a43e1-c86e-48ce-bc74-9c51c207ca30}</Project>
-      <Name>BusinessLogic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DataContract\DataContract.csproj">
-      <Project>{20E38279-9ABB-49CF-89E9-7ADA6A88C494}</Project>
-      <Name>DataContract</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FileLogger\FileLogger.csproj">
-      <Project>{47266391-0D53-46AC-88B5-1F759CF153C2}</Project>
-      <Name>FileLogger</Name>
-    </ProjectReference>
+    <Compile Include="Television.cs" />
+    <Compile Include="Titleplane\Picture.cs" />
+    <Compile Include="Titleplane\Pollock.cs" />
+    <Compile Include="Titleplane\TopOFTheBellCurve.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

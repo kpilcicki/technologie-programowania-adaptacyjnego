@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ExampleLibrary.Circle
+namespace ExampleLib.Circle
 {
-    public class B
+    public class C
     {
-        public C Cref { get; set; }
+        public A Aref { get; set; }
     }
 }

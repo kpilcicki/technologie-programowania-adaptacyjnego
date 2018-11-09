@@ -12,7 +12,7 @@ namespace CommandLineGUI
 
         public Menu Menu { get; set; }
 
-        public TreeViewConsole TreeViewConsole { get; set; }
+        public ConsoleTreeView TreeViewConsole { get; set; }
 
         public MainView(MainViewModel viewModel)
         {
@@ -29,7 +29,7 @@ namespace CommandLineGUI
 
         private void InitializeTreeView()
         {
-            TreeViewConsole = new TreeViewConsole();
+            TreeViewConsole = new ConsoleTreeView();
             TreeViewConsole.QuitKeywords.AddRange(new string[] { "q", "Q", "quit" });
 
             DataContext.SetBinding(TreeViewConsole, "TreeViewItems", "MetadataHierarchy");
@@ -47,7 +47,7 @@ namespace CommandLineGUI
             Menu.MenuItems.Add(new MenuItem()
             {
                 Option = "2", Header = "Display metadata",
-                Command = new RelayCommand(TreeViewConsole.Display, () => TreeViewConsole.HierarchicalDataCollection.Any())
+                Command = new RelayCommand(TreeViewConsole.Display, () => TreeViewConsole.ItemsSource.Any())
             });
         }
     }

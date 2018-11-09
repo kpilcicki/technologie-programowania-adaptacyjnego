@@ -6,21 +6,21 @@ using CommandLineGUI.Base;
 
 namespace CommandLineGUI.ViewTemplates
 {
-    public class TreeViewItemConsole : IDisplayable
+    public class ConsoleTreeViewItem : IDisplayable
     {
-        public TreeViewItem TreeItem { get; set; }
+        public MetadataTreeItem TreeItem { get; set; }
         public bool IsExpanded { get; set; }
-        public int Indent { get; set; }
-        public int Index { get; set; }
+        public int Spacing { get; set; }
+        public int Id { get; set; }
 
-        public TreeViewItemConsole(TreeViewItem treeItem, int indent)
+        public ConsoleTreeViewItem(MetadataTreeItem treeItem, int spacing)
         {
             TreeItem = treeItem;
             IsExpanded = false;
-            Indent = indent;
+            Spacing = spacing;
         }
 
-        public ObservableCollection<TreeViewItem> Expand()
+        public ObservableCollection<MetadataTreeItem> Expand()
         {
             IsExpanded = true;
             TreeItem.IsExpanded = true;
@@ -29,9 +29,9 @@ namespace CommandLineGUI.ViewTemplates
 
         public void Display()
         {
-            Console.Write(new string(' ', Indent * 3));
+            Console.Write(new string(' ', Spacing * 3));
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.Write($"{Index}. ");
+            Console.Write($"{Id}. ");
             Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.Write(IsExpanded ? "(-) " : "(+) ");
             Console.ForegroundColor = ConsoleColor.DarkGray;

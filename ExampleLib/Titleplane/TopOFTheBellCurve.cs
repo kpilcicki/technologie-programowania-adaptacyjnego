@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ExampleLibrary.Titleplane
+namespace ExampleLib.Titleplane
 {
     public class TopOFTheBellCurve<TT, CT>
     {

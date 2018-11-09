@@ -17,11 +17,16 @@ namespace BusinessLogic.ViewModel
         private readonly ILogger _logger;
         private readonly IUserInfo _userInfo;
 
+        private readonly object _syncLock = new object();
+
         private bool _isExecuting;
 
         public bool IsExecuting
         {
-            get { return _isExecuting; }
+            get
+            {
+                return _isExecuting;
+            }
 
             private set
             {
@@ -34,12 +39,12 @@ namespace BusinessLogic.ViewModel
 
         private Reflector _reflector;
 
-        private ObservableCollection<TreeViewItem> _metadataHierarchy;
+        private ObservableCollection<MetadataTreeItem> _metadataHierarchy;
 
-        public ObservableCollection<TreeViewItem> MetadataHierarchy
+        public ObservableCollection<MetadataTreeItem> MetadataHierarchy
         {
             get => _metadataHierarchy;
-            set => SetProperty(ref _metadataHierarchy, value);
+            private set => SetProperty(ref _metadataHierarchy, value);
         }
 
         private string _filePath;
@@ -55,13 +60,17 @@ namespace BusinessLogic.ViewModel
             _logger = logger;
             _filePathGetter = filePathGetter;
             _userInfo = userInfo;
-            MetadataHierarchy = new ObservableCollection<TreeViewItem>();
+            MetadataHierarchy = new ObservableCollection<MetadataTreeItem>();
             LoadMetadataCommand = new RelayCommand(Open, () => !_isExecuting);
         }
 
         private async void Open()
         {
-            IsExecuting = true;
+            lock (_syncLock) {
+                if (IsExecuting) return;
+                IsExecuting = true;
+            }
+
             _logger.Trace($"Reading file path...");
             string filePath = _filePathGetter.GetFilePath();
             if (string.IsNullOrEmpty(filePath) || !filePath.EndsWith(".dll", StringComparison.InvariantCulture))
@@ -101,7 +110,7 @@ namespace BusinessLogic.ViewModel
                 return;
             }
 
-            MetadataHierarchy = new ObservableCollection<TreeViewItem>() { new AssemblyTreeItem(_reflector.AssemblyModel) };
+            MetadataHierarchy = new ObservableCollection<MetadataTreeItem>() { new AssemblyTreeItem(_reflector.AssemblyModel) };
             _logger.Trace("Successfully loaded root metadata item.");
             IsExecuting = false;
         }

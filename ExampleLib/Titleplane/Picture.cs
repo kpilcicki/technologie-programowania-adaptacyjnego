@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ExampleLibrary.Titleplane
+namespace ExampleLib.Titleplane
 {
-    class Picture : Pollock
+    public class Picture : Pollock
     {
         public override void DoSomething()
         {

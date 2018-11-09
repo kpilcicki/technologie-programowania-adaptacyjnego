@@ -2,11 +2,10 @@
 using System.Globalization;
 using System.Windows.Data;
 using BusinessLogic.Constants;
-using BusinessLogic.Model;
 
 namespace WpfGUI.Converters
 {
-    [ValueConversion(typeof(ItemTypeEnum), typeof(string))]
+    [ValueConversion(typeof(object), typeof(string))]
     public class ItemTypeToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => TypeToStringMap.GetStringFromType(value);

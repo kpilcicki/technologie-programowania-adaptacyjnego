@@ -2,7 +2,7 @@
 
 namespace BusinessLogic.Model
 {
-    public class AssemblyTreeItem : TreeViewItem
+    public class AssemblyTreeItem : MetadataTreeItem
     {
         private readonly AssemblyModel _assemblyModel;
 

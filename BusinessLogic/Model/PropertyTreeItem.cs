@@ -2,7 +2,7 @@
 
 namespace BusinessLogic.Model
 {
-    public class PropertyTreeItem : TreeViewItem
+    public class PropertyTreeItem : MetadataTreeItem
     {
         public PropertyModel PropertyModel { get; set; }
 

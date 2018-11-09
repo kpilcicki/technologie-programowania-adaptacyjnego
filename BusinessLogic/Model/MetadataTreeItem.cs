@@ -2,18 +2,18 @@
 
 namespace BusinessLogic.Model
 {
-    public abstract class TreeViewItem
+    public abstract class MetadataTreeItem
     {
         private bool _wasBuilt;
         private bool _isExpanded;
 
         public string Name { get; set; }
 
-        public ObservableCollection<TreeViewItem> Children { get; }
+        public ObservableCollection<MetadataTreeItem> Children { get; }
 
-        protected TreeViewItem(string name)
+        protected MetadataTreeItem(string name)
         {
-            Children = new ObservableCollection<TreeViewItem>() { null };
+            Children = new ObservableCollection<MetadataTreeItem>() { null };
             _wasBuilt = false;
             Name = name;
         }

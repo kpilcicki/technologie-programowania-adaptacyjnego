@@ -17,6 +17,7 @@ namespace Reflection
                 if (string.IsNullOrEmpty(assemblyPath))
                     throw new System.ArgumentNullException();
                 Assembly assembly = Assembly.LoadFrom(assemblyPath);
+                TypeModel.TypeDictionary.Clear();
                 AssemblyModel = new AssemblyModel(assembly);
             }
             catch (FileLoadException e)

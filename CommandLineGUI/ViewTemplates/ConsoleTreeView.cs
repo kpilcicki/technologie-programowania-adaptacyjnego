@@ -6,45 +6,45 @@ using CommandLineGUI.Base;
 
 namespace CommandLineGUI.ViewTemplates
 {
-    public class TreeViewConsole : IDisplayable
+    public class ConsoleTreeView : IDisplayable
     {
-        private ObservableCollection<TreeViewItem> _treeViewItems;
+        private ObservableCollection<MetadataTreeItem> _treeViewItems;
 
-        public ObservableCollection<TreeViewItem> TreeViewItems
+        public ObservableCollection<MetadataTreeItem> TreeViewItems
         {
             get => _treeViewItems;
             set
             {
-                HierarchicalDataCollection.Clear();
+                ItemsSource.Clear();
                 _treeViewItems = value;
                 if (_treeViewItems?.Count > 0)
-                    HierarchicalDataCollection.Add(new TreeViewItemConsole(_treeViewItems[0], 0));
+                    ItemsSource.Add(new ConsoleTreeViewItem(_treeViewItems[0], 0));
             }
         }
 
-        public ObservableCollection<TreeViewItemConsole> HierarchicalDataCollection { get; }
+        public ObservableCollection<ConsoleTreeViewItem> ItemsSource { get; }
 
         public List<string> QuitKeywords { get; }
 
         private string _message = "";
 
-        public TreeViewConsole()
+        public ConsoleTreeView()
         {
-            HierarchicalDataCollection = new ObservableCollection<TreeViewItemConsole>();
+            ItemsSource = new ObservableCollection<ConsoleTreeViewItem>();
             QuitKeywords = new List<string>();
         }
 
-        public void Expand(int index)
+        public void Expand(int id)
         {
-            TreeViewItemConsole item = HierarchicalDataCollection[index];
+            ConsoleTreeViewItem item = ItemsSource[id];
             if (!item.IsExpanded)
             {
                 int i = 1;
-                ObservableCollection<TreeViewItem> items = item.Expand();
-                foreach (TreeViewItem treeViewItem in items)
+                ObservableCollection<MetadataTreeItem> items = item.Expand();
+                foreach (MetadataTreeItem treeViewItem in items)
                 {
-                    HierarchicalDataCollection.Insert(index + i,
-                        new TreeViewItemConsole(treeViewItem, item.Indent + 1));
+                    ItemsSource.Insert(id + i,
+                        new ConsoleTreeViewItem(treeViewItem, item.Spacing + 1));
                     i++;
                 }
             }
@@ -52,14 +52,14 @@ namespace CommandLineGUI.ViewTemplates
             {
                 for (int i = item.TreeItem.Children.Count; i > 0; i--)
                 {
-                    if (HierarchicalDataCollection[index + i].IsExpanded)
+                    if (ItemsSource[id + i].IsExpanded)
                     {
-                        Expand(index + i);
-                        HierarchicalDataCollection.RemoveAt(index + i);
+                        Expand(id + i);
+                        ItemsSource.RemoveAt(id + i);
                     }
                     else
                     {
-                        HierarchicalDataCollection.RemoveAt(index + i);
+                        ItemsSource.RemoveAt(id + i);
                     }
                 }
 
@@ -83,18 +83,18 @@ namespace CommandLineGUI.ViewTemplates
 
         private void DisplayElements()
         {
-            int index = 0;
-            foreach (TreeViewItemConsole itemConsole in HierarchicalDataCollection)
+            int id = 0;
+            foreach (ConsoleTreeViewItem consoleItem in ItemsSource)
             {
-                itemConsole.Index = index++;
-                itemConsole.Display();
+                consoleItem.Id = id++;
+                consoleItem.Display();
             }
         }
 
         private void ProcessInput(string choice, ref bool stayInTree)
         {
-            if (!Int32.TryParse(choice, out int parsedTemp) || parsedTemp < 0 ||
-                parsedTemp > HierarchicalDataCollection.Count - 1)
+            if (!Int32.TryParse(choice, out int parsedNumber) || parsedNumber < 0 ||
+                parsedNumber > ItemsSource.Count - 1)
             {
                 if (QuitKeywords.Exists(word => word == choice))
                 {
@@ -108,7 +108,7 @@ namespace CommandLineGUI.ViewTemplates
 
             _message = string.Empty;
 
-            Expand(parsedTemp);
+            Expand(parsedNumber);
         }
 
     }   
