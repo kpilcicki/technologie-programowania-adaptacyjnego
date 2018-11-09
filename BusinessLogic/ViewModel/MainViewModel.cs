@@ -1,87 +1,118 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Reflection;
 using System.Threading.Tasks;
 using BusinessLogic.API;
 using BusinessLogic.Base;
 using BusinessLogic.Model;
 using DataContract.API;
-using DataContract.Model;
+using Reflection;
 using Reflection.Exceptions;
 
 namespace BusinessLogic.ViewModel
 {
-    public class MainViewModel : ValidatableBindableBase
+    public class MainViewModel : BindableBase
     {
         private readonly IFilePathGetter _filePathGetter;
-        private readonly IMetadataStorageProvider _metadataProvider;
-        private readonly IMapper<AssemblyMetadataStorage, MetadataItem> _mapper;
+        private readonly ILogger _logger;
         private readonly IUserInfo _userInfo;
+
+        private readonly object _syncLock = new object();
+
+        private bool _isExecuting;
+
+        public bool IsExecuting
+        {
+            get
+            {
+                return _isExecuting;
+            }
+
+            private set
+            {
+                _isExecuting = value;
+                LoadMetadataCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        public IControllableCommand LoadMetadataCommand { get; }
+
+        private Reflector _reflector;
+
+        private ObservableCollection<MetadataTreeItem> _metadataHierarchy;
+
+        public ObservableCollection<MetadataTreeItem> MetadataHierarchy
+        {
+            get => _metadataHierarchy;
+            private set => SetProperty(ref _metadataHierarchy, value);
+        }
 
         private string _filePath;
 
         public string FilePath
         {
             get => _filePath;
-            set
-            {
-                SetPropertyAndValidate(ref _filePath, value);
-                LoadMetadataCommand.RaiseCanExecuteChanged();
-            }
+            set => SetProperty(ref _filePath, value);
         }
 
-        public IControllableCommand GetFilePathCommand { get; }
-
-        public IControllableCommand LoadMetadataCommand { get; }
-
-        private List<MetadataItem> _treeItems;
-
-        public List<MetadataItem> TreeItems
+        public MainViewModel(IFilePathGetter filePathGetter, ILogger logger, IUserInfo userInfo)
         {
-            get => _treeItems;
-            set => SetProperty(ref _treeItems, value);
-        }
-
-        public MainViewModel(
-            IFilePathGetter filePathGetter,
-            IMetadataStorageProvider metadataProvider,
-            IMapper<AssemblyMetadataStorage, MetadataItem> mapper,
-            IUserInfo userInfo)
-        {
+            _logger = logger;
             _filePathGetter = filePathGetter;
-            _metadataProvider = metadataProvider;
-            _mapper = mapper;
             _userInfo = userInfo;
-            GetFilePathCommand = new RelayCommand(GetFilePath);
-            LoadMetadataCommand = new SimpleAsyncCommand(LoadMetadata, () => File.Exists(FilePath) && FilePath.EndsWith(".dll", System.StringComparison.InvariantCulture));
-            TreeItems = new List<MetadataItem>();
+            MetadataHierarchy = new ObservableCollection<MetadataTreeItem>();
+            LoadMetadataCommand = new RelayCommand(Open, () => !_isExecuting);
         }
 
-        private void GetFilePath()
+        private async void Open()
         {
-            FilePath = _filePathGetter.GetFilePath();
-        }
+            lock (_syncLock) {
+                if (IsExecuting) return;
+                IsExecuting = true;
+            }
 
-        private async Task LoadMetadata()
-        {
+            _logger.Trace($"Reading file path...");
+            string filePath = _filePathGetter.GetFilePath();
+            if (string.IsNullOrEmpty(filePath) || !filePath.EndsWith(".dll", StringComparison.InvariantCulture))
+            {
+                _userInfo.PromptUser("Selected file was invalid!", "File Error");
+                _logger.Trace($"Selected file was invalid!");
+                IsExecuting = false;
+                return;
+            }
+
+            _logger.Trace($"Read file path: {filePath}");
+            FilePath = filePath;
+
             await Task.Run(() =>
             {
                 try
                 {
-                    AssemblyMetadataStorage storage = _metadataProvider.GetMetadataStorage(FilePath);
-                    TreeItems = new List<MetadataItem>() { _mapper.Map(storage) };
+                    _logger.Trace("Beginning reflection subroutine...");
+                    _reflector = new Reflector(FilePath);
+                    _logger.Trace("Reflection subroutine finished successfully!");
                 }
-                catch (AssemblyBlockedException)
+                catch (AssemblyBlockedException e)
                 {
-                    _userInfo.PromptUser("Unblock the selected assembly if you want to read its content!", "Expected Error.");
+                    _userInfo.PromptUser("Unblock the selected assembly if you want to read its content!", "Expected Error");
+                    _logger.Trace($"AssemblyBlockedException thrown, message: {e.Message}");
                 }
                 catch (ReflectionException e)
                 {
                     _userInfo.PromptUser($"Something unexpected happened.\nError message: {e.Message}", "Unexpected ERROR");
+                    _logger.Trace($"ReflectionException thrown, message: {e.Message}");
                 }
-            }).ConfigureAwait(false);
+            }).ConfigureAwait(true);
 
-            // toDo.Start();
-            // await toDo.ConfigureAwait(false);
+            if (_reflector == null)
+            {
+                IsExecuting = false;
+                return;
+            }
+
+            MetadataHierarchy = new ObservableCollection<MetadataTreeItem>() { new AssemblyTreeItem(_reflector.AssemblyModel) };
+            _logger.Trace("Successfully loaded root metadata item.");
+            IsExecuting = false;
         }
     }
 }
