@@ -2,7 +2,7 @@
 
 namespace BusinessLogic.Model
 {
-    public class NamespaceTreeItem : TreeViewItem
+    public class NamespaceTreeItem : MetadataTreeItem
     {
         private readonly NamespaceModel _namespaceModel;
 

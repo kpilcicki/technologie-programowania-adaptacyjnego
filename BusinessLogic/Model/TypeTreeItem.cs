@@ -3,7 +3,7 @@ using Reflection.Model;
 
 namespace BusinessLogic.Model
 {
-    public class TypeTreeItem : TreeViewItem
+    public class TypeTreeItem : MetadataTreeItem
     {
         private readonly TypeModel _typeModel;
 

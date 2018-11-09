@@ -78,6 +78,7 @@
     <Compile Include="Converters\ItemTypeToStringConverter.cs" />
     <Compile Include="FileDialog.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="InfoDialog.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

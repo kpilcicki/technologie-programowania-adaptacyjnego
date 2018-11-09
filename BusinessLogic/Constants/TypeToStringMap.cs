@@ -13,7 +13,17 @@ namespace BusinessLogic.Constants
             { typeof(ParameterTreeItem), "Parameter" },
             { typeof(NamespaceTreeItem), "Namespace" },
             { typeof(MethodTreeItem), "Method" },
-            { typeof(AssemblyTreeItem), "Type" },
+            { typeof(AssemblyTreeItem), "Assembly" },
         };
+
+        public static string GetStringFromType(object value)
+        {
+            if (value != null && TypeToStringMap.Map.TryGetValue(value.GetType(), out string converted))
+            {
+                return $"<<{converted}>>";
+            }
+
+            return "Unknown";
+        }
     }
 }

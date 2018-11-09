@@ -3,7 +3,7 @@ using Reflection.Model;
 
 namespace BusinessLogic.Model
 {
-    public class MethodTreeItem : TreeViewItem
+    public class MethodTreeItem : MetadataTreeItem
     {
         public MethodModel MethodModel { get; set; }
 

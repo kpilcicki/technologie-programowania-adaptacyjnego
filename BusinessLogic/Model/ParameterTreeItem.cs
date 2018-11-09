@@ -2,7 +2,7 @@
 
 namespace BusinessLogic.Model
 {
-    public class ParameterTreeItem : TreeViewItem
+    public class ParameterTreeItem : MetadataTreeItem
     {
         public ParameterModel ParameterModel { get; set; }
 
