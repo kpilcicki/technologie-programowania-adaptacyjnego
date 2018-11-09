@@ -14,8 +14,7 @@ namespace CommandLineGUI
 
         private static MainViewModel GetViewModel()
         {
-            ILogger logger = new Logger();
-            return new MainViewModel(new ConsoleFilePathGetter(), logger);
+            return new MainViewModel(new ConsoleFilePathGetter(), new Logger(), new ConsoleUserInfo());
         }
     }
 }

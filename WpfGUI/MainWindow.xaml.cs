@@ -17,7 +17,7 @@ namespace WpfGUI
         private MainViewModel InitializeViewModel()
         {
             ILogger logger = new Logger();
-            return new MainViewModel(new FileDialog(), new Logger());
+            return new MainViewModel(new FileDialog(), new Logger(), new InfoDialog());
         }
     }
 }

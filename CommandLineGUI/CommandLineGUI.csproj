@@ -47,6 +47,7 @@
     <Compile Include="Base\DataContext.cs" />
     <Compile Include="Base\IDisplayable.cs" />
     <Compile Include="ConsoleFilePathGetter.cs" />
+    <Compile Include="ConsoleUserInfo.cs" />
     <Compile Include="MainView.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -2,12 +2,12 @@
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using BusinessLogic.API;
 using BusinessLogic.Base;
 using BusinessLogic.Model;
 using DataContract.API;
 using Reflection;
+using Reflection.Exceptions;
 
 namespace BusinessLogic.ViewModel
 {
@@ -15,6 +15,7 @@ namespace BusinessLogic.ViewModel
     {
         private readonly IFilePathGetter _filePathGetter;
         private readonly ILogger _logger;
+        private readonly IUserInfo _userInfo;
 
         private bool _isExecuting;
 
@@ -38,10 +39,11 @@ namespace BusinessLogic.ViewModel
             set => SetProperty(ref _filePath, value);
         }
 
-        public MainViewModel(IFilePathGetter filePathGetter, ILogger logger)
+        public MainViewModel(IFilePathGetter filePathGetter, ILogger logger, IUserInfo userInfo)
         {
             _logger = logger;
             _filePathGetter = filePathGetter;
+            _userInfo = userInfo;
             MetadataHierarchy = new ObservableCollection<TreeViewItem>();
             LoadMetadataCommand = new RelayCommand(Open, () => !_isExecuting);
         }
@@ -66,14 +68,27 @@ namespace BusinessLogic.ViewModel
                 try
                 {
                     _logger.Trace("Beginning reflection subroutine...");
-                    _reflector = new Reflector(Assembly.LoadFrom(FilePath));
+                    _reflector = new Reflector(FilePath);
                     _logger.Trace("Reflection subroutine finished successfully!");
                 }
-                catch (Exception)
+                catch (AssemblyBlockedException e)
                 {
-                    // ignored
+                    _userInfo.PromptUser("Unblock the selected assembly if you want to read its content!", "Expected Error");
+                    _logger.Trace($"AssemblyBlockedException thrown, message: {e.Message}");
+                }
+                catch (ReflectionException e)
+                {
+                    _userInfo.PromptUser($"Something unexpected happened.\nError message: {e.Message}", "Unexpected ERROR");
+                    _logger.Trace($"ReflectionException thrown, message: {e.Message}");
                 }
             }).ConfigureAwait(true);
+
+            if (_reflector == null)
+            {
+                _isExecuting = false;
+                LoadMetadataCommand.RaiseCanExecuteChanged();
+                return;
+            }
 
             MetadataHierarchy = new ObservableCollection<TreeViewItem>() { new AssemblyTreeItem(_reflector.AssemblyModel) };
             _logger.Trace("Successfully loaded root metadata item.");

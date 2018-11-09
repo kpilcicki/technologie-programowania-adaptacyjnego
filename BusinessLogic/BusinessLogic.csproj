@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\IUserInfo.cs" />
     <Compile Include="Base\IAsyncCommand.cs" />
     <Compile Include="Base\IControllableCommand.cs" />
     <Compile Include="Base\IErrorHandler.cs" />

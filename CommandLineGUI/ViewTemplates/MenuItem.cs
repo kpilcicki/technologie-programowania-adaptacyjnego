@@ -14,7 +14,13 @@ namespace CommandLineGUI.ViewTemplates
        
         public void Display()
         {
-            Console.WriteLine($"{Option} - {Header}");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Write($"{Option}");
+            Console.ResetColor();
+            Console.Write(" - ");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($"{Header}");
+            Console.ResetColor();
         }
 
     }

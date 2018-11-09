@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using BusinessLogic.Constants;
 using BusinessLogic.Model;
 using CommandLineGUI.Base;
 
@@ -34,9 +35,11 @@ namespace CommandLineGUI.ViewTemplates
             Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.Write(IsExpanded ? "(-) " : "(+) ");
             Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.Write($"<<{TreeItem.ItemType}>> ");
+            Console.Write($"{TypeToStringMap.GetStringFromType(TreeItem)} ");
             Console.ResetColor();
             Console.WriteLine(TreeItem.Name);
         }
+
+
     }
 }
