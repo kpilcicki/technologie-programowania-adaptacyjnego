@@ -3,7 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:WpfGUI"
+        xmlns:model="clr-namespace:BusinessLogic.Model;assembly=BusinessLogic"
+        mc:Ignorable="d"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -11,22 +13,73 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        xmlns:local="clr-namespace:WpfGUI"
-        xmlns:converters="clr-namespace:WpfGUI.Converters"
-        mc:Ignorable="d"
         Title="ReflectorApp" Height="450" Width="800">
     <Window.Resources>
-        <converters:ItemTypeToStringConverter x:Key="TypeConverter" />
+        <Style x:Key="InfoTextBlock" TargetType="TextBlock">
+            <Setter Property="FontStyle" Value="Italic" />
+            <Setter Property="FontWeight" Value="ExtraBlack" />
+            <Setter Property="Margin" Value="10 0 0 0" />
+        </Style>
+        <Style x:Key="NameTextBlock" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Margin" Value="10 0 0 0" />
+        </Style>
+        <HierarchicalDataTemplate DataType="{x:Type model:AssemblyTreeItem}" ItemsSource="{Binding Children}">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="Icons/AssemblyIcon.png" />
+                <TextBlock Style="{StaticResource InfoTextBlock}" Text="Assembly" />
+                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding Name}" />
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type model:MethodTreeItem}" ItemsSource="{Binding Children}">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="Icons/MethodIcon.png" />
+                <TextBlock Style="{StaticResource InfoTextBlock}" Text="Method" />
+                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding Name}" />
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type model:TypeTreeItem}" ItemsSource="{Binding Children}">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="Icons/ClassIcon.png" />
+                <TextBlock Style="{StaticResource InfoTextBlock}" Text="Type" />
+                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding Name}" />
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type model:ParameterTreeItem}" ItemsSource="{Binding Children}">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="Icons/ParameterIcon.png" />
+                <TextBlock Style="{StaticResource InfoTextBlock}" Text="Parameter" />
+                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding Name}" />
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type model:PropertyTreeItem}" ItemsSource="{Binding Children}">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="Icons/PropertyIcon.png" />
+                <TextBlock Style="{StaticResource InfoTextBlock}" Text="Property" />
+                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding Name}" />
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type model:NamespaceTreeItem}" ItemsSource="{Binding Children}">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="Icons/NamespaceIcon.png" />
+                <TextBlock Style="{StaticResource InfoTextBlock}" Text="Namespace" />
+                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding Name}" />
+            </StackPanel>
+        </HierarchicalDataTemplate>
     </Window.Resources>
+    
     <Grid Margin="20 20 20 20">
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="6*" />
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="9*" />
         </Grid.RowDefinitions>
+
         <StackPanel
             Grid.Row="0"
             Grid.Column="0"
@@ -34,12 +87,13 @@
             VerticalAlignment="Center"
             Margin="10 5 10 5">
 
-            <TextBlock FontSize="17" 
-                       FontWeight="DemiBold" 
-                       Text="FilePath:"/>
             <TextBlock FontSize="17"
+                       FontWeight="DemiBold"
+                       Text="FilePath:" />
+            <TextBlock FontSize="17"
+                       Margin="10 0 0 0"
                        HorizontalAlignment="Stretch"
-                       Text="{Binding FilePath}"/>
+                       Text="{Binding FilePath}" />
         </StackPanel>
 
         <Button Grid.Row="0"
@@ -54,16 +108,6 @@
                   Grid.ColumnSpan="2"
                   Margin="0 20 0 0"
                   ItemsSource="{Binding MetadataHierarchy}">
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Padding="0 0 10 0" FontWeight="ExtraBlack" FontStyle="Italic"
-                                   Text="{Binding Converter={StaticResource TypeConverter}}" />
-                        <TextBlock FontWeight="Medium" Text="{Binding Path=Name}" Margin="0 0 4 0" />
-                    </StackPanel>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
-
             <TreeView.ItemContainerStyle>
                 <Style TargetType="{x:Type TreeViewItem}">
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />

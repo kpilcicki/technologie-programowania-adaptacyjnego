@@ -1,7 +1,7 @@
 ﻿using BusinessLogic.API;
 using Microsoft.Win32;
 
-namespace WpfGUI
+namespace WpfGUI.Utilities
 {
     internal class FileDialog : IFilePathGetter
     {

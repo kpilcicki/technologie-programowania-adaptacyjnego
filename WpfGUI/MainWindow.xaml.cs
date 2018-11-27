@@ -2,6 +2,7 @@
 using BusinessLogic.ViewModel;
 using DataContract.API;
 using FileLogger;
+using WpfGUI.Utilities;
 
 namespace WpfGUI
 {

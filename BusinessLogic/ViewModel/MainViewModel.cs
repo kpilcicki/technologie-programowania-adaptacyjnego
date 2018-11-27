@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Reflection;
 using System.Threading.Tasks;
 using BusinessLogic.API;
 using BusinessLogic.Base;
@@ -66,7 +65,8 @@ namespace BusinessLogic.ViewModel
 
         private async void Open()
         {
-            lock (_syncLock) {
+            lock (_syncLock)
+            {
                 if (IsExecuting) return;
                 IsExecuting = true;
             }

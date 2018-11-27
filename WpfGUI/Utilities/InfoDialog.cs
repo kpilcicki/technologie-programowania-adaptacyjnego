@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using BusinessLogic.API;
 
-namespace WpfGUI
+namespace WpfGUI.Utilities
 {
     public class InfoDialog : IUserInfo
     {
