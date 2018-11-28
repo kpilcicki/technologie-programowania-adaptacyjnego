@@ -40,13 +40,17 @@ namespace CommandLineGUI
             Menu = new Menu();
             Menu.QuitKeywords.AddRange(new string[] {"q", "Q", "quit"});
 
-            MenuItem loadMetadataFromFile = new MenuItem() {Option = "1", Header = "Load metadata from .dll file"};
+            MenuItem loadMetadataFromFile = new MenuItem() {Option = "1", Header = "Load metadata from .dll or .xml file"};
             Menu.MenuItems.Add(loadMetadataFromFile);
             DataContext.SetBinding(loadMetadataFromFile, "Command", "LoadMetadataCommand");
 
+            MenuItem saveMetadata = new MenuItem() { Option = "2", Header = "Save metadata to .xml file" };
+            Menu.MenuItems.Add(saveMetadata);
+            DataContext.SetBinding(saveMetadata, "Command", "SaveMetadataCommand");
+
             Menu.MenuItems.Add(new MenuItem()
             {
-                Option = "2", Header = "Display metadata",
+                Option = "3", Header = "Display metadata",
                 Command = new RelayCommand(TreeViewConsole.Display, () => TreeViewConsole.ItemsSource.Any())
             });
         }

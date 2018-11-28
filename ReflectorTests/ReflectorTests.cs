@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DataContract.Model;
 using FluentAssertions;
@@ -103,6 +104,16 @@ namespace ReflectorTests
             List<TypeModel> classes = _assemblyModel.NamespaceModels
                 .Find(t => t.Name == NamespaceCircle).Types.Where(t => t.Name == "A").ToList();
             classes.First().Fields.Count.Should().Be(3);
+        }
+
+        [TestMethod]
+        public void When_ReflectorConstructorCalled_Expect_NoDuplicateReferences()
+        {
+            List<PropertyModel> properties = _assemblyModel.NamespaceModels
+                .Find(t => t.Name == NamespaceCircle).Types.Find(t => t.Name == "B").Properties.Where(prop => prop.Type.Name == "C").ToList();
+
+            properties.Count.Should().Be(2);
+            properties.First().Type.Should().Be(properties.Last().Type);
         }
     }
 }

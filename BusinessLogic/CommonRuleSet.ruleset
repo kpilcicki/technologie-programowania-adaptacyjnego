@@ -15,6 +15,7 @@
     <Rule Id="CA1707" Action="None" />
     <Rule Id="CA1801" Action="Error" />
     <Rule Id="CA1822" Action="None" />
+    <Rule Id="CA2007" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
     <Rule Id="CA1308" Action="None" />

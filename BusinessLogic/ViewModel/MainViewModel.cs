@@ -33,6 +33,8 @@ namespace BusinessLogic.ViewModel
 
         public IControllableCommand LoadMetadataCommand { get; }
 
+        public IControllableCommand SaveMetadataCommand { get; }
+
         private AssemblyModel _assemblyModel;
 
         public AssemblyModel AssemblyModel
@@ -80,10 +82,11 @@ namespace BusinessLogic.ViewModel
             _userInfo = userInfo ?? throw new ArgumentNullException(nameof(userInfo));
 
             MetadataHierarchy = new ObservableCollection<MetadataTreeItem>();
-            LoadMetadataCommand = new RelayCommand(Open, () => !IsBusy);
+            LoadMetadataCommand = new RelayCommand(async () => await Open(), () => !IsBusy);
+            SaveMetadataCommand = new RelayCommand(async () => await Save(), () => !IsBusy && AssemblyModel != null);
         }
 
-        private void Open()
+        private async Task Open()
         {
             try
             {
@@ -105,13 +108,13 @@ namespace BusinessLogic.ViewModel
                 if (filePath.EndsWith(".dll", StringComparison.InvariantCulture))
                 {
                     _logger.Trace($"Reading metadata from {filePath}; .dll");
-                    AssemblyModel = _reflector.ReflectDll(filePath);
+                    AssemblyModel = await Task.Run(() => _reflector.ReflectDll(filePath));
                     _logger.Trace($"Successfully read metadata from {filePath}; .dll");
                 }
                 else if (filePath.EndsWith(".xml", StringComparison.InvariantCulture))
                 {
                     _logger.Trace($"Reading metadata from {filePath}; .xml");
-                    AssemblyModel = _serializer.Deserialize<AssemblyModel>(filePath);
+                    AssemblyModel = await Task.Run(() => _serializer.Deserialize<AssemblyModel>(filePath));
                     _logger.Trace($"Successfully read metadata from {filePath}; .xml");
                 }
                 else
@@ -138,30 +141,37 @@ namespace BusinessLogic.ViewModel
             }
         }
 
-        private async void Save()
+        private async Task Save()
         {
-            await Task.Run(() =>
-            {
-                _logger.Trace($"Serializing metadata...");
+            IsBusy = true;
+            _logger.Trace($"Serializing metadata...");
 
-                try
+            try
+            {
+                string filePath = _filePathGetter.GetFilePath();
+                if (filePath != null && filePath.EndsWith(".xml", StringComparison.InvariantCulture))
                 {
-                    _serializer.Serialize(AssemblyModel, "data.xml");
+                    await Task.Run(() => _serializer.Serialize(AssemblyModel, filePath));
                     _logger.Trace($"Serialization of assembly: {AssemblyModel.Name} succeeded");
                     _userInfo.PromptUser("Saving succeeded", "Saving operation");
                 }
-                catch (Exception ex)
+                else
                 {
-                    _logger.Trace($"Serialization of assembly: {AssemblyModel.Name} succeeded");
-                    _userInfo.PromptUser(ex.Message, "Serialization failed");
-                    _logger.Trace(
-                        $"Serialization of assembly: {AssemblyModel.Name} failed: exception thrown: {ex.Message}");
+                    _logger.Trace($"Provided file is not .xml file");
+                    _userInfo.PromptUser("Provided file is not .xml file", "Saving operation failure");
                 }
-                finally
-                {
-                    IsBusy = false;
-                }
-            }).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.Trace($"Serialization of assembly: {AssemblyModel.Name} succeeded");
+                _userInfo.PromptUser(ex.Message, "Serialization failed");
+                _logger.Trace(
+                    $"Serialization of assembly: {AssemblyModel.Name} failed: exception thrown: {ex.Message}");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 }
