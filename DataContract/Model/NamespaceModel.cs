@@ -11,10 +11,5 @@ namespace DataContract.Model
 
         [DataMember]
         public List<TypeModel> Types { get; set; }
-
-        public NamespaceModel(string namespaceName)
-        {
-            Name = namespaceName;
-        }
     }
 }

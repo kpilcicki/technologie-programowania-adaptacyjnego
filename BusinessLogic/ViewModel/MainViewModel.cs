@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Threading.Tasks;
-using BusinessLogic.API;
 using BusinessLogic.Base;
 using BusinessLogic.Model;
-using DataContract.API;
 using DataContract.Model;
-using Reflection;
 using Reflection.Exceptions;
+using ServiceContract.Services;
 
 namespace BusinessLogic.ViewModel
 {
@@ -17,30 +16,37 @@ namespace BusinessLogic.ViewModel
         private readonly ILogger _logger;
         private readonly IUserInfo _userInfo;
         private readonly ISerializer _serializer;
+        private readonly IReflector _reflector;
 
-        private readonly object _syncLock = new object();
+        private bool _isBusy;
 
-        private bool _isExecuting;
-
-        public bool IsExecuting
+        public bool IsBusy
         {
-            get
-            {
-                return _isExecuting;
-            }
+            get => _isBusy;
 
             private set
             {
-                _isExecuting = value;
+                _isBusy = value;
                 LoadMetadataCommand.RaiseCanExecuteChanged();
             }
         }
 
         public IControllableCommand LoadMetadataCommand { get; }
 
-        public IControllableCommand SaveMetadataCommand { get;  }
+        private AssemblyModel _assemblyModel;
 
-        private Reflector _reflector;
+        public AssemblyModel AssemblyModel
+        {
+            get => _assemblyModel;
+            private set
+            {
+                _assemblyModel = value;
+                MetadataHierarchy = new ObservableCollection<MetadataTreeItem>()
+                {
+                    new AssemblyTreeItem(_assemblyModel)
+                };
+            }
+        }
 
         private ObservableCollection<MetadataTreeItem> _metadataHierarchy;
 
@@ -58,114 +64,104 @@ namespace BusinessLogic.ViewModel
             set => SetProperty(ref _filePath, value);
         }
 
-        private string _saveFilePath;
-
-        public string SaveFilePath
-        {
-            get => _saveFilePath;
-            set => SetProperty(ref _saveFilePath, value);
-        }
-
         public MainViewModel(
+            IReflector reflector,
             IUserInfo userInfo,
             IFilePathGetter filePathGetter,
             ISerializer serializer,
-            ILogger logger
-            )
+            ILogger logger)
         {
             _logger = logger;
-            _filePathGetter = filePathGetter;
-            _userInfo = userInfo;
-            _serializer = serializer;
+
+            _reflector = reflector ?? throw new ArgumentNullException(nameof(reflector));
+            _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
+
+            _filePathGetter = filePathGetter ?? throw new ArgumentNullException(nameof(filePathGetter));
+            _userInfo = userInfo ?? throw new ArgumentNullException(nameof(userInfo));
+
             MetadataHierarchy = new ObservableCollection<MetadataTreeItem>();
-            LoadMetadataCommand = new RelayCommand(Open, () => !_isExecuting);
-            SaveMetadataCommand = new RelayCommand(Save, () => !_isExecuting);
+            LoadMetadataCommand = new RelayCommand(Open, () => !IsBusy);
         }
 
-        private async void Open()
+        private void Open()
         {
-            lock (_syncLock)
+            try
             {
-                if (IsExecuting) return;
-                IsExecuting = true;
-            }
+                IsBusy = true;
 
-            _logger.Trace($"Reading file path...");
-            string filePath = _filePathGetter.GetFilePath();
-            if (string.IsNullOrEmpty(filePath) || (!filePath.EndsWith(".dll", StringComparison.InvariantCulture) && !filePath.EndsWith(".xml", StringComparison.InvariantCulture)))
-            {
-                _userInfo.PromptUser("Selected file was invalid!", "File Error");
-                _logger.Trace($"Selected file was invalid!");
-                IsExecuting = false;
-                return;
-            }
+                _logger.Trace($"Reading file path...");
 
-            _logger.Trace($"Read file path: {filePath}");
-            FilePath = filePath;
+                string filePath = _filePathGetter.GetFilePath();
 
-            await Task.Run(() =>
-            {
-                try
+                if (string.IsNullOrEmpty(filePath))
                 {
-                    if (filePath.EndsWith(".dll", StringComparison.InvariantCulture))
-                    {
-                        _logger.Trace("Beginning reflection subroutine...");
-                        _reflector = new Reflector(FilePath);
-                        _logger.Trace("Reflection subroutine finished successfully!");
-                    }
-                    else if (filePath.EndsWith(".xml", StringComparison.InvariantCulture))
-                    {
-                        AssemblyModel model = _serializer.Deserialize<AssemblyModel>(filePath);
-                        _reflector.AssemblyModel = model;
-                    }
+                    _userInfo.PromptUser("Provided filepath was empty", "Filepath Error");
+                    _logger.Trace($"Provided filepath was null or empty");
+                    return;
                 }
-                catch (AssemblyBlockedException e)
-                {
-                    _userInfo.PromptUser("Unblock the selected assembly if you want to read its content!", "Expected Error");
-                    _logger.Trace($"AssemblyBlockedException thrown, message: {e.Message}");
-                }
-                catch (ReflectionException e)
-                {
-                    _userInfo.PromptUser($"Something unexpected happened.\nError message: {e.Message}", "Unexpected ERROR");
-                    _logger.Trace($"ReflectionException thrown, message: {e.Message}");
-                }
-            }).ConfigureAwait(true);
 
-            if (_reflector == null)
-            {
-                IsExecuting = false;
-                return;
+                FilePath = filePath;
+
+                if (filePath.EndsWith(".dll", StringComparison.InvariantCulture))
+                {
+                    _logger.Trace($"Reading metadata from {filePath}; .dll");
+                    AssemblyModel = _reflector.ReflectDll(filePath);
+                    _logger.Trace($"Successfully read metadata from {filePath}; .dll");
+                }
+                else if (filePath.EndsWith(".xml", StringComparison.InvariantCulture))
+                {
+                    _logger.Trace($"Reading metadata from {filePath}; .xml");
+                    AssemblyModel = _serializer.Deserialize<AssemblyModel>(filePath);
+                    _logger.Trace($"Successfully read metadata from {filePath}; .xml");
+                }
+                else
+                {
+                    _userInfo.PromptUser(
+                        "Provided file has unknown extension. Program accepts files only with .dll and .xml extensions",
+                        "File Error");
+                    _logger.Trace($"Provided file has unknown extension {Path.GetExtension(filePath)}");
+                }
             }
-
-            MetadataHierarchy = new ObservableCollection<MetadataTreeItem>() { new AssemblyTreeItem(_reflector.AssemblyModel) };
-            _logger.Trace("Successfully loaded root metadata item.");
-            IsExecuting = false;
+            catch (AssemblyBlockedException e)
+            {
+                _userInfo.PromptUser("Unblock the selected assembly if you want to read its content!", "Expected Error");
+                _logger.Trace($"AssemblyBlockedException thrown, message: {e.Message}");
+            }
+            catch (ReflectionException e)
+            {
+                _userInfo.PromptUser($"Something unexpected happened.\nError message: {e.Message}", "Unexpected Error");
+                _logger.Trace($"ReflectionException thrown, message: {e.Message}");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         private async void Save()
         {
-            lock (_syncLock)
-            {
-                if (IsExecuting) return;
-                IsExecuting = true;
-            }
-
-            _logger.Trace($"Serializing metadata...");
-
             await Task.Run(() =>
             {
+                _logger.Trace($"Serializing metadata...");
+
                 try
                 {
-                    _serializer.Serialize(_reflector.AssemblyModel, SaveFilePath);
-                    _userInfo.PromptUser("Serialization suceeded", "Serialization suceeded");
+                    _serializer.Serialize(AssemblyModel, "data.xml");
+                    _logger.Trace($"Serialization of assembly: {AssemblyModel.Name} succeeded");
+                    _userInfo.PromptUser("Saving succeeded", "Saving operation");
                 }
                 catch (Exception ex)
                 {
+                    _logger.Trace($"Serialization of assembly: {AssemblyModel.Name} succeeded");
                     _userInfo.PromptUser(ex.Message, "Serialization failed");
+                    _logger.Trace(
+                        $"Serialization of assembly: {AssemblyModel.Name} failed: exception thrown: {ex.Message}");
                 }
-            }).ConfigureAwait(true);
-
-            IsExecuting = false;
+                finally
+                {
+                    IsBusy = false;
+                }
+            }).ConfigureAwait(false);
         }
     }
 }

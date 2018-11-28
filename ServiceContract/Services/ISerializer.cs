@@ -1,4 +1,4 @@
-﻿namespace DataContract.API
+﻿namespace ServiceContract.Services
 {
     public interface ISerializer
     {

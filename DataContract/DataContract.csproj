@@ -49,8 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\ILogger.cs" />
-    <Compile Include="API\ISerializer.cs" />
     <Compile Include="Enums\AccessLevel.cs" />
     <Compile Include="Enums\TypeKind.cs" />
     <Compile Include="Model\AssemblyModel.cs" />

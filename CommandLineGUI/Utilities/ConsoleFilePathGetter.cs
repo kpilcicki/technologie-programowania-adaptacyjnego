@@ -1,5 +1,5 @@
 ﻿using System;
-using BusinessLogic.API;
+using ServiceContract.Services;
 
 namespace CommandLineGUI.Utilities
 {
@@ -7,7 +7,7 @@ namespace CommandLineGUI.Utilities
     {
         public string GetFilePath()
         {
-            Console.WriteLine("Provide absolute path for .dll file");
+            Console.WriteLine("Provide absolute path for file");
             string filePath = Console.ReadLine();
             return filePath;
         }

@@ -2,6 +2,7 @@
 using CommandLineGUI.Utilities;
 using FileLogger;
 using FileSerializer;
+using Reflection;
 
 namespace CommandLineGUI
 {
@@ -16,9 +17,10 @@ namespace CommandLineGUI
         private static MainViewModel GetViewModel()
         {
             return new MainViewModel(
+                new Reflector(),
                 new ConsoleUserInfo(),
-                new ConsoleFilePathGetter(), 
-                new XmlSerializer(), 
+                new ConsoleFilePathGetter(),
+                new XmlSerializer(),
                 new Logger());
         }
     }

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
-using DataContract.API;
+using ServiceContract.Services;
 
 namespace FileSerializer
 {

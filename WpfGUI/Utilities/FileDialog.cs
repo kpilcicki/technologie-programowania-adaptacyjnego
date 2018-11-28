@@ -1,5 +1,5 @@
-﻿using BusinessLogic.API;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
+using ServiceContract.Services;
 
 namespace WpfGUI.Utilities
 {

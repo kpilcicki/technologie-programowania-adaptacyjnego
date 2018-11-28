@@ -4,7 +4,7 @@ namespace BusinessLogic.Model
 {
     public class PropertyTreeItem : MetadataTreeItem
     {
-        public PropertyModel PropertyModel { get; set; }
+        public PropertyModel PropertyModel { get; }
 
         public PropertyTreeItem(PropertyModel type)
         {

@@ -4,26 +4,24 @@ namespace BusinessLogic.Model
 {
     public class NamespaceTreeItem : MetadataTreeItem
     {
-        private readonly NamespaceModel _namespaceModel;
+        public NamespaceModel NamespaceModel { get; }
 
         public NamespaceTreeItem(NamespaceModel namespaceModel)
         {
-            _namespaceModel = namespaceModel;
+            NamespaceModel = namespaceModel;
         }
 
         public override string ToString()
         {
-            return _namespaceModel.Name;
+            return NamespaceModel.Name;
         }
 
         protected override void BuildTreeView()
         {
-            if (_namespaceModel?.Types != null)
+            if (NamespaceModel?.Types == null) return;
+            foreach (TypeModel typeModel in NamespaceModel?.Types)
             {
-                foreach (TypeModel typeModel in _namespaceModel?.Types)
-                {
-                    Children.Add(new TypeTreeItem(typeModel));
-                }
+                Children.Add(new TypeTreeItem(typeModel));
             }
         }
     }

@@ -144,6 +144,10 @@
       <Project>{0F44BF6A-2A53-4607-B0F6-FDDA2EAAFFDB}</Project>
       <Name>Reflection</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ServiceContract\ServiceContract.csproj">
+      <Project>{B52E62F5-1427-4E96-9FAD-F0F6099FA54A}</Project>
+      <Name>ServiceContract</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\ParameterIcon.png" />

@@ -33,10 +33,5 @@ namespace DataContract.Model
 
         [DataMember(EmitDefaultValue = false)]
         public List<ParameterModel> Parameters { get; set; }
-
-        public MethodModel(string name)
-        {
-            Name = name;
-        }
     }
 }

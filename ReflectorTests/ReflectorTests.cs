@@ -14,25 +14,26 @@ namespace ReflectorTests
         public const string BasicNamespace = "ExampleLib";
         private const string NamespaceCircle = "ExampleLib.Circle";
         private const string NamespaceTitleplane = "ExampleLib.Titleplane";
-        private Reflector _reflector;
+        private AssemblyModel _assemblyModel;
 
         [TestInitialize]
         public void SetUp()
         {
-            _reflector = new Reflector(DllFilePath);
+            Reflector reflector = new Reflector();
+            _assemblyModel = reflector.ReflectDll(DllFilePath);
         }
 
         [TestMethod]
         public void When_ReflectorConstructorCalled_Expect_CorrectNumberOfNamespaces()
         {
-            _reflector.AssemblyModel.NamespaceModels.Count.Should().Be(3);
+            _assemblyModel.NamespaceModels.Count.Should().Be(3);
         }
 
         [TestMethod]
         public void When_ReflectorConstructorCalled_Expect_CorrectNumberOfTypes()
         {
-            List<TypeModel> firstNamespace = _reflector.AssemblyModel.NamespaceModels.Find(t => t.Name == NamespaceCircle).Types;
-            List<TypeModel> secondNamespace = _reflector.AssemblyModel.NamespaceModels.Find(t => t.Name == NamespaceTitleplane).Types;
+            List<TypeModel> firstNamespace = _assemblyModel.NamespaceModels.Find(t => t.Name == NamespaceCircle).Types;
+            List<TypeModel> secondNamespace = _assemblyModel.NamespaceModels.Find(t => t.Name == NamespaceTitleplane).Types;
             firstNamespace.Count.Should().Be(3);
             secondNamespace.Count.Should().Be(3);
         }
@@ -40,7 +41,7 @@ namespace ReflectorTests
         [TestMethod]
         public void When_ReflectorConstructorCalled_Expect_CorrectNumberOfStaticClasses()
         {
-            List<TypeModel> staticClasses = _reflector.AssemblyModel.NamespaceModels
+            List<TypeModel> staticClasses = _assemblyModel.NamespaceModels
                 .Find(t => t.Name == BasicNamespace).Types
                 .Where(t => t.IsStatic).ToList();
            staticClasses.Count.Should().Be(1);
@@ -49,7 +50,7 @@ namespace ReflectorTests
         [TestMethod]
         public void When_ReflectorConstructorCalled_Expect_CorrectNumberOfAbstractClasses()
         {
-            List<TypeModel> abstractClasses = _reflector.AssemblyModel.NamespaceModels
+            List<TypeModel> abstractClasses = _assemblyModel.NamespaceModels
                 .Find(t => t.Name == NamespaceTitleplane).Types
                 .Where(t => t.IsAbstract).ToList();
              abstractClasses.Count.Should().Be(1);
@@ -58,7 +59,7 @@ namespace ReflectorTests
         [TestMethod]
         public void When_ReflectorConstructorCalled_Expect_CorrectNumberOfGenericArguments()
         {
-            List<TypeModel> genericClasses = _reflector.AssemblyModel.NamespaceModels
+            List<TypeModel> genericClasses = _assemblyModel.NamespaceModels
                 .Find(t => t.Name == NamespaceTitleplane).Types.Where(t => t.GenericArguments?.Count != 0)
                 .ToList();
             genericClasses.Count.Should().Be(1);
@@ -67,7 +68,7 @@ namespace ReflectorTests
         [TestMethod]
         public void When_ReflectorConstructorCalled_Expect_CorrectNumberOfClassesWithBaseType()
         {
-            List<TypeModel> classesWithBaseType = _reflector.AssemblyModel.NamespaceModels
+            List<TypeModel> classesWithBaseType = _assemblyModel.NamespaceModels
                 .Find(t => t.Name == NamespaceTitleplane).Types.Where(t => t.BaseType != null).ToList();
             classesWithBaseType.Count.Should().Be(1);
         }
@@ -75,7 +76,7 @@ namespace ReflectorTests
         [TestMethod]
         public void When_ReflectorConstructorCalled_Expect_CorrectNumberOfPropertiesInClass()
         {
-            List<TypeModel> classes = _reflector.AssemblyModel.NamespaceModels
+            List<TypeModel> classes = _assemblyModel.NamespaceModels
                 .Find(t => t.Name == NamespaceCircle).Types.Where(t => t.Name == "B").ToList();
             classes.First().Properties.Count.Should().Be(2);
         }
@@ -83,7 +84,7 @@ namespace ReflectorTests
         [TestMethod]
         public void When_ReflectorConstructorCalled_Expect_CorrectNumberOfMethodsInClass()
         {
-            List<TypeModel> classes = _reflector.AssemblyModel.NamespaceModels
+            List<TypeModel> classes = _assemblyModel.NamespaceModels
                 .Find(t => t.Name == NamespaceTitleplane).Types.Where(t => t.Name == "Picture").ToList();
             classes.First().Methods.Count.Should().Be(2);
         }
@@ -91,7 +92,7 @@ namespace ReflectorTests
         [TestMethod]
         public void When_ReflectorConstructorCalled_Expect_CorrectNumberOfConstructorsInClass()
         {
-            List<TypeModel> classes = _reflector.AssemblyModel.NamespaceModels
+            List<TypeModel> classes = _assemblyModel.NamespaceModels
                 .Find(t => t.Name == NamespaceCircle).Types.Where(t => t.Name == "B").ToList();
             classes.First().Constructors.Count.Should().Be(2);
         }
@@ -99,7 +100,7 @@ namespace ReflectorTests
         [TestMethod]
         public void When_ReflectorConstructorCalled_Expect_CorrectNumberOfFieldsInClass()
         {
-            List<TypeModel> classes = _reflector.AssemblyModel.NamespaceModels
+            List<TypeModel> classes = _assemblyModel.NamespaceModels
                 .Find(t => t.Name == NamespaceCircle).Types.Where(t => t.Name == "A").ToList();
             classes.First().Fields.Count.Should().Be(3);
         }

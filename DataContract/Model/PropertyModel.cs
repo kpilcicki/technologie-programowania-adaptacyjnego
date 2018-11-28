@@ -10,11 +10,5 @@ namespace DataContract.Model
 
         [DataMember]
         public TypeModel Type { get; set; }
-
-        public PropertyModel(string name, TypeModel propertyType)
-        {
-            Name = name;
-            Type = propertyType;
-        }
     }
 }

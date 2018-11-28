@@ -7,25 +7,26 @@ using DataContract.Model;
 using Reflection.Exceptions;
 using Reflection.Extensions;
 using Reflection.Helpers;
+using ServiceContract.Services;
 using static Reflection.Helpers.TypeLoaderHelpers;
 
 namespace Reflection
 {
-    public class Reflector
+    public class Reflector : IReflector
     {
-        public AssemblyModel AssemblyModel { get; set; }
+        private string _currentAssemblyName = string.Empty;
 
-        public Reflector(string assemblyPath)
+        public AssemblyModel ReflectDll(string dllFilePath)
         {
             try
             {
-                if (string.IsNullOrEmpty(assemblyPath))
-                    throw new System.ArgumentNullException();
-                Assembly assembly = Assembly.LoadFrom(assemblyPath);
+                if (string.IsNullOrEmpty(dllFilePath))
+                    throw new ArgumentNullException(nameof(dllFilePath));
 
-                DictionaryTypeSingleton.Instance.Clear();
+                Assembly assembly = Assembly.LoadFrom(dllFilePath);
+                AssemblyModel assemblyModel = LoadAssembly(assembly);
 
-                AssemblyModel = LoadAssembly(assembly);
+                return assemblyModel;
             }
             catch (FileLoadException e)
             {
@@ -35,26 +36,33 @@ namespace Reflection
             {
                 throw new ReflectionException(e.Message);
             }
-        }
-
-        public AssemblyModel LoadAssembly(Assembly assembly)
-        {
-            AssemblyModel assemblyModule = new AssemblyModel(assembly.ManifestModule.Name);
-            AssemblyModel = assemblyModule;
-            assemblyModule.NamespaceModels = assembly.GetTypes()
-                .Where(t => t.IsVisible)
-                .GroupBy(t => t.Namespace)
-                .OrderBy(grouping => grouping.Key)
-                .Select(t => LoadNamespace(t.Key, t.ToList()))
-                .ToList();
-
-            return assemblyModule;
-        }
-
-        public NamespaceModel LoadNamespace(string namespaceName, List<Type> typesInNamespace)
-        {
-            return new NamespaceModel(namespaceName)
+            finally
             {
+                DictionaryTypeSingleton.Instance.Clear();
+                _currentAssemblyName = string.Empty;
+            }
+        }
+
+        private AssemblyModel LoadAssembly(Assembly assembly)
+        {
+            _currentAssemblyName = assembly.ManifestModule.Name;
+            return new AssemblyModel()
+            {
+                Name = _currentAssemblyName,
+                NamespaceModels = assembly.GetTypes()
+                    .Where(t => t.IsVisible)
+                    .GroupBy(t => t.Namespace)
+                    .OrderBy(grouping => grouping.Key)
+                    .Select(t => LoadNamespace(t.Key, t.ToList()))
+                    .ToList()
+            };
+        }
+
+        private NamespaceModel LoadNamespace(string namespaceName, List<Type> typesInNamespace)
+        {
+            return new NamespaceModel()
+            {
+                Name = namespaceName,
                 Types = typesInNamespace
                     .OrderBy(t => t.Name)
                     .Select(LoadType)
@@ -62,9 +70,10 @@ namespace Reflection
             };
         }
 
-        public TypeModel LoadType(Type type)
+        private TypeModel LoadType(Type type)
         {
             if (type == null) return null;
+
             DictionaryTypeSingleton dict = DictionaryTypeSingleton.Instance;
             if (dict.ContainsKey(type.Name))
             {
@@ -72,14 +81,7 @@ namespace Reflection
             }
             else
             {
-                if (type.Assembly.ManifestModule.Name != AssemblyModel.Name)
-                {
-                    TypeModel typeModel = new TypeModel(type.Name, type.GetNamespace());
-                    dict.RegisterType(type.Name, typeModel);
-                    return typeModel;
-                }
-
-                return CreateType(type);
+                return type.Assembly.ManifestModule.Name != _currentAssemblyName ? CreateOutsideType(type) : CreateType(type);
             }
         }
 
@@ -87,9 +89,11 @@ namespace Reflection
         {
             DictionaryTypeSingleton dict = DictionaryTypeSingleton.Instance;
 
-            TypeModel typeModel = new TypeModel(type.Name, type.GetNamespace());
+            TypeModel typeModel = new TypeModel();
             dict.RegisterType(type.Name, typeModel);
 
+            typeModel.Name = type.Name;
+            typeModel.NamespaceName = type.GetNamespace();
             typeModel.Type = GetTypeKind(type);
             typeModel.IsStatic = type.IsSealed && type.IsAbstract;
             typeModel.IsAbstract = type.IsAbstract;
@@ -98,57 +102,105 @@ namespace Reflection
             typeModel.BaseType = LoadType(GetBaseType(type));
             typeModel.DeclaringType = LoadType(GetDeclaringType(type));
 
-            typeModel.NestedTypes = GetNestedTypes(type).Select(LoadType).ToList();
-            typeModel.GenericArguments = GetGenericArguments(type).Select(LoadType).ToList();
-            typeModel.ImplementedInterfaces = GetImplementedInterfaces(type).Select(LoadType).ToList();
+            typeModel.NestedTypes = GetNestedTypes(type)
+                .Select(LoadType)
+                .ToList();
 
+            typeModel.GenericArguments = GetGenericArguments(type)
+                .Select(LoadType)
+                .ToList();
 
-            typeModel.Properties = GetProperties(type).Select(LoadProperty).ToList();
-            typeModel.Fields = GetFields(type).Select(LoadField).ToList();
+            typeModel.ImplementedInterfaces = GetImplementedInterfaces(type)
+                .Select(LoadType)
+                .ToList();
+
+            typeModel.Properties = GetProperties(type)
+                .Select(LoadProperty)
+                .ToList();
+
+            typeModel.Fields = GetFields(type)
+                .Select(LoadField)
+                .ToList();
+
             IEnumerable<MethodBase> methods = GetConstructors(type);
-            typeModel.Constructors = methods.Select(LoadMethod).ToList();
-            typeModel.Methods = GetMethods(type).Select(LoadMethod).ToList();
+            typeModel.Constructors = methods
+                .Select(LoadMethod)
+                .ToList();
+
+            IEnumerable<MethodBase> methods2 = GetMethods(type);
+
+            typeModel.Methods = methods2
+                .Select(LoadMethod)
+                .ToList();
+
+            return typeModel;
+        }
+
+        private TypeModel CreateOutsideType(Type type)
+        {
+            DictionaryTypeSingleton dict = DictionaryTypeSingleton.Instance;
+
+            TypeModel typeModel = new TypeModel();
+            dict.RegisterType(type.Name, typeModel);
+
+            typeModel.Name = type.Name;
+            typeModel.NamespaceName = type.GetNamespace();
+            typeModel.Type = GetTypeKind(type);
+            typeModel.IsStatic = type.IsSealed && type.IsAbstract;
+            typeModel.IsAbstract = type.IsAbstract;
+            typeModel.IsSealed = type.IsSealed;
 
             return typeModel;
         }
 
         private MethodModel LoadMethod(MethodBase method)
         {
-            return new MethodModel(method.Name)
+            return new MethodModel()
             {
+                Name = method.Name,
                 Accessibility = MethodLoaderHelpers.GetAccessibility(method),
-                GenericArguments = MethodLoaderHelpers.GetGenericArguments(method).Select(LoadType).ToList(),
                 IsAbstract = method.IsAbstract,
                 IsExtensionMethod = MethodLoaderHelpers.IsExtensionMethod(method),
                 IsStatic = method.IsStatic,
                 IsVirtual = method.IsVirtual,
-                Parameters = MethodLoaderHelpers.GetParameters(method).Select(LoadParameter).ToList(),
-                ReturnType = LoadType(MethodLoaderHelpers.GetReturnType(method))
+                ReturnType = LoadType(MethodLoaderHelpers.GetReturnType(method)),
+
+                GenericArguments = MethodLoaderHelpers.GetGenericArguments(method)
+                    .Select(LoadType)
+                    .ToList(),
+
+                Parameters = MethodLoaderHelpers
+                    .GetParameters(method)
+                    .Select(LoadParameter)
+                    .ToList()
             };
         }
 
         private FieldModel LoadField(FieldInfo field)
         {
-            return new FieldModel(
-                field.Name,
-                LoadType(field.FieldType)
-            );
+            return new FieldModel()
+            {
+                Name = field.Name,
+                Type = LoadType(field.FieldType)
+            };
         }
 
         private PropertyModel LoadProperty(PropertyInfo property)
         {
-            return new PropertyModel(
-                property.Name,
-                LoadType(property.PropertyType)
-            );
+            return new PropertyModel()
+            {
+                Name = property.Name,
+                Type = LoadType(property.PropertyType)
+            };
         }
 
         private ParameterModel LoadParameter(ParameterInfo parameter)
         {
-            return new ParameterModel(
-                parameter.Name,
-                LoadType(parameter.ParameterType)
-            );
+            return new ParameterModel()
+            {
+                Name = parameter.Name,
+                Type = LoadType(parameter.ParameterType)
+            };
         }
     }
 }

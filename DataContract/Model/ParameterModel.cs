@@ -10,11 +10,5 @@ namespace DataContract.Model
 
         [DataMember]
         public TypeModel Type { get; set; }
-
-        public ParameterModel(string name, TypeModel typeModel)
-        {
-            Name = name;
-            Type = typeModel;
-        }
     }
 }

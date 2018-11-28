@@ -5,7 +5,7 @@ namespace BusinessLogic.Model
 {
     public class MethodTreeItem : MetadataTreeItem
     {
-        public MethodModel MethodModel { get; set; }
+        public MethodModel MethodModel { get; }
 
         public MethodTreeItem(MethodModel methodModel)
         {

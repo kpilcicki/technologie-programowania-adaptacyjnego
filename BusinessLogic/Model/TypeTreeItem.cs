@@ -6,90 +6,90 @@ namespace BusinessLogic.Model
 {
     public class TypeTreeItem : MetadataTreeItem
     {
-        private readonly TypeModel _typeModel;
+        public TypeModel TypeModel { get; }
 
         public TypeTreeItem(TypeModel typeModel)
         {
-            _typeModel = typeModel;
+            TypeModel = typeModel;
         }
 
         public override string ToString()
         {
-            if (_typeModel == null) return string.Empty;
+            if (TypeModel == null) return string.Empty;
 
             StringBuilder sb = new StringBuilder();
-            sb.Append($"{_typeModel.Accessibility.ToString().ToLowerInvariant()} ");
-            sb.Append(_typeModel.IsSealed ? $"sealed " : string.Empty);
-            sb.Append(_typeModel.IsAbstract ? $"abstract " : string.Empty);
-            sb.Append(_typeModel.IsStatic ? $"static " : string.Empty);
-            sb.Append($"{_typeModel.Type.ToString().ToLower(CultureInfo.InvariantCulture)} ");
-            sb.Append(_typeModel.Name);
+            sb.Append($"{TypeModel.Accessibility.ToString().ToLowerInvariant()} ");
+            sb.Append(TypeModel.IsSealed ? $"sealed " : string.Empty);
+            sb.Append(TypeModel.IsAbstract ? $"abstract " : string.Empty);
+            sb.Append(TypeModel.IsStatic ? $"static " : string.Empty);
+            sb.Append($"{TypeModel.Type.ToString().ToLower(CultureInfo.InvariantCulture)} ");
+            sb.Append(TypeModel.Name);
             return sb.ToString();
         }
 
         protected override void BuildTreeView()
         {
-            if (_typeModel.BaseType != null)
+            if (TypeModel.BaseType != null)
             {
-                Children.Add(new TypeTreeItem(_typeModel.BaseType));
+                Children.Add(new TypeTreeItem(TypeModel.BaseType));
             }
 
-            if (_typeModel.DeclaringType != null)
+            if (TypeModel.DeclaringType != null)
             {
-                Children.Add(new TypeTreeItem(_typeModel.DeclaringType));
+                Children.Add(new TypeTreeItem(TypeModel.DeclaringType));
             }
 
-            if (_typeModel.Properties != null)
+            if (TypeModel.Properties != null)
             {
-                foreach (PropertyModel propertyModel in _typeModel.Properties)
+                foreach (PropertyModel propertyModel in TypeModel.Properties)
                 {
                     Children.Add(new PropertyTreeItem(propertyModel));
                 }
             }
 
-            if (_typeModel.Fields != null)
+            if (TypeModel.Fields != null)
             {
-                foreach (FieldModel fieldModel in _typeModel.Fields)
+                foreach (FieldModel fieldModel in TypeModel.Fields)
                 {
                     Children.Add(new FieldTreeItem(fieldModel));
                 }
             }
 
-            if (_typeModel.GenericArguments != null)
+            if (TypeModel.GenericArguments != null)
             {
-                foreach (TypeModel typeModel in _typeModel.GenericArguments)
+                foreach (TypeModel typeModel in TypeModel.GenericArguments)
                 {
                     Children.Add(new TypeTreeItem(typeModel));
                 }
             }
 
-            if (_typeModel.ImplementedInterfaces != null)
+            if (TypeModel.ImplementedInterfaces != null)
             {
-                foreach (TypeModel typeModel in _typeModel.ImplementedInterfaces)
+                foreach (TypeModel typeModel in TypeModel.ImplementedInterfaces)
                 {
                     Children.Add(new TypeTreeItem(typeModel));
                 }
             }
 
-            if (_typeModel.NestedTypes != null)
+            if (TypeModel.NestedTypes != null)
             {
-                foreach (TypeModel typeModel in _typeModel.NestedTypes)
+                foreach (TypeModel typeModel in TypeModel.NestedTypes)
                 {
                     Children.Add(new TypeTreeItem(typeModel));
                 }
             }
 
-            if (_typeModel.Methods != null)
+            if (TypeModel.Methods != null)
             {
-                foreach (MethodModel methodModel in _typeModel.Methods)
+                foreach (MethodModel methodModel in TypeModel.Methods)
                 {
                     Children.Add(new MethodTreeItem(methodModel));
                 }
             }
 
-            if (_typeModel.Constructors != null)
+            if (TypeModel.Constructors != null)
             {
-                foreach (MethodModel methodModel in _typeModel.Constructors)
+                foreach (MethodModel methodModel in TypeModel.Constructors)
                 {
                     Children.Add(new MethodTreeItem(methodModel));
                 }

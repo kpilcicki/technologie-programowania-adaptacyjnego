@@ -54,11 +54,5 @@ namespace DataContract.Model
 
         [DataMember(EmitDefaultValue = false)]
         public List<FieldModel> Fields { get; set; }
-
-        public TypeModel(string typeName, string namespaceName)
-        {
-            Name = typeName;
-            NamespaceName = namespaceName;
-        }
     }
 }

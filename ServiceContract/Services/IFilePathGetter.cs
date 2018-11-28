@@ -1,4 +1,4 @@
-﻿namespace BusinessLogic.API
+﻿namespace ServiceContract.Services
 {
     public interface IFilePathGetter
     {

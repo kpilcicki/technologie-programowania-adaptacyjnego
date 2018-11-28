@@ -11,7 +11,7 @@ namespace Reflection.Helpers
     {
         public static IEnumerable<Type> GetGenericArguments(MethodBase method)
         {
-            if (!method.ContainsGenericParameters)
+            if (!method.IsGenericMethodDefinition)
                 return Enumerable.Empty<Type>();
             return method
                 .GetGenericArguments();

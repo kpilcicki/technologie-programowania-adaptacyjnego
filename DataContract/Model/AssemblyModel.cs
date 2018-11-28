@@ -11,10 +11,5 @@ namespace DataContract.Model
 
         [DataMember]
         public List<NamespaceModel> NamespaceModels { get; set; }
-
-        public AssemblyModel(string name)
-        {
-            Name = name;
-        }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using BusinessLogic.Model;
 
-namespace BusinessLogic.Constants
+namespace CommandLineGUI.Constants
 {
     public static class TypeToStringMap
     {

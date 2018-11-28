@@ -1,5 +1,5 @@
 ﻿using System;
-using BusinessLogic.API;
+using ServiceContract.Services;
 
 namespace CommandLineGUI.Utilities
 {

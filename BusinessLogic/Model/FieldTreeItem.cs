@@ -4,7 +4,7 @@ namespace BusinessLogic.Model
 {
     public class FieldTreeItem : MetadataTreeItem
     {
-        public FieldModel FieldModel { get; set; }
+        public FieldModel FieldModel { get; }
 
         public FieldTreeItem(FieldModel type)
         {
