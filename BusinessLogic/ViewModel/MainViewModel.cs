@@ -5,9 +5,9 @@ using BusinessLogic.API;
 using BusinessLogic.Base;
 using BusinessLogic.Model;
 using DataContract.API;
+using DataContract.Model;
 using Reflection;
 using Reflection.Exceptions;
-using Reflection.Model;
 
 namespace BusinessLogic.ViewModel
 {

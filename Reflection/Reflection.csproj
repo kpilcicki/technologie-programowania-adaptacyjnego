@@ -43,16 +43,9 @@
   <ItemGroup>
     <Compile Include="Exceptions\AssemblyBlockedException.cs" />
     <Compile Include="Exceptions\ReflectionException.cs" />
-    <Compile Include="Loaders\MethodLoaderHelpers.cs" />
-    <Compile Include="Loaders\TypeLoaderHelpers.cs" />
-    <Compile Include="Model\AssemblyModel.cs" />
+    <Compile Include="Helpers\MethodLoaderHelpers.cs" />
+    <Compile Include="Helpers\TypeLoaderHelpers.cs" />
     <Compile Include="Extensions\ExtensionMethods.cs" />
-    <Compile Include="Model\FieldModel.cs" />
-    <Compile Include="Model\MethodModel.cs" />
-    <Compile Include="Model\NamespaceModel.cs" />
-    <Compile Include="Model\ParameterModel.cs" />
-    <Compile Include="Model\PropertyModel.cs" />
-    <Compile Include="Model\TypeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflector.cs" />
     <Compile Include="TypeDictionarySingletone.cs" />

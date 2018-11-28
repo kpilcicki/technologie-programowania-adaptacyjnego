@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Reflection.Model;
+using DataContract.Model;
 
 namespace Reflection
 {

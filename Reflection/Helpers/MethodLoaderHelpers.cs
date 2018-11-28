@@ -1,35 +1,34 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using DataContract.Enums;
-using Reflection.Model;
 
-namespace Reflection.Loaders
+namespace Reflection.Helpers
 {
     internal static class MethodLoaderHelpers
     {
-        public static List<TypeModel> GetGenericArguments(MethodBase method)
+        public static IEnumerable<Type> GetGenericArguments(MethodBase method)
         {
+            if (!method.ContainsGenericParameters)
+                return Enumerable.Empty<Type>();
             return method
-                .GetGenericArguments()
-                .Select(TypeLoaderHelpers.LoadTypeModel).ToList();
+                .GetGenericArguments();
         }
 
-        public static List<ParameterModel> GetParameters(MethodBase method)
+        public static IEnumerable<ParameterInfo> GetParameters(MethodBase method)
         {
             return method
-                .GetParameters()
-                .Select(t => new ParameterModel(t.Name, TypeLoaderHelpers.LoadTypeModel(t.ParameterType)))
-                .ToList();
+                .GetParameters();
         }
 
-        public static TypeModel GetReturnType(MethodBase method)
+        public static Type GetReturnType(MethodBase method)
         {
             MethodInfo methodInfo = method as MethodInfo;
             if (methodInfo == null)
                 return null;
-            return TypeLoaderHelpers.LoadTypeModel(methodInfo.ReturnType);
+            return methodInfo.ReturnType;
         }
 
         public static bool IsExtensionMethod(MethodBase method)

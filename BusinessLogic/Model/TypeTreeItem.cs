@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
-using Reflection.Model;
+using DataContract.Model;
 
 namespace BusinessLogic.Model
 {

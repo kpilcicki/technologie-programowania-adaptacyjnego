@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
 using System.Runtime.Serialization;
 using DataContract.Enums;
-using Reflection.Loaders;
 
-namespace Reflection.Model
+namespace DataContract.Model
 {
     [DataContract(IsReference = true)]
     public class MethodModel
@@ -26,7 +24,7 @@ namespace Reflection.Model
 
         [DataMember]
         public bool IsVirtual { get; set; }
-        
+
         [DataMember]
         public TypeModel ReturnType { get; set; }
 
@@ -36,17 +34,9 @@ namespace Reflection.Model
         [DataMember(EmitDefaultValue = false)]
         public List<ParameterModel> Parameters { get; set; }
 
-        public MethodModel(MethodBase method)
+        public MethodModel(string name)
         {
-            Name = method.Name;
-            GenericArguments = !method.IsGenericMethodDefinition ? null : MethodLoaderHelpers.GetGenericArguments(method);
-            ReturnType = MethodLoaderHelpers.GetReturnType(method);
-            Parameters = MethodLoaderHelpers.GetParameters(method);
-            Accessibility = MethodLoaderHelpers.GetAccessibility(method);
-            IsAbstract = method.IsAbstract;
-            IsStatic = method.IsStatic;
-            IsVirtual = method.IsVirtual;
-            IsExtensionMethod = MethodLoaderHelpers.IsExtensionMethod(method);
+            Name = name;
         }
     }
 }

@@ -4,7 +4,6 @@
     {
         Public,
         Protected,
-        ProtectedInternal,
         Private,
         Internal
     }

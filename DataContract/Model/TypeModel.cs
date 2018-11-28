@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using DataContract.Enums;
 
-namespace Reflection.Model
+namespace DataContract.Model
 {
     [DataContract(IsReference = true)]
     public class TypeModel
@@ -12,10 +12,10 @@ namespace Reflection.Model
 
         [DataMember]
         public string NamespaceName { get; set; }
-        
+
         [DataMember(EmitDefaultValue = false)]
         public TypeModel BaseType { get; set; }
-        
+
         [DataMember(EmitDefaultValue = false)]
         public List<TypeModel> GenericArguments { get; set; }
 
@@ -26,7 +26,7 @@ namespace Reflection.Model
         public bool IsSealed { get; set; }
 
         [DataMember]
-        public bool IsAbstract{ get; set; }
+        public bool IsAbstract { get; set; }
 
         [DataMember]
         public bool IsStatic { get; set; }
