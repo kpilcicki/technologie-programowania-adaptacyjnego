@@ -3,16 +3,16 @@
 namespace Reflection.Model
 {
     [DataContract(IsReference = true)]
-    public class ParameterModel
+    public class FieldModel
     {
         [DataMember] public string Name { get; set; }
 
         [DataMember] public TypeModel Type { get; set; }
 
-        public ParameterModel(string name, TypeModel typeModel)
+        public FieldModel(string name, TypeModel propertyType)
         {
             Name = name;
-            Type = typeModel;
+            Type = propertyType;
         }
     }
 }

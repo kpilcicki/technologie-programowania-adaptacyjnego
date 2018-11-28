@@ -8,7 +8,7 @@ namespace Reflection
 {
     public class Reflector
     {
-        public AssemblyModel AssemblyModel { get; private set; }
+        public AssemblyModel AssemblyModel { get; set; }
 
         public Reflector(string assemblyPath)
         {
@@ -17,7 +17,9 @@ namespace Reflection
                 if (string.IsNullOrEmpty(assemblyPath))
                     throw new System.ArgumentNullException();
                 Assembly assembly = Assembly.LoadFrom(assemblyPath);
-                TypeModel.TypeDictionary.Clear();
+                
+                DictionaryTypeSingleton.Instance.Clear();
+
                 AssemblyModel = new AssemblyModel(assembly);
             }
             catch (FileLoadException e)

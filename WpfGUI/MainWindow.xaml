@@ -28,42 +28,49 @@
             <StackPanel Orientation="Horizontal">
                 <Image Source="Icons/AssemblyIcon.png" />
                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="Assembly" />
-                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding Name}" />
+                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding }" />
             </StackPanel>
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate DataType="{x:Type model:MethodTreeItem}" ItemsSource="{Binding Children}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="Icons/MethodIcon.png" />
                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="Method" />
-                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding Name}" />
+                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding }" />
             </StackPanel>
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate DataType="{x:Type model:TypeTreeItem}" ItemsSource="{Binding Children}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="Icons/ClassIcon.png" />
                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="Type" />
-                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding Name}" />
+                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding}" />
             </StackPanel>
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate DataType="{x:Type model:ParameterTreeItem}" ItemsSource="{Binding Children}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="Icons/ParameterIcon.png" />
                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="Parameter" />
-                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding Name}" />
+                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding}" />
             </StackPanel>
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate DataType="{x:Type model:PropertyTreeItem}" ItemsSource="{Binding Children}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="Icons/PropertyIcon.png" />
                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="Property" />
-                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding Name}" />
+                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding}" />
             </StackPanel>
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate DataType="{x:Type model:NamespaceTreeItem}" ItemsSource="{Binding Children}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="Icons/NamespaceIcon.png" />
                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="Namespace" />
-                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding Name}" />
+                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding}" />
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type model:FieldTreeItem}" ItemsSource="{Binding Children}">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="Icons/FieldIcon.png" />
+                <TextBlock Style="{StaticResource InfoTextBlock}" Text="Field" />
+                <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding}" />
             </StackPanel>
         </HierarchicalDataTemplate>
     </Window.Resources>
@@ -78,6 +85,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="9*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <StackPanel
@@ -114,5 +122,30 @@
                 </Style>
             </TreeView.ItemContainerStyle>
         </TreeView>
+
+        <StackPanel
+            Grid.Row="2"
+            Grid.Column="0"
+            Orientation="Horizontal"
+            VerticalAlignment="Center"
+            Margin="10 5 10 5">
+
+            <TextBlock FontSize="17"
+                       FontWeight="DemiBold"
+                       Text="Serialization source/destination:" />
+            <TextBox FontSize="17"
+                       Margin="10 0 0 0"
+                       HorizontalAlignment="Stretch"
+                       Text="{Binding SaveFilePath}" />
+        </StackPanel>
+
+
+        <Button Grid.Row="2"
+                Grid.Column="1"
+                Content="Save"
+                Command="{Binding SaveMetadataCommand}"
+                MaxWidth="200175"
+                Margin="10 0 0 0" />
+
     </Grid>
 </Window>

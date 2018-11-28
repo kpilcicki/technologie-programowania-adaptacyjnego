@@ -7,6 +7,7 @@ using BusinessLogic.Model;
 using DataContract.API;
 using Reflection;
 using Reflection.Exceptions;
+using Reflection.Model;
 
 namespace BusinessLogic.ViewModel
 {
@@ -15,6 +16,7 @@ namespace BusinessLogic.ViewModel
         private readonly IFilePathGetter _filePathGetter;
         private readonly ILogger _logger;
         private readonly IUserInfo _userInfo;
+        private readonly ISerializer _serializer;
 
         private readonly object _syncLock = new object();
 
@@ -36,6 +38,8 @@ namespace BusinessLogic.ViewModel
 
         public IControllableCommand LoadMetadataCommand { get; }
 
+        public IControllableCommand SaveMetadataCommand { get;  }
+
         private Reflector _reflector;
 
         private ObservableCollection<MetadataTreeItem> _metadataHierarchy;
@@ -54,13 +58,28 @@ namespace BusinessLogic.ViewModel
             set => SetProperty(ref _filePath, value);
         }
 
-        public MainViewModel(IFilePathGetter filePathGetter, ILogger logger, IUserInfo userInfo)
+        private string _saveFilePath;
+
+        public string SaveFilePath
+        {
+            get => _saveFilePath;
+            set => SetProperty(ref _saveFilePath, value);
+        }
+
+        public MainViewModel(
+            IUserInfo userInfo,
+            IFilePathGetter filePathGetter,
+            ISerializer serializer,
+            ILogger logger
+            )
         {
             _logger = logger;
             _filePathGetter = filePathGetter;
             _userInfo = userInfo;
+            _serializer = serializer;
             MetadataHierarchy = new ObservableCollection<MetadataTreeItem>();
             LoadMetadataCommand = new RelayCommand(Open, () => !_isExecuting);
+            SaveMetadataCommand = new RelayCommand(Save, () => !_isExecuting);
         }
 
         private async void Open()
@@ -73,7 +92,7 @@ namespace BusinessLogic.ViewModel
 
             _logger.Trace($"Reading file path...");
             string filePath = _filePathGetter.GetFilePath();
-            if (string.IsNullOrEmpty(filePath) || !filePath.EndsWith(".dll", StringComparison.InvariantCulture))
+            if (string.IsNullOrEmpty(filePath) || (!filePath.EndsWith(".dll", StringComparison.InvariantCulture) && !filePath.EndsWith(".xml", StringComparison.InvariantCulture)))
             {
                 _userInfo.PromptUser("Selected file was invalid!", "File Error");
                 _logger.Trace($"Selected file was invalid!");
@@ -88,9 +107,17 @@ namespace BusinessLogic.ViewModel
             {
                 try
                 {
-                    _logger.Trace("Beginning reflection subroutine...");
-                    _reflector = new Reflector(FilePath);
-                    _logger.Trace("Reflection subroutine finished successfully!");
+                    if (filePath.EndsWith(".dll", StringComparison.InvariantCulture))
+                    {
+                        _logger.Trace("Beginning reflection subroutine...");
+                        _reflector = new Reflector(FilePath);
+                        _logger.Trace("Reflection subroutine finished successfully!");
+                    }
+                    else if (filePath.EndsWith(".xml", StringComparison.InvariantCulture))
+                    {
+                        AssemblyModel model = _serializer.Deserialize<AssemblyModel>(filePath);
+                        _reflector.AssemblyModel = model;
+                    }
                 }
                 catch (AssemblyBlockedException e)
                 {
@@ -112,6 +139,32 @@ namespace BusinessLogic.ViewModel
 
             MetadataHierarchy = new ObservableCollection<MetadataTreeItem>() { new AssemblyTreeItem(_reflector.AssemblyModel) };
             _logger.Trace("Successfully loaded root metadata item.");
+            IsExecuting = false;
+        }
+
+        private async void Save()
+        {
+            lock (_syncLock)
+            {
+                if (IsExecuting) return;
+                IsExecuting = true;
+            }
+
+            _logger.Trace($"Serializing metadata...");
+
+            await Task.Run(() =>
+            {
+                try
+                {
+                    _serializer.Serialize(_reflector.AssemblyModel, SaveFilePath);
+                    _userInfo.PromptUser("Serialization suceeded", "Serialization suceeded");
+                }
+                catch (Exception ex)
+                {
+                    _userInfo.PromptUser(ex.Message, "Serialization failed");
+                }
+            }).ConfigureAwait(true);
+
             IsExecuting = false;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.ViewModel;
-using DataContract.API;
+using CommandLineGUI.Utilities;
 using FileLogger;
+using FileSerializer;
 
 namespace CommandLineGUI
 {
@@ -14,7 +15,11 @@ namespace CommandLineGUI
 
         private static MainViewModel GetViewModel()
         {
-            return new MainViewModel(new ConsoleFilePathGetter(), new Logger(), new ConsoleUserInfo());
+            return new MainViewModel(
+                new ConsoleUserInfo(),
+                new ConsoleFilePathGetter(), 
+                new XmlSerializer(), 
+                new Logger());
         }
     }
 }

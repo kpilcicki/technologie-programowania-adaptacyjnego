@@ -37,7 +37,7 @@ namespace CommandLineGUI.ViewTemplates
             Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.Write($"{TypeToStringMap.GetStringFromType(TreeItem)} ");
             Console.ResetColor();
-            Console.WriteLine(TreeItem.Name);
+            Console.WriteLine(TreeItem);
         }
 
 

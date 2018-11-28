@@ -1,12 +1,11 @@
-﻿using DataContract.Enums;
+﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Reflection;
 using Reflection.Model;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace ReflectionTest
+namespace ReflectorTests
 {
     [TestClass]
     public class ReflectorTests 
@@ -43,7 +42,7 @@ namespace ReflectionTest
         {
             List<TypeModel> staticClasses = _reflector.AssemblyModel.NamespaceModels
                 .Find(t => t.Name == BasicNamespace).Types
-                .Where(t => t.Modifiers.Item4 == StaticEnum.Static).ToList();
+                .Where(t => t.IsStatic).ToList();
            staticClasses.Count.Should().Be(1);
         }
 
@@ -52,7 +51,7 @@ namespace ReflectionTest
         {
             List<TypeModel> abstractClasses = _reflector.AssemblyModel.NamespaceModels
                 .Find(t => t.Name == NamespaceTitleplane).Types
-                .Where(t => t.Modifiers.Item3 == AbstractEnum.Abstract).ToList();
+                .Where(t => t.IsAbstract).ToList();
              abstractClasses.Count.Should().Be(1);
         }
 
@@ -60,7 +59,7 @@ namespace ReflectionTest
         public void When_ReflectorConstructorCalled_Expect_CorrectNumberOfGenericArguments()
         {
             List<TypeModel> genericClasses = _reflector.AssemblyModel.NamespaceModels
-                .Find(t => t.Name == NamespaceTitleplane).Types.Where(t => t.GenericArguments != null)
+                .Find(t => t.Name == NamespaceTitleplane).Types.Where(t => t.GenericArguments?.Count != 0)
                 .ToList();
             genericClasses.Count.Should().Be(1);
         }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ExampleLib.Titleplane
+﻿namespace ExampleLib.Titleplane
 {
     public abstract class Pollock
     {

@@ -1,7 +1,7 @@
-﻿using BusinessLogic.API;
-using System;
+﻿using System;
+using BusinessLogic.API;
 
-namespace CommandLineGUI
+namespace CommandLineGUI.Utilities
 {
     class ConsoleUserInfo : IUserInfo
     {

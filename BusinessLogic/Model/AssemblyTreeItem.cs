@@ -7,9 +7,13 @@ namespace BusinessLogic.Model
         private readonly AssemblyModel _assemblyModel;
 
         public AssemblyTreeItem(AssemblyModel assembly)
-            : base(assembly.Name)
         {
             _assemblyModel = assembly;
+        }
+
+        public override string ToString()
+        {
+            return _assemblyModel.Name;
         }
 
         protected override void BuildTreeView()

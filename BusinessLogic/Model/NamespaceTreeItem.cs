@@ -7,9 +7,13 @@ namespace BusinessLogic.Model
         private readonly NamespaceModel _namespaceModel;
 
         public NamespaceTreeItem(NamespaceModel namespaceModel)
-            : base(namespaceModel.Name)
         {
             _namespaceModel = namespaceModel;
+        }
+
+        public override string ToString()
+        {
+            return _namespaceModel.Name;
         }
 
         protected override void BuildTreeView()
@@ -18,7 +22,7 @@ namespace BusinessLogic.Model
             {
                 foreach (TypeModel typeModel in _namespaceModel?.Types)
                 {
-                    Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[typeModel.Name]));
+                    Children.Add(new TypeTreeItem(typeModel));
                 }
             }
         }

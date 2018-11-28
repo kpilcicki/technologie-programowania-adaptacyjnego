@@ -49,12 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\ILogger.cs" />
-    <Compile Include="Enums\AbstractEnum.cs" />
+    <Compile Include="API\ISerializer.cs" />
     <Compile Include="Enums\AccessLevel.cs" />
-    <Compile Include="Enums\SealedEnum.cs" />
-    <Compile Include="Enums\StaticEnum.cs" />
     <Compile Include="Enums\TypeKind.cs" />
-    <Compile Include="Enums\VirtualEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

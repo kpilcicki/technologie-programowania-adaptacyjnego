@@ -7,16 +7,20 @@ namespace BusinessLogic.Model
         public ParameterModel ParameterModel { get; set; }
 
         public ParameterTreeItem(ParameterModel parameterModel)
-            : base(parameterModel.Name)
         {
             ParameterModel = parameterModel;
+        }
+
+        public override string ToString()
+        {
+            return ParameterModel.Name;
         }
 
         protected override void BuildTreeView()
         {
             if (ParameterModel.Type != null)
             {
-                Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[ParameterModel.Type.Name]));
+                Children.Add(new TypeTreeItem(ParameterModel.Type));
             }
         }
     }

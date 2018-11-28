@@ -46,8 +46,8 @@
     <Compile Include="Base\Binding.cs" />
     <Compile Include="Base\DataContext.cs" />
     <Compile Include="Base\IDisplayable.cs" />
-    <Compile Include="ConsoleFilePathGetter.cs" />
-    <Compile Include="ConsoleUserInfo.cs" />
+    <Compile Include="Utilities\ConsoleFilePathGetter.cs" />
+    <Compile Include="Utilities\ConsoleUserInfo.cs" />
     <Compile Include="MainView.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,6 +71,10 @@
     <ProjectReference Include="..\FileLogger\FileLogger.csproj">
       <Project>{47266391-0D53-46AC-88B5-1F759CF153C2}</Project>
       <Name>FileLogger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FileSerializer\FileSerializer.csproj">
+      <Project>{30047b88-7959-4a79-8098-8dc77d5abcee}</Project>
+      <Name>FileSerializer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

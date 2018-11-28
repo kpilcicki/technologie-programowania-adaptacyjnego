@@ -1,4 +1,5 @@
-﻿using DataContract.Enums;
+﻿using System.Globalization;
+using System.Text;
 using Reflection.Model;
 
 namespace BusinessLogic.Model
@@ -8,51 +9,49 @@ namespace BusinessLogic.Model
         private readonly TypeModel _typeModel;
 
         public TypeTreeItem(TypeModel typeModel)
-            : base(GetModifiers(typeModel) + typeModel.Name)
         {
             _typeModel = typeModel;
         }
 
-        public static string GetModifiers(TypeModel model)
+        public override string ToString()
         {
-            if (model.Modifiers != null)
-            {
-                string type = null;
-                type += model.Modifiers.Item1.ToString().ToLower() + " ";
-                type += model.Modifiers.Item2 == SealedEnum.Sealed ? SealedEnum.Sealed.ToString().ToLower() + " " : string.Empty;
-                type += model.Modifiers.Item3 == AbstractEnum.Abstract ? AbstractEnum.Abstract.ToString().ToLower() + " " : string.Empty;
-                type += model.Modifiers.Item4 == StaticEnum.Static ? StaticEnum.Static.ToString().ToLower() + " " : string.Empty;
-                return type;
-            }
+            if (_typeModel == null) return string.Empty;
 
-            return null;
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"{_typeModel.Accessibility.ToString().ToLowerInvariant()} ");
+            sb.Append(_typeModel.IsSealed ? $"sealed " : string.Empty);
+            sb.Append(_typeModel.IsAbstract ? $"abstract " : string.Empty);
+            sb.Append(_typeModel.IsStatic ? $"static " : string.Empty);
+            sb.Append($"{_typeModel.Type.ToString().ToLower(CultureInfo.InvariantCulture)} ");
+            sb.Append(_typeModel.Name);
+            return sb.ToString();
         }
 
         protected override void BuildTreeView()
         {
             if (_typeModel.BaseType != null)
             {
-                Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[_typeModel.BaseType.Name]));
+                Children.Add(new TypeTreeItem(_typeModel.BaseType));
             }
 
             if (_typeModel.DeclaringType != null)
             {
-                Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[_typeModel.DeclaringType.Name]));
+                Children.Add(new TypeTreeItem(_typeModel.DeclaringType));
             }
 
             if (_typeModel.Properties != null)
             {
                 foreach (PropertyModel propertyModel in _typeModel.Properties)
                 {
-                    Children.Add(new PropertyTreeItem(propertyModel, GetModifiers(propertyModel.Type) + propertyModel.Type.Name + " " + propertyModel.Name));
+                    Children.Add(new PropertyTreeItem(propertyModel));
                 }
             }
 
             if (_typeModel.Fields != null)
             {
-                foreach (ParameterModel parameterModel in _typeModel.Fields)
+                foreach (FieldModel fieldModel in _typeModel.Fields)
                 {
-                    Children.Add(new ParameterTreeItem(parameterModel));
+                    Children.Add(new FieldTreeItem(fieldModel));
                 }
             }
 
@@ -60,7 +59,7 @@ namespace BusinessLogic.Model
             {
                 foreach (TypeModel typeModel in _typeModel.GenericArguments)
                 {
-                    Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[typeModel.Name]));
+                    Children.Add(new TypeTreeItem(typeModel));
                 }
             }
 
@@ -68,7 +67,7 @@ namespace BusinessLogic.Model
             {
                 foreach (TypeModel typeModel in _typeModel.ImplementedInterfaces)
                 {
-                    Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[typeModel.Name]));
+                    Children.Add(new TypeTreeItem(typeModel));
                 }
             }
 
@@ -76,7 +75,7 @@ namespace BusinessLogic.Model
             {
                 foreach (TypeModel typeModel in _typeModel.NestedTypes)
                 {
-                    Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[typeModel.Name]));
+                    Children.Add(new TypeTreeItem(typeModel));
                 }
             }
 

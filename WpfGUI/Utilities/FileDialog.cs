@@ -7,7 +7,7 @@ namespace WpfGUI.Utilities
     {
         public string GetFilePath()
         {
-            OpenFileDialog fileDialog = new OpenFileDialog { Filter = "Dynamic Library File(*.dll) | *.dll" };
+            OpenFileDialog fileDialog = new OpenFileDialog();
 
             return fileDialog.ShowDialog() == true ? fileDialog.FileName : string.Empty;
         }

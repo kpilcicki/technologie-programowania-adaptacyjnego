@@ -2,6 +2,7 @@
 using BusinessLogic.ViewModel;
 using DataContract.API;
 using FileLogger;
+using FileSerializer;
 using WpfGUI.Utilities;
 
 namespace WpfGUI
@@ -18,7 +19,11 @@ namespace WpfGUI
         private MainViewModel InitializeViewModel()
         {
             ILogger logger = new Logger();
-            return new MainViewModel(new FileDialog(), new Logger(), new InfoDialog());
+            return new MainViewModel(
+                new InfoDialog(),
+                new FileDialog(),
+                new XmlSerializer(),
+                new Logger());
         }
     }
 }
