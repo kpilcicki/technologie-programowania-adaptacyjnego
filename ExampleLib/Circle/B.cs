@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ExampleLib.Circle
+﻿namespace ExampleLib.Circle
 {
     public class B
     {

@@ -37,7 +37,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -50,19 +49,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\IUserInfo.cs" />
+    <Compile Include="Base\AsyncCommand.cs" />
+    <Compile Include="Base\IAsyncCommand.cs" />
     <Compile Include="Base\IControllableCommand.cs" />
+    <Compile Include="Base\IErrorHandler.cs" />
     <Compile Include="Base\RelayCommand.cs" />
-    <Compile Include="Constants\TypeToStringMap.cs" />
+    <Compile Include="Base\TaskUtility.cs" />
     <Compile Include="Model\AssemblyTreeItem.cs" />
     <Compile Include="Model\MetadataTreeItem.cs" />
     <Compile Include="Model\MethodTreeItem.cs" />
     <Compile Include="Model\NamespaceTreeItem.cs" />
     <Compile Include="Model\ParameterTreeItem.cs" />
+    <Compile Include="Model\FieldTreeItem.cs" />
     <Compile Include="Model\PropertyTreeItem.cs" />
     <Compile Include="Model\TypeTreeItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="API\IFilePathGetter.cs" />
     <Compile Include="Base\BindableBase.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
   </ItemGroup>
@@ -74,6 +75,10 @@
     <ProjectReference Include="..\Reflection\Reflection.csproj">
       <Project>{0F44BF6A-2A53-4607-B0F6-FDDA2EAAFFDB}</Project>
       <Name>Reflection</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ServiceContract\ServiceContract.csproj">
+      <Project>{b52e62f5-1427-4e96-9fad-f0f6099fa54a}</Project>
+      <Name>ServiceContract</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

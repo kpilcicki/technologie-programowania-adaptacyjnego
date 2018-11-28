@@ -7,15 +7,12 @@ namespace BusinessLogic.Model
         private bool _wasBuilt;
         private bool _isExpanded;
 
-        public string Name { get; set; }
-
         public ObservableCollection<MetadataTreeItem> Children { get; }
 
-        protected MetadataTreeItem(string name)
+        protected MetadataTreeItem()
         {
             Children = new ObservableCollection<MetadataTreeItem>() { null };
             _wasBuilt = false;
-            Name = name;
         }
 
         public bool IsExpanded

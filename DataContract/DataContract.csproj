@@ -40,6 +40,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,13 +49,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\ILogger.cs" />
-    <Compile Include="Enums\AbstractEnum.cs" />
     <Compile Include="Enums\AccessLevel.cs" />
-    <Compile Include="Enums\SealedEnum.cs" />
-    <Compile Include="Enums\StaticEnum.cs" />
     <Compile Include="Enums\TypeKind.cs" />
-    <Compile Include="Enums\VirtualEnum.cs" />
+    <Compile Include="Model\AssemblyModel.cs" />
+    <Compile Include="Model\FieldModel.cs" />
+    <Compile Include="Model\MethodModel.cs" />
+    <Compile Include="Model\NamespaceModel.cs" />
+    <Compile Include="Model\ParameterModel.cs" />
+    <Compile Include="Model\PropertyModel.cs" />
+    <Compile Include="Model\TypeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

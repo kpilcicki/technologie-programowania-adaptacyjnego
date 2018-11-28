@@ -49,6 +49,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -75,10 +76,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Converters\ItemTypeToStringConverter.cs" />
-    <Compile Include="FileDialog.cs" />
+    <Compile Include="Utilities\FileDialog.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="InfoDialog.cs" />
+    <Compile Include="Utilities\InfoDialog.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -99,7 +99,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
@@ -136,10 +136,31 @@
       <Project>{47266391-0D53-46AC-88B5-1F759CF153C2}</Project>
       <Name>FileLogger</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FileSerializer\FileSerializer.csproj">
+      <Project>{30047b88-7959-4a79-8098-8dc77d5abcee}</Project>
+      <Name>FileSerializer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Reflection\Reflection.csproj">
       <Project>{0F44BF6A-2A53-4607-B0F6-FDDA2EAAFFDB}</Project>
       <Name>Reflection</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ServiceContract\ServiceContract.csproj">
+      <Project>{B52E62F5-1427-4E96-9FAD-F0F6099FA54A}</Project>
+      <Name>ServiceContract</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\ParameterIcon.png" />
+    <Resource Include="Icons\ClassIcon.png" />
+    <Resource Include="Icons\MethodIcon.png" />
+    <Resource Include="Icons\NamespaceIcon.png" />
+    <Resource Include="Icons\PropertyIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\AssemblyIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\FieldIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

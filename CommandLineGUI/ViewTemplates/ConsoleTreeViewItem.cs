@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using BusinessLogic.Constants;
 using BusinessLogic.Model;
 using CommandLineGUI.Base;
+using CommandLineGUI.Constants;
 
 namespace CommandLineGUI.ViewTemplates
 {
@@ -37,7 +37,7 @@ namespace CommandLineGUI.ViewTemplates
             Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.Write($"{TypeToStringMap.GetStringFromType(TreeItem)} ");
             Console.ResetColor();
-            Console.WriteLine(TreeItem.Name);
+            Console.WriteLine(TreeItem);
         }
 
 

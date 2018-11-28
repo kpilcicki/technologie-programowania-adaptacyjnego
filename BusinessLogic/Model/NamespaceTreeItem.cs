@@ -1,25 +1,27 @@
-﻿using Reflection.Model;
+﻿using DataContract.Model;
 
 namespace BusinessLogic.Model
 {
     public class NamespaceTreeItem : MetadataTreeItem
     {
-        private readonly NamespaceModel _namespaceModel;
+        public NamespaceModel NamespaceModel { get; }
 
         public NamespaceTreeItem(NamespaceModel namespaceModel)
-            : base(namespaceModel.Name)
         {
-            _namespaceModel = namespaceModel;
+            NamespaceModel = namespaceModel;
+        }
+
+        public override string ToString()
+        {
+            return NamespaceModel.Name;
         }
 
         protected override void BuildTreeView()
         {
-            if (_namespaceModel?.Types != null)
+            if (NamespaceModel?.Types == null) return;
+            foreach (TypeModel typeModel in NamespaceModel?.Types)
             {
-                foreach (TypeModel typeModel in _namespaceModel?.Types)
-                {
-                    Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[typeModel.Name]));
-                }
+                Children.Add(new TypeTreeItem(typeModel));
             }
         }
     }

@@ -1,5 +1,5 @@
 ﻿using System;
-using DataContract.API;
+using ServiceContract.Services;
 
 namespace FileLogger
 {

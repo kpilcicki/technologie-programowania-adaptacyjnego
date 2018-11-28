@@ -1,96 +1,95 @@
-﻿using DataContract.Enums;
-using Reflection.Model;
+﻿using System.Globalization;
+using System.Text;
+using DataContract.Model;
 
 namespace BusinessLogic.Model
 {
     public class TypeTreeItem : MetadataTreeItem
     {
-        private readonly TypeModel _typeModel;
+        public TypeModel TypeModel { get; }
 
         public TypeTreeItem(TypeModel typeModel)
-            : base(GetModifiers(typeModel) + typeModel.Name)
         {
-            _typeModel = typeModel;
+            TypeModel = typeModel;
         }
 
-        public static string GetModifiers(TypeModel model)
+        public override string ToString()
         {
-            if (model.Modifiers != null)
-            {
-                string type = null;
-                type += model.Modifiers.Item1.ToString().ToLower() + " ";
-                type += model.Modifiers.Item2 == SealedEnum.Sealed ? SealedEnum.Sealed.ToString().ToLower() + " " : string.Empty;
-                type += model.Modifiers.Item3 == AbstractEnum.Abstract ? AbstractEnum.Abstract.ToString().ToLower() + " " : string.Empty;
-                type += model.Modifiers.Item4 == StaticEnum.Static ? StaticEnum.Static.ToString().ToLower() + " " : string.Empty;
-                return type;
-            }
+            if (TypeModel == null) return string.Empty;
 
-            return null;
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"{TypeModel.Accessibility.ToString().ToLowerInvariant()} ");
+            sb.Append(TypeModel.IsSealed ? $"sealed " : string.Empty);
+            sb.Append(TypeModel.IsAbstract ? $"abstract " : string.Empty);
+            sb.Append(TypeModel.IsStatic ? $"static " : string.Empty);
+            sb.Append($"{TypeModel.Type.ToString().ToLower(CultureInfo.InvariantCulture)} ");
+            sb.Append(TypeModel.Name);
+            return sb.ToString();
         }
 
         protected override void BuildTreeView()
         {
-            if (_typeModel.BaseType != null)
+            if (TypeModel.BaseType != null)
             {
-                Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[_typeModel.BaseType.Name]));
+                Children.Add(new TypeTreeItem(TypeModel.BaseType));
             }
 
-            if (_typeModel.DeclaringType != null)
+            if (TypeModel.DeclaringType != null)
             {
-                Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[_typeModel.DeclaringType.Name]));
+                Children.Add(new TypeTreeItem(TypeModel.DeclaringType));
             }
 
-            if (_typeModel.Properties != null)
+            if (TypeModel.Properties != null)
             {
-                foreach (PropertyModel propertyModel in _typeModel.Properties)
+                foreach (PropertyModel propertyModel in TypeModel.Properties)
                 {
-                    Children.Add(new PropertyTreeItem(propertyModel, GetModifiers(propertyModel.Type) + propertyModel.Type.Name + " " + propertyModel.Name));
+                    Children.Add(new PropertyTreeItem(propertyModel));
                 }
             }
 
-            if (_typeModel.Fields != null)
+            if (TypeModel.Fields != null)
             {
-                foreach (ParameterModel parameterModel in _typeModel.Fields)
+                foreach (FieldModel fieldModel in TypeModel.Fields)
                 {
-                    Children.Add(new ParameterTreeItem(parameterModel));
+                    Children.Add(new FieldTreeItem(fieldModel));
                 }
             }
 
-            if (_typeModel.GenericArguments != null)
+            if (TypeModel.GenericArguments != null)
             {
-                foreach (TypeModel typeModel in _typeModel.GenericArguments)
+                foreach (TypeModel typeModel in TypeModel.GenericArguments)
                 {
-                    Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[typeModel.Name]));
+                    Children.Add(new TypeTreeItem(typeModel));
                 }
             }
 
-            if (_typeModel.ImplementedInterfaces != null)
+            if (TypeModel.ImplementedInterfaces != null)
             {
-                foreach (TypeModel typeModel in _typeModel.ImplementedInterfaces)
+                foreach (TypeModel typeModel in TypeModel.ImplementedInterfaces)
                 {
-                    Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[typeModel.Name]));
+                    Children.Add(new TypeTreeItem(typeModel));
                 }
             }
 
-            if (_typeModel.NestedTypes != null)
+            if (TypeModel.NestedTypes != null)
             {
-                foreach (TypeModel typeModel in _typeModel.NestedTypes)
+                foreach (TypeModel typeModel in TypeModel.NestedTypes)
                 {
-                    Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[typeModel.Name]));
+                    Children.Add(new TypeTreeItem(typeModel));
                 }
             }
 
-            if (_typeModel.Methods != null)
+            if (TypeModel.Methods != null)
             {
-                foreach (MethodModel methodModel in _typeModel.Methods)
+                foreach (MethodModel methodModel in TypeModel.Methods)
                 {
                     Children.Add(new MethodTreeItem(methodModel));
                 }
             }
 
-            if (_typeModel.Constructors != null)
+            if (TypeModel.Constructors != null)
             {
-                foreach (MethodModel methodModel in _typeModel.Constructors)
+                foreach (MethodModel methodModel in TypeModel.Constructors)
                 {
                     Children.Add(new MethodTreeItem(methodModel));
                 }

@@ -1,26 +1,28 @@
-﻿using DataContract.Enums;
-using Reflection.Model;
+﻿using System.Text;
+using DataContract.Model;
 
 namespace BusinessLogic.Model
 {
     public class MethodTreeItem : MetadataTreeItem
     {
-        public MethodModel MethodModel { get; set; }
+        public MethodModel MethodModel { get; }
 
         public MethodTreeItem(MethodModel methodModel)
-            : base(GetModifiers(methodModel) + methodModel.Name)
         {
             MethodModel = methodModel;
         }
 
-        public static string GetModifiers(MethodModel model)
+        public override string ToString()
         {
-            string type = null;
-            type += model.Modifiers.Item1.ToString().ToLower() + " ";
-            type += model.Modifiers.Item2 == AbstractEnum.Abstract ? AbstractEnum.Abstract.ToString().ToLower() + " " : string.Empty;
-            type += model.Modifiers.Item3 == StaticEnum.Static ? StaticEnum.Static.ToString().ToLower() + " " : string.Empty;
-            type += model.Modifiers.Item4 == VirtualEnum.Virtual ? VirtualEnum.Virtual.ToString().ToLower() + " " : string.Empty;
-            return type;
+            if (MethodModel == null) return string.Empty;
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"{MethodModel.Accessibility.ToString().ToLowerInvariant()} ");
+            sb.Append(MethodModel.IsAbstract ? $"abstract " : string.Empty);
+            sb.Append(MethodModel.IsStatic ? $"static" : string.Empty);
+            sb.Append(MethodModel.IsAbstract ? $"virtual " : string.Empty);
+            sb.Append(MethodModel.Name);
+            return sb.ToString();
         }
 
         protected override void BuildTreeView()
@@ -29,7 +31,7 @@ namespace BusinessLogic.Model
             {
                 foreach (TypeModel genericArgument in MethodModel.GenericArguments)
                 {
-                    Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[genericArgument.Name]));
+                    Children.Add(new TypeTreeItem(genericArgument));
                 }
             }
 
@@ -43,7 +45,7 @@ namespace BusinessLogic.Model
 
             if (MethodModel.ReturnType != null)
             {
-                Children.Add(new TypeTreeItem(TypeModel.TypeDictionary[MethodModel.ReturnType.Name]));
+                Children.Add(new TypeTreeItem(MethodModel.ReturnType));
             }
         }
     }
