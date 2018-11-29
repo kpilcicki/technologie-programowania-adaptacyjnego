@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Threading.Tasks;
 using BusinessLogic.Base;
 using BusinessLogic.Model;
 using DataContract.Model;
@@ -28,6 +27,7 @@ namespace BusinessLogic.ViewModel
             {
                 _isBusy = value;
                 LoadMetadataCommand.RaiseCanExecuteChanged();
+                SaveMetadataCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -47,6 +47,7 @@ namespace BusinessLogic.ViewModel
                 {
                     new AssemblyTreeItem(_assemblyModel)
                 };
+                SaveMetadataCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -82,11 +83,11 @@ namespace BusinessLogic.ViewModel
             _userInfo = userInfo ?? throw new ArgumentNullException(nameof(userInfo));
 
             MetadataHierarchy = new ObservableCollection<MetadataTreeItem>();
-            LoadMetadataCommand = new RelayCommand(async () => await Open(), () => !IsBusy);
-            SaveMetadataCommand = new RelayCommand(async () => await Save(), () => !IsBusy && AssemblyModel != null);
+            LoadMetadataCommand = new RelayCommand( Open, () => !IsBusy);
+            SaveMetadataCommand = new RelayCommand( Save, () => !IsBusy && AssemblyModel != null);
         }
 
-        private async Task Open()
+        private void Open()
         {
             try
             {
@@ -108,13 +109,13 @@ namespace BusinessLogic.ViewModel
                 if (filePath.EndsWith(".dll", StringComparison.InvariantCulture))
                 {
                     _logger.Trace($"Reading metadata from {filePath}; .dll");
-                    AssemblyModel = await Task.Run(() => _reflector.ReflectDll(filePath));
+                    AssemblyModel = _reflector.ReflectDll(filePath);
                     _logger.Trace($"Successfully read metadata from {filePath}; .dll");
                 }
                 else if (filePath.EndsWith(".xml", StringComparison.InvariantCulture))
                 {
                     _logger.Trace($"Reading metadata from {filePath}; .xml");
-                    AssemblyModel = await Task.Run(() => _serializer.Deserialize<AssemblyModel>(filePath));
+                    AssemblyModel = _serializer.Deserialize<AssemblyModel>(filePath);
                     _logger.Trace($"Successfully read metadata from {filePath}; .xml");
                 }
                 else
@@ -141,17 +142,17 @@ namespace BusinessLogic.ViewModel
             }
         }
 
-        private async Task Save()
+        private void Save()
         {
-            IsBusy = true;
-            _logger.Trace($"Serializing metadata...");
-
             try
             {
+                IsBusy = true;
+                _logger.Trace($"Serializing metadata...");
+
                 string filePath = _filePathGetter.GetFilePath();
                 if (filePath != null && filePath.EndsWith(".xml", StringComparison.InvariantCulture))
                 {
-                    await Task.Run(() => _serializer.Serialize(AssemblyModel, filePath));
+                    _serializer.Serialize(AssemblyModel, filePath);
                     _logger.Trace($"Serialization of assembly: {AssemblyModel.Name} succeeded");
                     _userInfo.PromptUser("Saving succeeded", "Saving operation");
                 }
