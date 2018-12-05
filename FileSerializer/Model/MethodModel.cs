@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using DataContract.Enums;
+using Reflection.Enums;
 
-namespace DataContract.Model
+namespace FileSerializer.Model
 {
     [DataContract(IsReference = true)]
     public class MethodModel

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
-using ServiceContract.Services;
+using BusinessLogic.Services;
 
 namespace FileSerializer
 {

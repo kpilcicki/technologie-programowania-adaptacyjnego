@@ -41,13 +41,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\AssemblyModel.cs" />
+    <Compile Include="Model\FieldModel.cs" />
+    <Compile Include="Model\MethodModel.cs" />
+    <Compile Include="Model\NamespaceModel.cs" />
+    <Compile Include="Model\ParameterModel.cs" />
+    <Compile Include="Model\PropertyModel.cs" />
+    <Compile Include="Model\TypeModel.cs" />
     <Compile Include="XmlSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ServiceContract\ServiceContract.csproj">
-      <Project>{b52e62f5-1427-4e96-9fad-f0f6099fa54a}</Project>
-      <Name>ServiceContract</Name>
+    <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj">
+      <Project>{860A43E1-C86E-48CE-BC74-9C51C207CA30}</Project>
+      <Name>BusinessLogic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Reflection\Reflection.csproj">
+      <Project>{0f44bf6a-2a53-4607-b0f6-fdda2eaaffdb}</Project>
+      <Name>Reflection</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

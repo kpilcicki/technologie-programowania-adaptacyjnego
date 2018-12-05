@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using BusinessLogic.Base;
 using BusinessLogic.Model;
-using DataContract.Model;
+using BusinessLogic.Services;
 using Reflection.Exceptions;
 using ServiceContract.Services;
 

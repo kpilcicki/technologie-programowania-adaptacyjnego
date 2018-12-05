@@ -128,10 +128,6 @@
       <Project>{860a43e1-c86e-48ce-bc74-9c51c207ca30}</Project>
       <Name>BusinessLogic</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DataContract\DataContract.csproj">
-      <Project>{20e38279-9abb-49cf-89e9-7ada6a88c494}</Project>
-      <Name>DataContract</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FileLogger\FileLogger.csproj">
       <Project>{47266391-0D53-46AC-88B5-1F759CF153C2}</Project>
       <Name>FileLogger</Name>
@@ -143,10 +139,6 @@
     <ProjectReference Include="..\Reflection\Reflection.csproj">
       <Project>{0F44BF6A-2A53-4607-B0F6-FDDA2EAAFFDB}</Project>
       <Name>Reflection</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ServiceContract\ServiceContract.csproj">
-      <Project>{B52E62F5-1427-4E96-9FAD-F0F6099FA54A}</Project>
-      <Name>ServiceContract</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

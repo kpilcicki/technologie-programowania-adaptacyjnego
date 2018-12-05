@@ -45,9 +45,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ServiceContract\ServiceContract.csproj">
-      <Project>{B52E62F5-1427-4E96-9FAD-F0F6099FA54A}</Project>
-      <Name>ServiceContract</Name>
+    <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj">
+      <Project>{860A43E1-C86E-48CE-BC74-9C51C207CA30}</Project>
+      <Name>BusinessLogic</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

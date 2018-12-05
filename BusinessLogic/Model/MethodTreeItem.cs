@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using DataContract.Model;
+using Reflection.Model;
 
 namespace BusinessLogic.Model
 {

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using DataContract.Enums;
+using Reflection.Enums;
 
-namespace DataContract.Model
+namespace FileSerializer.Model
 {
     [DataContract(IsReference = true)]
     public class TypeModel
@@ -41,7 +41,7 @@ namespace DataContract.Model
         public List<TypeModel> NestedTypes { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public List<PropertyModel> Properties { get; set; }
+        public List<FileSerializer.Model.PropertyModel> Properties { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
         public TypeModel DeclaringType { get; set; }

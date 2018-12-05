@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace DataContract.Model
+namespace FileSerializer.Model
 {
     [DataContract(IsReference = true)]
     public class NamespaceModel

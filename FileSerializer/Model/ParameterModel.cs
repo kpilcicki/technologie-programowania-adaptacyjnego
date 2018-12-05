@@ -1,9 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-namespace DataContract.Model
+namespace FileSerializer.Model
 {
     [DataContract(IsReference = true)]
-    public class PropertyModel
+    public class ParameterModel
     {
         [DataMember]
         public string Name { get; set; }
