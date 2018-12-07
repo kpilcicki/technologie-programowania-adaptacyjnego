@@ -53,6 +53,13 @@
     <Compile Include="Model\ParameterModel.cs" />
     <Compile Include="Model\PropertyModel.cs" />
     <Compile Include="Model\TypeModel.cs" />
+    <Compile Include="PersistenceModel\IAssemblyModel.cs" />
+    <Compile Include="PersistenceModel\IFieldModel.cs" />
+    <Compile Include="PersistenceModel\IMethodModel.cs" />
+    <Compile Include="PersistenceModel\INamespaceModel.cs" />
+    <Compile Include="PersistenceModel\IParameterModel.cs" />
+    <Compile Include="PersistenceModel\IPropertyModel.cs" />
+    <Compile Include="PersistenceModel\ITypeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflector.cs" />
     <Compile Include="TypeDictionarySingletone.cs" />

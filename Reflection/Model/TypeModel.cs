@@ -4,42 +4,43 @@ using System.Linq;
 using System.Reflection;
 using Reflection.Enums;
 using Reflection.Extensions;
+using Reflection.PersistenceModel;
 
 namespace Reflection.Model
 {
-    public class TypeModel
+    public class TypeModel: ITypeModel
     {
-        public string Name { get; }
+        public string Name { get; set; }
 
-        public string NamespaceName { get; }
+        public string NamespaceName { get; set; }
 
-        public TypeModel BaseType { get; }
+        public ITypeModel BaseType { get; set; }
 
-        public List<TypeModel> GenericArguments { get; }
+        public List<ITypeModel> GenericArguments { get; set; }
 
-        public AccessLevel Accessibility { get; }
+        public AccessLevel Accessibility { get; set; }
 
-        public bool IsSealed { get; }
+        public bool IsSealed { get; set; }
 
-        public bool IsAbstract { get; }
+        public bool IsAbstract { get; set; }
 
-        public bool IsStatic { get; }
+        public bool IsStatic { get; set; }
 
-        public TypeKind Type { get; }
+        public TypeKind Type { get; set; }
 
-        public List<TypeModel> ImplementedInterfaces { get; }
+        public List<ITypeModel> ImplementedInterfaces { get; set; }
 
-        public List<TypeModel> NestedTypes { get; }
+        public List<ITypeModel> NestedTypes { get; set; }
 
-        public List<PropertyModel> Properties { get; }
+        public List<IPropertyModel> Properties { get; set; }
 
-        public TypeModel DeclaringType { get; }
+        public ITypeModel DeclaringType { get; set; }
 
-        public List<MethodModel> Methods { get; }
+        public List<IMethodModel> Methods { get; set; }
 
-        public List<MethodModel> Constructors { get; }
+        public List<IMethodModel> Constructors { get; set; }
 
-        public List<FieldModel> Fields { get; set; }
+        public List<IFieldModel> Fields { get; set; }
 
         public TypeModel(Type type)
         {
@@ -54,16 +55,46 @@ namespace Reflection.Model
 
             BaseType = GetBaseType(type);
             DeclaringType = GetDeclaringType(type);
-            NestedTypes = GetNestedTypes(type);
-            GenericArguments = GetGenericArguments(type);
-            ImplementedInterfaces = GetImplementedInterfaces(type);
-            Properties = GetProperties(type);
-            Fields = GetFields(type);
-            Constructors = GetConstructors(type);
-            Methods = GetMethods(type);
+            NestedTypes = GetNestedTypes(type)?.Select(t => t as ITypeModel).ToList();
+            GenericArguments = GetGenericArguments(type)?.Select(t => t as ITypeModel).ToList();
+            ImplementedInterfaces = GetImplementedInterfaces(type)?.Select(t => t as ITypeModel).ToList();
+            Properties = GetProperties(type)?.Select(t => t as IPropertyModel).ToList();
+            Fields = GetFields(type)?.Select(t => t as IFieldModel).ToList();
+            Constructors = GetConstructors(type)?.Select(t => t as IMethodModel).ToList();
+            Methods = GetMethods(type)?.Select(t => t as IMethodModel).ToList();
+        }
+
+        public TypeModel(ITypeModel type)
+        {
+            DictionaryTypeSingleton.Instance.RegisterType(type.Name, this);
+            Name = type.Name;
+            NamespaceName = type.NamespaceName;
+            Accessibility = type.Accessibility;
+            Type = type.Type;
+            IsStatic = type.IsSealed && type.IsAbstract;
+            IsAbstract = type.IsAbstract;
+            IsSealed = type.IsSealed;
+
+            BaseType = LoadType(type.BaseType);
+            DeclaringType = LoadType(type.DeclaringType);
+            NestedTypes = type.NestedTypes?.Select(t => LoadType(t) as ITypeModel).ToList();
+
+            GenericArguments = type.GenericArguments?.Select(t => LoadType(t) as ITypeModel).ToList();
+
+            ImplementedInterfaces = type.ImplementedInterfaces?.Select(t => LoadType(t) as ITypeModel).ToList(); ;
+
+            Properties = type.Properties?.Select(p => new PropertyModel(p) as IPropertyModel).ToList();
+            Fields = type.Fields?.Select(field => new FieldModel(field) as IFieldModel).ToList();
+            Constructors = type.Constructors?.Select(c => new MethodModel(c) as IMethodModel).ToList();
+            Methods = type.Methods?.Select(m => new MethodModel(m) as IMethodModel).ToList();
         }
 
         public static TypeModel LoadType(Type type)
+        {
+            return DictionaryTypeSingleton.Instance.GetType(type.Name) ?? new TypeModel(type);
+        }
+
+        public static TypeModel LoadType(ITypeModel type)
         {
             return DictionaryTypeSingleton.Instance.GetType(type.Name) ?? new TypeModel(type);
         }

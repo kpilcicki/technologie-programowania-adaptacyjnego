@@ -1,17 +1,24 @@
-﻿using System.Reflection;
+﻿using Reflection.PersistenceModel;
+using System.Reflection;
 
 namespace Reflection.Model
 {
-    public class PropertyModel
+    public class PropertyModel : IPropertyModel
     {
-        public string Name { get; }
+        public string Name { get; set; }
 
-        public TypeModel Type { get; }
+        public ITypeModel Type { get; set; }
 
         public PropertyModel(PropertyInfo propertyInfo)
         {
             Name = propertyInfo.Name;
             Type = TypeModel.LoadType(propertyInfo.PropertyType);
+        }
+
+        public PropertyModel(IPropertyModel propertyInfo)
+        {
+            Name = propertyInfo.Name;
+            Type = TypeModel.LoadType(propertyInfo.Type);
         }
     }
 }

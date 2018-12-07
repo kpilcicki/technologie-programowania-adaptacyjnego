@@ -1,9 +1,11 @@
-﻿namespace BusinessLogic.Services
+﻿using Reflection.Model;
+
+namespace BusinessLogic.Services
 {
     public interface ISerializer
     {
-        void Serialize<T>(T sourceObject, string destination);
+        void Serialize(AssemblyModel sourceObject, string destination);
 
-        T Deserialize<T>(string source);
+        AssemblyModel Deserialize(string source);
     }
 }

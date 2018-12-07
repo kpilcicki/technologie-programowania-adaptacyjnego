@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using Reflection.Enums;
+using Reflection.PersistenceModel;
 
 namespace FileSerializer.Model
 {
     [DataContract(IsReference = true)]
-    public class TypeModel
+    public class TypeModel : ITypeModel
     {
         [DataMember]
         public string Name { get; set; }
@@ -14,10 +16,10 @@ namespace FileSerializer.Model
         public string NamespaceName { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public TypeModel BaseType { get; set; }
+        public ITypeModel BaseType { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public List<TypeModel> GenericArguments { get; set; }
+        public List<ITypeModel> GenericArguments { get; set; }
 
         [DataMember]
         public AccessLevel Accessibility { get; set; }
@@ -35,24 +37,55 @@ namespace FileSerializer.Model
         public TypeKind Type { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public List<TypeModel> ImplementedInterfaces { get; set; }
+        public List<ITypeModel> ImplementedInterfaces { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public List<TypeModel> NestedTypes { get; set; }
+        public List<ITypeModel> NestedTypes { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public List<FileSerializer.Model.PropertyModel> Properties { get; set; }
+        public List<IPropertyModel> Properties { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public TypeModel DeclaringType { get; set; }
+        public ITypeModel DeclaringType { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public List<MethodModel> Methods { get; set; }
+        public List<IMethodModel> Methods { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public List<MethodModel> Constructors { get; set; }
+        public List<IMethodModel> Constructors { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public List<FieldModel> Fields { get; set; }
+        public List<IFieldModel> Fields { get; set; }
+
+        public TypeModel(ITypeModel type)
+        {
+            DictionaryTypeSingleton.Instance.RegisterType(type.Name, this);
+            Name = type.Name;
+            NamespaceName = type.NamespaceName;
+            Accessibility = type.Accessibility;
+            Type = type.Type;
+            IsStatic = type.IsStatic;
+            IsAbstract = type.IsAbstract;
+            IsSealed = type.IsSealed;
+
+            BaseType = TypeModel.LoadType(type.BaseType);
+            DeclaringType = TypeModel.LoadType(type.DeclaringType);
+            NestedTypes = type.NestedTypes?.Select(t => TypeModel.LoadType(t) as ITypeModel).ToList();
+
+            GenericArguments = type.GenericArguments?.Select(t => TypeModel.LoadType(t) as ITypeModel).ToList();
+
+            ImplementedInterfaces = type.ImplementedInterfaces?.Select(t => TypeModel.LoadType(t) as ITypeModel).ToList();
+
+            Properties = type.Properties?.Select(p => new PropertyModel(p) as IPropertyModel).ToList();
+            Fields = type.Fields?.Select(t => new FieldModel(t) as IFieldModel).ToList();
+            Constructors = type.Constructors?.Select(c => new MethodModel(c) as IMethodModel).ToList();
+            Methods = type.Methods?.Select(m => new MethodModel(m) as IMethodModel).ToList();
+        }
+
+        public static TypeModel LoadType(ITypeModel type)
+        {
+            if (type == null) return null;
+            return DictionaryTypeSingleton.Instance.GetType(type.Name) ?? new TypeModel(type);
+        }
     }
 }

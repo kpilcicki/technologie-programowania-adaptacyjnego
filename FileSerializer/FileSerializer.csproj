@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
@@ -41,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DictionaryTypeSingleton.cs" />
     <Compile Include="Model\AssemblyModel.cs" />
     <Compile Include="Model\FieldModel.cs" />
     <Compile Include="Model\MethodModel.cs" />
@@ -60,6 +62,9 @@
       <Project>{0f44bf6a-2a53-4607-b0f6-fdda2eaaffdb}</Project>
       <Name>Reflection</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Mapper\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

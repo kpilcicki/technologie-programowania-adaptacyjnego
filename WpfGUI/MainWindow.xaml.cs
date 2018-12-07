@@ -1,8 +1,5 @@
 ﻿using System.Windows;
 using BusinessLogic.ViewModel;
-using FileLogger;
-using FileSerializer;
-using Reflection;
 using WpfGUI.Utilities;
 
 namespace WpfGUI
@@ -13,17 +10,15 @@ namespace WpfGUI
         {
             InitializeComponent();
 
-            DataContext = InitializeViewModel();
+            var x = InitializeViewModel();
+            DataContext = x;
         }
 
         private MainViewModel InitializeViewModel()
         {
-            return new MainViewModel(
-                new Reflector(),
+            return Composer.GetComposedMainViewModel(
                 new InfoDialog(),
-                new FileDialog(),
-                new XmlSerializer(),
-                new Logger());
+                new FileDialog());
         }
     }
 }

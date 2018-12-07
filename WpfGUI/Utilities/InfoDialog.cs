@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using BusinessLogic.Services;
-using ServiceContract.Services;
 
 namespace WpfGUI.Utilities
 {

@@ -20,7 +20,7 @@ namespace BusinessLogic.Model
         {
             if (ParameterModel.Type != null)
             {
-                Children.Add(new TypeTreeItem(ParameterModel.Type));
+                Children.Add(new TypeTreeItem((TypeModel)ParameterModel.Type));
             }
         }
     }

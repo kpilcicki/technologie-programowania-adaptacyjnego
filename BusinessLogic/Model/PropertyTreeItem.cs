@@ -20,7 +20,7 @@ namespace BusinessLogic.Model
         {
             if (PropertyModel.Type != null)
             {
-                Children.Add(new TypeTreeItem(PropertyModel.Type));
+                Children.Add(new TypeTreeItem((TypeModel)PropertyModel.Type));
             }
         }
     }

@@ -45,7 +45,7 @@ namespace BusinessLogic.Model
 
             if (MethodModel.ReturnType != null)
             {
-                Children.Add(new TypeTreeItem(MethodModel.ReturnType));
+                Children.Add(new TypeTreeItem((TypeModel)MethodModel.ReturnType));
             }
         }
     }

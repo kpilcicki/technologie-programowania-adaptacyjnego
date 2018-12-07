@@ -38,6 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
@@ -67,9 +68,9 @@
     <Compile Include="Base\BindableBase.cs" />
     <Compile Include="Services\IFilePathGetter.cs" />
     <Compile Include="Services\ILogger.cs" />
-    <Compile Include="Services\IReflector.cs" />
     <Compile Include="Services\ISerializer.cs" />
     <Compile Include="Services\IUserInfo.cs" />
+    <Compile Include="ViewModel\Composer.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
