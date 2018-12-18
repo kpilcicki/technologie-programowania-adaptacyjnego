@@ -1,19 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using Reflection.Enums;
-using Reflection.PersistenceModel;
+using DataTransferGraph.Enums;
+using DataTransferGraph.Model;
 
 namespace FileSerializer.Model
 {
     [DataContract(IsReference = true)]
-    public class MethodModel : IMethodModel
+    public class MethodModel
     {
         [DataMember]
         public string Name { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public List<ITypeModel> GenericArguments { get; set; }
+        public List<TypeModel> GenericArguments { get; set; }
 
         [DataMember]
         public AccessLevel Accessibility { get; set; }
@@ -28,25 +28,25 @@ namespace FileSerializer.Model
         public bool IsVirtual { get; set; }
 
         [DataMember]
-        public ITypeModel ReturnType { get; set; }
+        public TypeModel ReturnType { get; set; }
 
         [DataMember]
         public bool IsExtensionMethod { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public List<IParameterModel> Parameters { get; set; }
+        public List<ParameterModel> Parameters { get; set; }
 
-        public MethodModel(IMethodModel methodModel)
+        public MethodModel(MethodDtg methodModel)
         {
             Name = methodModel.Name;
-            GenericArguments = methodModel.GenericArguments;
+            GenericArguments = methodModel.GenericArguments?.Select(TypeModel.LoadType).ToList();
             Accessibility = methodModel.Accessibility;
             IsAbstract = methodModel.IsAbstract;
             IsStatic = methodModel.IsStatic;
             IsVirtual = methodModel.IsVirtual;
-            ReturnType = methodModel.ReturnType;
+            ReturnType = TypeModel.LoadType(methodModel.ReturnType);
             IsExtensionMethod = methodModel.IsExtensionMethod;
-            Parameters = methodModel.Parameters?.Select(p => new ParameterModel(p) as IParameterModel).ToList();
+            Parameters = methodModel.Parameters?.Select(p => new ParameterModel(p)).ToList();
         }
     }
 }

@@ -8,6 +8,7 @@ using BusinessLogic.Services;
 using Reflection;
 using Reflection.Exceptions;
 using Reflection.Model;
+using Reflection.Persistence;
 
 namespace BusinessLogic.ViewModel
 {
@@ -34,8 +35,7 @@ namespace BusinessLogic.ViewModel
         [Import(typeof(ILogger))]
         public ILogger Logger { get; set; }
 
-        [Import(typeof(ISerializer))]
-        public ISerializer Serializer { get; set; }
+        public PersistenceManager PersistenceService { get; set; } = new PersistenceManager();
 
         public IControllableCommand LoadMetadataCommand { get; }
 
@@ -114,7 +114,7 @@ namespace BusinessLogic.ViewModel
                 else if (filePath.EndsWith(".xml", StringComparison.InvariantCulture))
                 {
                     Logger?.Trace($"Reading metadata from {filePath}; .xml");
-                    AssemblyModel = Serializer?.Deserialize(filePath);
+                    AssemblyModel = PersistenceService?.Deserialize(filePath);
                     Logger?.Trace($"Successfully read metadata from {filePath}; .xml");
                 }
                 else
@@ -151,7 +151,7 @@ namespace BusinessLogic.ViewModel
                 string filePath = _filePathGetter.GetFilePath();
                 if (filePath != null && filePath.EndsWith(".xml", StringComparison.InvariantCulture))
                 {
-                    Serializer?.Serialize(AssemblyModel, filePath);
+                    PersistenceService?.Serialize(AssemblyModel, filePath);
                     Logger?.Trace($"Serialization of assembly: {AssemblyModel.Name} succeeded");
                     _userInfo.PromptUser("Saving succeeded", "Saving operation");
                 }

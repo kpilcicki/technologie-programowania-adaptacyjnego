@@ -1,29 +1,29 @@
-﻿using Reflection.PersistenceModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DataTransferGraph.Model;
 
 namespace Reflection.Model
 {
-    public class NamespaceModel : INamespaceModel
+    public class NamespaceModel
     {
         public string Name { get; set;  }
 
-        public List<ITypeModel> Types { get; set; }
+        public List<TypeModel> Types { get; set; }
 
         public NamespaceModel(string namespaceName, List<Type> types)
         {
             Name = namespaceName;
             Types = types
                 .OrderBy(t => t.Name)
-                .Select(t => TypeModel.LoadType(t) as ITypeModel)
+                .Select(t => TypeModel.LoadType(t))
                 .ToList();
         }
 
-        public NamespaceModel(INamespaceModel namespaceModel)
+        public NamespaceModel(NamespaceDtg namespaceModel)
         {
             Name = namespaceModel.Name;
-            Types = namespaceModel.Types?.Select(t => TypeModel.LoadType(t) as ITypeModel).ToList();
+            Types = namespaceModel.Types?.Select(t => TypeModel.LoadType(t)).ToList();
         }
     }
 }

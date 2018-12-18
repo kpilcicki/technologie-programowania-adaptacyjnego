@@ -74,6 +74,10 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DataTransferGraph\DataTransferGraph.csproj">
+      <Project>{6386b87d-23da-4c2e-81e0-090f123803b6}</Project>
+      <Name>DataTransferGraph</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Reflection\Reflection.csproj">
       <Project>{0F44BF6A-2A53-4607-B0F6-FDDA2EAAFFDB}</Project>
       <Name>Reflection</Name>

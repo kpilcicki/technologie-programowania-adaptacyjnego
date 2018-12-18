@@ -1,4 +1,4 @@
-﻿namespace Reflection.Enums
+﻿namespace DataTransferGraph.Enums
 {
     public enum TypeKind
     {

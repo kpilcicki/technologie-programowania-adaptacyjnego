@@ -41,11 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums\AccessLevel.cs" />
-    <Compile Include="Enums\TypeKind.cs" />
     <Compile Include="Exceptions\AssemblyBlockedException.cs" />
     <Compile Include="Exceptions\ReflectionException.cs" />
     <Compile Include="Extensions\ExtensionMethods.cs" />
+    <Compile Include="Mapper\DataTransferMapper.cs" />
     <Compile Include="Model\AssemblyModel.cs" />
     <Compile Include="Model\FieldModel.cs" />
     <Compile Include="Model\MethodModel.cs" />
@@ -53,16 +52,20 @@
     <Compile Include="Model\ParameterModel.cs" />
     <Compile Include="Model\PropertyModel.cs" />
     <Compile Include="Model\TypeModel.cs" />
-    <Compile Include="PersistenceModel\IAssemblyModel.cs" />
-    <Compile Include="PersistenceModel\IFieldModel.cs" />
-    <Compile Include="PersistenceModel\IMethodModel.cs" />
-    <Compile Include="PersistenceModel\INamespaceModel.cs" />
-    <Compile Include="PersistenceModel\IParameterModel.cs" />
-    <Compile Include="PersistenceModel\IPropertyModel.cs" />
-    <Compile Include="PersistenceModel\ITypeModel.cs" />
+    <Compile Include="Persistence\PersistenceManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflector.cs" />
     <Compile Include="TypeDictionarySingletone.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataTransferGraph\DataTransferGraph.csproj">
+      <Project>{6386B87D-23DA-4C2E-81E0-090F123803B6}</Project>
+      <Name>DataTransferGraph</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FileSerializer\FileSerializer.csproj">
+      <Project>{30047b88-7959-4a79-8098-8dc77d5abcee}</Project>
+      <Name>FileSerializer</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

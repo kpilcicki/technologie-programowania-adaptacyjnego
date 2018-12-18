@@ -1,21 +1,21 @@
-﻿using Reflection.PersistenceModel;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
+using DataTransferGraph.Model;
 
 namespace FileSerializer.Model
 {
     [DataContract(IsReference = true)]
-    public class PropertyModel : IPropertyModel
+    public class PropertyModel
     {
         [DataMember]
         public string Name { get; set; }
 
         [DataMember]
-        public ITypeModel Type { get; set; }
+        public TypeModel Type { get; set; }
 
-        public PropertyModel(IPropertyModel propertyModel)
+        public PropertyModel(PropertyDtg propertyModel)
         {
             Name = propertyModel.Name;
-            Type = TypeModel.LoadType(propertyModel.Type) as ITypeModel;
+            Type = TypeModel.LoadType(propertyModel.Type);
         }
     }
 }

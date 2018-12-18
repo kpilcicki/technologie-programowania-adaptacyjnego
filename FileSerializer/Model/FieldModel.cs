@@ -1,18 +1,18 @@
-﻿using Reflection.PersistenceModel;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
+using DataTransferGraph.Model;
 
 namespace FileSerializer.Model
 {
     [DataContract(IsReference = true)]
-    public class FieldModel : IFieldModel
+    public class FieldModel
     {
         [DataMember]
         public string Name { get; set; }
 
         [DataMember]
-        public ITypeModel Type { get; set; }
+        public TypeModel Type { get; set; }
 
-        public FieldModel(IFieldModel fieldModel)
+        public FieldModel(FieldDtg fieldModel)
         {
             Name = fieldModel.Name;
             Type = TypeModel.LoadType(fieldModel.Type);

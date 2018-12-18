@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{30047B88-7959-4A79-8098-8DC77D5ABCEE}</ProjectGuid>
+    <ProjectGuid>{6386B87D-23DA-4C2E-81E0-090F123803B6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FileSerializer</RootNamespace>
-    <AssemblyName>FileSerializer</AssemblyName>
+    <RootNamespace>DataTransferGraph</RootNamespace>
+    <AssemblyName>DataTransferGraph</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,9 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,24 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DictionaryTypeSingleton.cs" />
-    <Compile Include="Mapper\DataTransferMapper.cs" />
-    <Compile Include="Model\AssemblyModel.cs" />
-    <Compile Include="Model\FieldModel.cs" />
-    <Compile Include="Model\MethodModel.cs" />
-    <Compile Include="Model\NamespaceModel.cs" />
-    <Compile Include="Model\ParameterModel.cs" />
-    <Compile Include="Model\PropertyModel.cs" />
-    <Compile Include="Model\TypeModel.cs" />
-    <Compile Include="XmlSerializer.cs" />
+    <Compile Include="Enums\AccessLevel.cs" />
+    <Compile Include="Enums\TypeKind.cs" />
+    <Compile Include="Model\AssemblyDtg.cs" />
+    <Compile Include="Model\FieldDtg.cs" />
+    <Compile Include="Model\MethodDtg.cs" />
+    <Compile Include="Model\NamespaceDtg.cs" />
+    <Compile Include="Model\ParameterDtg.cs" />
+    <Compile Include="Model\PropertyDtg.cs" />
+    <Compile Include="Model\TypeDtg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <ProjectReference Include="..\DataTransferGraph\DataTransferGraph.csproj">
-      <Project>{6386b87d-23da-4c2e-81e0-090f123803b6}</Project>
-      <Name>DataTransferGraph</Name>
-    </ProjectReference>
+    <Compile Include="Services\IAssemblySerialization.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -2,16 +2,16 @@
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Reflection.Enums;
-using Reflection.PersistenceModel;
+using DataTransferGraph.Enums;
+using DataTransferGraph.Model;
 
 namespace Reflection.Model
 {
-    public class MethodModel : IMethodModel
+    public class MethodModel
     {
         public string Name { get; set; }
 
-        public List<ITypeModel> GenericArguments { get; set; }
+        public List<TypeModel> GenericArguments { get; set; }
 
         public AccessLevel Accessibility { get; set; }
 
@@ -21,11 +21,11 @@ namespace Reflection.Model
 
         public bool IsVirtual { get; set; }
 
-        public ITypeModel ReturnType { get; set; }
+        public TypeModel ReturnType { get; set; }
 
         public bool IsExtensionMethod { get; set; }
 
-        public List<IParameterModel> Parameters { get; set; }
+        public List<ParameterModel> Parameters { get; set; }
 
         public MethodModel(MethodBase methodBase)
         {
@@ -36,11 +36,11 @@ namespace Reflection.Model
             IsStatic = methodBase.IsStatic;
             IsVirtual = methodBase.IsVirtual;
             ReturnType = GetReturnType(methodBase);
-            GenericArguments = GetGenericArguments(methodBase)?.Select(t => t as ITypeModel).ToList();
-            Parameters = GetParameters(methodBase)?.Select(t => t as IParameterModel).ToList();
+            GenericArguments = GetGenericArguments(methodBase);
+            Parameters = GetParameters(methodBase);
         }
 
-        public MethodModel(IMethodModel methodBase)
+        public MethodModel(MethodDtg methodBase)
         {
             Name = methodBase.Name;
             Accessibility = methodBase.Accessibility;
@@ -50,8 +50,8 @@ namespace Reflection.Model
             IsVirtual = methodBase.IsVirtual;
 
             ReturnType = TypeModel.LoadType(methodBase.ReturnType);
-            GenericArguments = methodBase.GenericArguments?.Select(t => TypeModel.LoadType(t) as ITypeModel).ToList();
-            Parameters = methodBase.Parameters?.Select(p => new ParameterModel(p) as IParameterModel).ToList();
+            GenericArguments = methodBase.GenericArguments?.Select(t => TypeModel.LoadType(t)).ToList();
+            Parameters = methodBase.Parameters?.Select(p => new ParameterModel(p)).ToList();
         }
 
         private static List<TypeModel> GetGenericArguments(MethodBase method)

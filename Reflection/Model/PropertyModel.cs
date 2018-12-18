@@ -1,13 +1,13 @@
-﻿using Reflection.PersistenceModel;
-using System.Reflection;
+﻿using System.Reflection;
+using DataTransferGraph.Model;
 
 namespace Reflection.Model
 {
-    public class PropertyModel : IPropertyModel
+    public class PropertyModel
     {
         public string Name { get; set; }
 
-        public ITypeModel Type { get; set; }
+        public TypeModel Type { get; set; }
 
         public PropertyModel(PropertyInfo propertyInfo)
         {
@@ -15,7 +15,7 @@ namespace Reflection.Model
             Type = TypeModel.LoadType(propertyInfo.PropertyType);
         }
 
-        public PropertyModel(IPropertyModel propertyInfo)
+        public PropertyModel(PropertyDtg propertyInfo)
         {
             Name = propertyInfo.Name;
             Type = TypeModel.LoadType(propertyInfo.Type);

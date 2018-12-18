@@ -1,23 +1,23 @@
-﻿using Reflection.PersistenceModel;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using DataTransferGraph.Model;
 
 namespace FileSerializer.Model
 {
     [DataContract]
-    public class AssemblyModel : IAssemblyModel
+    public class AssemblyModel
     {
         [DataMember]
         public string Name { get; set; }
 
         [DataMember]
-        public List<INamespaceModel> NamespaceModels { get; set; }
+        public List<NamespaceModel> NamespaceModels { get; set; }
 
-        public AssemblyModel(IAssemblyModel assemblyModel)
+        public AssemblyModel(AssemblyDtg assemblyModel)
         {
             Name = assemblyModel.Name;
-            NamespaceModels = assemblyModel.NamespaceModels?.Select(ns => new NamespaceModel(ns) as INamespaceModel).ToList();
+            NamespaceModels = assemblyModel.NamespaceModels?.Select(ns => new NamespaceModel(ns)).ToList();
         }
     }
 }

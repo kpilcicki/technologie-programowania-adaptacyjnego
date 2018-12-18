@@ -1,13 +1,13 @@
-﻿using Reflection.PersistenceModel;
-using System.Reflection;
+﻿using System.Reflection;
+using DataTransferGraph.Model;
 
 namespace Reflection.Model
 {
-    public class ParameterModel : IParameterModel
+    public class ParameterModel
     {
         public string Name { get; set; }
 
-        public ITypeModel Type { get; set; }
+        public TypeModel Type { get; set; }
 
         public ParameterModel(ParameterInfo parameterInfo)
         {
@@ -15,7 +15,7 @@ namespace Reflection.Model
             Type = TypeModel.LoadType(parameterInfo.ParameterType);
         }
 
-        public ParameterModel(IParameterModel parameterInfo)
+        public ParameterModel(ParameterDtg parameterInfo)
         {
             Name = parameterInfo.Name;
             Type = TypeModel.LoadType(parameterInfo.Type);
