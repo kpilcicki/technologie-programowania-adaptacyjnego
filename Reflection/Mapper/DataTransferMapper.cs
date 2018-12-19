@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataTransferGraph.Model;
+using Reflection.Enums;
 using Reflection.Model;
 
 namespace Reflection.Mapper
@@ -35,7 +36,7 @@ namespace Reflection.Mapper
             {
                 Name = methodModel.Name,
                 GenericArguments = methodModel.GenericArguments?.Select(LoadType).ToList(),
-                Accessibility = methodModel.Accessibility,
+                Accessibility = EnumMapper.GetAccessLevel(methodModel.Accessibility),
                 IsAbstract = methodModel.IsAbstract,
                 IsStatic = methodModel.IsStatic,
                 IsVirtual = methodModel.IsVirtual,
@@ -80,8 +81,8 @@ namespace Reflection.Mapper
             {
                 Name = type.Name,
                 NamespaceName = type.NamespaceName,
-                Accessibility = type.Accessibility,
-                Type = type.Type,
+                Accessibility = EnumMapper.GetAccessLevel(type.Accessibility),
+                Type = EnumMapper.GetTypeKind(type.Type),
                 IsStatic = type.IsStatic,
                 IsAbstract = type.IsAbstract,
                 IsSealed = type.IsSealed,

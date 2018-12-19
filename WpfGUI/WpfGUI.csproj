@@ -128,18 +128,6 @@
       <Project>{860a43e1-c86e-48ce-bc74-9c51c207ca30}</Project>
       <Name>BusinessLogic</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FileLogger\FileLogger.csproj">
-      <Project>{47266391-0D53-46AC-88B5-1F759CF153C2}</Project>
-      <Name>FileLogger</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FileSerializer\FileSerializer.csproj">
-      <Project>{30047b88-7959-4a79-8098-8dc77d5abcee}</Project>
-      <Name>FileSerializer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Reflection\Reflection.csproj">
-      <Project>{0F44BF6A-2A53-4607-B0F6-FDDA2EAAFFDB}</Project>
-      <Name>Reflection</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\ParameterIcon.png" />

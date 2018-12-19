@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using DataTransferGraph.Enums;
 using DataTransferGraph.Model;
+using Reflection.Enums;
 using Reflection.Extensions;
 
 namespace Reflection.Model
@@ -69,19 +69,19 @@ namespace Reflection.Model
             DictionaryTypeSingleton.Instance.RegisterType(type.Name, this);
             Name = type.Name;
             NamespaceName = type.NamespaceName;
-            Accessibility = type.Accessibility;
-            Type = type.Type;
+            Accessibility = EnumMapper.GetAccessLevel(type.Accessibility);
+            Type = EnumMapper.GetTypeKind(type.Type);
             IsStatic = type.IsSealed && type.IsAbstract;
             IsAbstract = type.IsAbstract;
             IsSealed = type.IsSealed;
 
             BaseType = LoadType(type.BaseType);
             DeclaringType = LoadType(type.DeclaringType);
-            NestedTypes = type.NestedTypes?.Select(t => LoadType(t)).ToList();
+            NestedTypes = type.NestedTypes?.Select(LoadType).ToList();
 
-            GenericArguments = type.GenericArguments?.Select(t => LoadType(t)).ToList();
+            GenericArguments = type.GenericArguments?.Select(LoadType).ToList();
 
-            ImplementedInterfaces = type.ImplementedInterfaces?.Select(t => LoadType(t)).ToList(); ;
+            ImplementedInterfaces = type.ImplementedInterfaces?.Select(LoadType).ToList(); ;
 
             Properties = type.Properties?.Select(p => new PropertyModel(p)).ToList();
             Fields = type.Fields?.Select(field => new FieldModel(field)).ToList();

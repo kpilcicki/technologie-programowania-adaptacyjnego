@@ -35,7 +35,7 @@ namespace BusinessLogic.ViewModel
         [Import(typeof(ILogger))]
         public ILogger Logger { get; set; }
 
-        public PersistenceManager PersistenceService { get; set; } = new PersistenceManager();
+        public PersistenceManager PersistenceService { get; set; }
 
         public IControllableCommand LoadMetadataCommand { get; }
 
@@ -81,6 +81,7 @@ namespace BusinessLogic.ViewModel
             _filePathGetter = filePathGetter ?? throw new ArgumentNullException(nameof(filePathGetter));
             _userInfo = userInfo ?? throw new ArgumentNullException(nameof(userInfo));
 
+            PersistenceService = PersistenceManager.GetComposedPersistenceManager();
             MetadataHierarchy = new ObservableCollection<MetadataTreeItem>();
             LoadMetadataCommand = new RelayCommand(Open, () => !IsBusy);
             SaveMetadataCommand = new RelayCommand(Save, () => !IsBusy && AssemblyModel != null);

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using DataTransferGraph.Enums;
+using Reflection.Enums;
 using DataTransferGraph.Model;
 
 namespace Reflection.Model
@@ -43,7 +43,7 @@ namespace Reflection.Model
         public MethodModel(MethodDtg methodBase)
         {
             Name = methodBase.Name;
-            Accessibility = methodBase.Accessibility;
+            Accessibility = EnumMapper.GetAccessLevel(methodBase.Accessibility);
             IsAbstract = methodBase.IsAbstract;
             IsExtensionMethod = methodBase.IsExtensionMethod;
             IsStatic = methodBase.IsStatic;

@@ -1,6 +1,7 @@
-﻿using DataTransferGraph.Model;
+﻿using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
+using DataTransferGraph.Model;
 using DataTransferGraph.Services;
-using FileSerializer;
 using Reflection.Mapper;
 using Reflection.Model;
 
@@ -8,7 +9,8 @@ namespace Reflection.Persistence
 {
     public class PersistenceManager
     {
-        public IAssemblySerialization Serializator = new XmlSerializer();
+        [Import]
+        public IAssemblySerialization Serializator;
         public void Serialize(AssemblyModel assemblyModel, string connectionString)
         {
             AssemblyDtg assemblyDtg = DataTransferMapper.AssemblyDtg(assemblyModel);
@@ -27,5 +29,18 @@ namespace Reflection.Persistence
             return assemblyModel;
         }
 
+        public static PersistenceManager GetComposedPersistenceManager()
+        {
+            PersistenceManager pm = new PersistenceManager();
+
+            AggregateCatalog catalog = new AggregateCatalog();
+            catalog.Catalogs.Add(new DirectoryCatalog("../../../FileSerializer/bin/Debug"));
+            catalog.Catalogs.Add(new DirectoryCatalog("../../../FileLogger/bin/Debug"));
+            CompositionContainer container = new CompositionContainer(catalog);
+
+            container.ComposeParts(pm);
+
+            return pm;
+        }
     }
 }
