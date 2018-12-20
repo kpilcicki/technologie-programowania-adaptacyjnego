@@ -52,4 +52,8 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if not exist "$(SolutionDir)plugins" mkdir "$(SolutionDir)plugins"
+copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)plugins\$(ProjectName).dll"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

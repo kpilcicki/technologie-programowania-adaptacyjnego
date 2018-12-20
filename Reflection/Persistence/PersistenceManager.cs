@@ -34,8 +34,7 @@ namespace Reflection.Persistence
             PersistenceManager pm = new PersistenceManager();
 
             AggregateCatalog catalog = new AggregateCatalog();
-            catalog.Catalogs.Add(new DirectoryCatalog("../../../FileSerializer/bin/Debug"));
-            catalog.Catalogs.Add(new DirectoryCatalog("../../../FileLogger/bin/Debug"));
+            catalog.Catalogs.Add(new DirectoryCatalog("../../../plugins"));
             CompositionContainer container = new CompositionContainer(catalog);
 
             container.ComposeParts(pm);

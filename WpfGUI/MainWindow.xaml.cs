@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using BusinessLogic;
 using BusinessLogic.ViewModel;
 using WpfGUI.Utilities;
 
@@ -18,7 +19,8 @@ namespace WpfGUI
         {
             return Composer.GetComposedMainViewModel(
                 new InfoDialog(),
-                new FileDialog());
+                new FileDialog(),
+                new FatalErrorHandler());
         }
     }
 }

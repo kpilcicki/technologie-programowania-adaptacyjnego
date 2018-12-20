@@ -40,11 +40,11 @@ namespace CommandLineGUI
             Menu = new Menu();
             Menu.QuitKeywords.AddRange(new string[] {"q", "Q", "quit"});
 
-            MenuItem loadMetadataFromFile = new MenuItem() {Option = "1", Header = "Load metadata from .dll or .xml file"};
+            MenuItem loadMetadataFromFile = new MenuItem() {Option = "1", Header = "Load metadata from .dll or from other source"};
             Menu.MenuItems.Add(loadMetadataFromFile);
             DataContext.SetBinding(loadMetadataFromFile, "Command", "LoadMetadataCommand");
 
-            MenuItem saveMetadata = new MenuItem() { Option = "2", Header = "Save metadata to .xml file" };
+            MenuItem saveMetadata = new MenuItem() { Option = "2", Header = "Save loaded metadata" };
             Menu.MenuItems.Add(saveMetadata);
             DataContext.SetBinding(saveMetadata, "Command", "SaveMetadataCommand");
 
