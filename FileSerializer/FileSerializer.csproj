@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
@@ -41,14 +42,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DictionaryTypeSingleton.cs" />
+    <Compile Include="Mapper\DataTransferMapper.cs" />
+    <Compile Include="Model\AssemblyModel.cs" />
+    <Compile Include="Model\FieldModel.cs" />
+    <Compile Include="Model\MethodModel.cs" />
+    <Compile Include="Model\NamespaceModel.cs" />
+    <Compile Include="Model\ParameterModel.cs" />
+    <Compile Include="Model\PropertyModel.cs" />
+    <Compile Include="Model\TypeModel.cs" />
     <Compile Include="XmlSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\ServiceContract\ServiceContract.csproj">
-      <Project>{b52e62f5-1427-4e96-9fad-f0f6099fa54a}</Project>
-      <Name>ServiceContract</Name>
+    <ProjectReference Include="..\DataTransferGraph\DataTransferGraph.csproj">
+      <Project>{6386b87d-23da-4c2e-81e0-090f123803b6}</Project>
+      <Name>DataTransferGraph</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if not exist "$(SolutionDir)plugins" mkdir "$(SolutionDir)plugins"
+copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)plugins\$(ProjectName).dll"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -1,5 +1,5 @@
-﻿using Microsoft.Win32;
-using ServiceContract.Services;
+﻿using BusinessLogic.Services;
+using Microsoft.Win32;
 
 namespace WpfGUI.Utilities
 {

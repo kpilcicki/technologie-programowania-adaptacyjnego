@@ -1,4 +1,4 @@
-﻿using DataContract.Model;
+﻿using Reflection.Model;
 
 namespace BusinessLogic.Model
 {
@@ -20,7 +20,7 @@ namespace BusinessLogic.Model
         {
             if (FieldModel.Type != null)
             {
-                Children.Add(new TypeTreeItem(FieldModel.Type));
+                Children.Add(new TypeTreeItem((TypeModel)FieldModel.Type));
             }
         }
     }

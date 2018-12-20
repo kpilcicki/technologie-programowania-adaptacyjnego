@@ -1,8 +1,6 @@
-﻿using BusinessLogic.ViewModel;
+﻿using BusinessLogic;
+using BusinessLogic.ViewModel;
 using CommandLineGUI.Utilities;
-using FileLogger;
-using FileSerializer;
-using Reflection;
 
 namespace CommandLineGUI
 {
@@ -10,18 +8,16 @@ namespace CommandLineGUI
     {
         internal static void Main(string[] args)
         {
-            MainView mainView = new MainView(GetViewModel());
+            MainView mainView = new MainView(InitializeViewModel());
             mainView.Display();
         }
 
-        private static MainViewModel GetViewModel()
+        private static MainViewModel InitializeViewModel()
         {
-            return new MainViewModel(
-                new Reflector(),
+            return Composer.GetComposedMainViewModel(
                 new ConsoleUserInfo(),
                 new ConsoleFilePathGetter(),
-                new XmlSerializer(),
-                new Logger());
+                new ConsoleFatalErrorHandler());
         }
     }
 }

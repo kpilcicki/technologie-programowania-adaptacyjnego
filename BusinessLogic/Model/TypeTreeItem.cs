@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
-using DataContract.Model;
+using Reflection.Model;
 
 namespace BusinessLogic.Model
 {
@@ -31,12 +31,12 @@ namespace BusinessLogic.Model
         {
             if (TypeModel.BaseType != null)
             {
-                Children.Add(new TypeTreeItem(TypeModel.BaseType));
+                Children.Add(new TypeTreeItem((TypeModel)TypeModel.BaseType));
             }
 
             if (TypeModel.DeclaringType != null)
             {
-                Children.Add(new TypeTreeItem(TypeModel.DeclaringType));
+                Children.Add(new TypeTreeItem((TypeModel)TypeModel.DeclaringType));
             }
 
             if (TypeModel.Properties != null)

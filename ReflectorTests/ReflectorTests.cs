@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using DataContract.Model;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Reflection;
+using Reflection.Model;
 
 namespace ReflectorTests
 {
@@ -61,7 +60,7 @@ namespace ReflectorTests
         public void When_ReflectorConstructorCalled_Expect_CorrectNumberOfGenericArguments()
         {
             List<TypeModel> genericClasses = _assemblyModel.NamespaceModels
-                .Find(t => t.Name == NamespaceTitleplane).Types.Where(t => t.GenericArguments?.Count != 0)
+                .Find(t => t.Name == NamespaceTitleplane).Types.Where(t => t.GenericArguments != null)
                 .ToList();
             genericClasses.Count.Should().Be(1);
         }

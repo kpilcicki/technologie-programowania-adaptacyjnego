@@ -1,29 +1,36 @@
-﻿using System.IO;
+﻿using System.ComponentModel.Composition;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
-using ServiceContract.Services;
+using DataTransferGraph.Model;
+using DataTransferGraph.Services;
+using FileSerializer.Mapper;
+using FileSerializer.Model;
 
 namespace FileSerializer
 {
-    public class XmlSerializer : ISerializer
+    [Export(typeof(IAssemblySerialization))]
+    public class XmlSerializer : IAssemblySerialization
     {
-        public void Serialize<T>(T sourceObject, string destination)
-        { 
-            DataContractSerializer dataContractSerializer = new DataContractSerializer(typeof(T));
+        public void Serialize(string connectionString, AssemblyDtg assemblyDtg)
+        {
+            AssemblyModel assemblyToSerialize = new AssemblyModel(assemblyDtg);
+
+            DataContractSerializer dataContractSerializer = new DataContractSerializer(typeof(AssemblyModel));
             XmlWriterSettings settings = new XmlWriterSettings { Indent = true };
 
-            using (XmlWriter xw = XmlWriter.Create(destination, settings))
+            using (XmlWriter xw = XmlWriter.Create(connectionString, settings))
             {
-                dataContractSerializer.WriteObject(xw, sourceObject);
+                dataContractSerializer.WriteObject(xw, assemblyToSerialize);
             }
         }
 
-        public T Deserialize<T>(string source)
+        AssemblyDtg IAssemblySerialization.Deserialize(string connectionString)
         {
-            DataContractSerializer dataContractSerializer = new DataContractSerializer(typeof(T));
-            using (FileStream fs = new FileStream(source, FileMode.Open))
+            DataContractSerializer dataContractSerializer = new DataContractSerializer(typeof(AssemblyModel));
+            using (FileStream fs = new FileStream(connectionString, FileMode.Open))
             {
-                return (T)dataContractSerializer.ReadObject(fs);
+                return DataTransferMapper.AssemblyDtg((AssemblyModel)dataContractSerializer.ReadObject(fs));
             }
         }
     }

@@ -73,10 +73,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DataContract\DataContract.csproj">
-      <Project>{20E38279-9ABB-49CF-89E9-7ADA6A88C494}</Project>
-      <Name>DataContract</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ExampleLib\ExampleLib.csproj">
       <Project>{604260e1-1bb1-4e32-b736-0fdf6d1b6ffa}</Project>
       <Name>ExampleLib</Name>
