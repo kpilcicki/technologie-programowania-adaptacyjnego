@@ -10,7 +10,7 @@ namespace Reflection.Persistence
     public class PersistenceManager
     {
         [Import]
-        public IAssemblySerialization Serializator;
+        public IAssemblySerialization Serializator = new DatabaseBus.DatabaseConnection();
         public void Serialize(AssemblyModel assemblyModel, string connectionString)
         {
             AssemblyDtg assemblyDtg = DataTransferMapper.AssemblyDtg(assemblyModel);
