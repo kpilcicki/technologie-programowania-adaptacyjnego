@@ -5,6 +5,7 @@ using System.IO;
 using BusinessLogic.Base;
 using BusinessLogic.Model;
 using BusinessLogic.Services;
+using DataTransferGraph.Exception;
 using Reflection;
 using Reflection.Exceptions;
 using Reflection.Model;
@@ -40,6 +41,8 @@ namespace BusinessLogic.ViewModel
         public IControllableCommand LoadMetadataCommand { get; }
 
         public IControllableCommand SaveMetadataCommand { get; }
+
+        public IControllableCommand LoadMetadataFromDataSource { get; }
 
         private AssemblyModel _assemblyModel;
 
@@ -82,17 +85,18 @@ namespace BusinessLogic.ViewModel
             _userInfo = userInfo ?? throw new ArgumentNullException(nameof(userInfo));
 
             MetadataHierarchy = new ObservableCollection<MetadataTreeItem>();
-            LoadMetadataCommand = new RelayCommand(Open, () => !IsBusy);
+            LoadMetadataCommand = new RelayCommand(ReadMetadata, () => !IsBusy);
             SaveMetadataCommand = new RelayCommand(Save, () => !IsBusy && AssemblyModel != null);
+            LoadMetadataFromDataSource = new RelayCommand(ReadFromDataSource, () => !IsBusy);
         }
 
-        private void Open()
+        private void ReadMetadata()
         {
             try
             {
                 IsBusy = true;
 
-                Logger?.Trace($"Reading file path...");
+                Logger?.Trace($"Reading file path for .dll file...");
 
                 string filePath = _filePathGetter.GetFilePath();
 
@@ -111,29 +115,45 @@ namespace BusinessLogic.ViewModel
                     AssemblyModel = _reflector.ReflectDll(filePath);
                     Logger?.Trace($"Successfully read metadata from {filePath}; .dll");
                 }
-                else if (filePath.EndsWith(".xml", StringComparison.InvariantCulture))
-                {
-                    Logger?.Trace($"Reading metadata from {filePath}; .xml");
-                    AssemblyModel = PersistenceService?.Deserialize(filePath);
-                    Logger?.Trace($"Successfully read metadata from {filePath}; .xml");
-                }
                 else
                 {
                     _userInfo.PromptUser(
-                        "Provided file has unknown extension. Program accepts files only with .dll and .xml extensions",
+                        "Provided file has unknown extension. Program accepts files only with .dll extensions",
                         "File Error");
                     Logger?.Trace($"Provided file has unknown extension {Path.GetExtension(filePath)}");
                 }
             }
             catch (AssemblyBlockedException e)
             {
-                _userInfo.PromptUser("Unblock the selected assembly if you want to read its content!", "Expected Error");
+                _userInfo.PromptUser("Unblock the selected assembly if you want to read its content!",
+                    "Expected Error");
                 Logger?.Trace($"AssemblyBlockedException thrown, message: {e.Message}");
             }
             catch (ReflectionException e)
             {
                 _userInfo.PromptUser($"Something unexpected happened.\nError message: {e.Message}", "Unexpected Error");
                 Logger?.Trace($"ReflectionException thrown, message: {e.Message}");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        private void ReadFromDataSource()
+        {
+            try
+            {
+                IsBusy = true;
+                Logger?.Trace($"Reading metadata from data source;");
+                AssemblyModel = PersistenceService?.Deserialize();
+                Logger?.Trace($"Successfully read metadata from data source;");
+            }
+            catch (ReadingMetadataException e)
+            {
+                _userInfo.PromptUser($"An error occurred during reading from data source. {e.Message}",
+                    "Unexpected exception");
+                Logger?.Trace($"ReadingMetadataException thrown, message: {e.Message}");
             }
             finally
             {
@@ -148,27 +168,17 @@ namespace BusinessLogic.ViewModel
                 IsBusy = true;
                 Logger?.Trace($"Serializing metadata...");
 
-                string filePath = _filePathGetter.GetFilePath();
-                if (filePath != null && filePath.EndsWith(".xml", StringComparison.InvariantCulture))
-                {
-                    PersistenceService?.Serialize(AssemblyModel, filePath);
-                    Logger?.Trace($"Serialization of assembly: {AssemblyModel.Name} succeeded");
-                    _userInfo.PromptUser("Saving succeeded", "Saving operation");
-                }
-                else
-                {
-                    Logger?.Trace($"Provided file is not .xml file");
-                    _userInfo.PromptUser("Provided file is not .xml file", "Saving operation failure");
-                }
+                PersistenceService?.Serialize(AssemblyModel);
+                Logger?.Trace($"Serialization of assembly: {AssemblyModel.Name} succeeded");
+                _userInfo.PromptUser("Saving succeeded", "Saving operation");
             }
-
-            // catch (Exception ex)
-            // {
-            //    Logger?.Trace($"Serialization of assembly: {AssemblyModel.Name} failed");
-            //    _userInfo.PromptUser(ex.Message, "Serialization failed");
-            //    Logger?.Trace(
-            //        $"Serialization of assembly: {AssemblyModel.Name} failed: exception thrown: {ex.Message}");
-            // }
+            catch (SavingMetadataException ex)
+            {
+               Logger?.Trace($"Serialization of assembly: {AssemblyModel.Name} failed");
+               _userInfo.PromptUser(ex.Message, "Serialization failed");
+               Logger?.Trace(
+                   $"Serialization of assembly: {AssemblyModel.Name} failed: exception thrown: {ex.Message}");
+            }
             finally
             {
                 IsBusy = false;

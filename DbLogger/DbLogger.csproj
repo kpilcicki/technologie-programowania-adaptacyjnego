@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{30047B88-7959-4A79-8098-8DC77D5ABCEE}</ProjectGuid>
+    <ProjectGuid>{C675D1CF-5BC3-47AF-B73B-AF3CD2DDBDA4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FileSerializer</RootNamespace>
-    <AssemblyName>FileSerializer</AssemblyName>
+    <RootNamespace>DbLogger</RootNamespace>
+    <AssemblyName>DbLogger</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,11 +31,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Configuration" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,24 +49,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DictionaryTypeSingleton.cs" />
-    <Compile Include="Exception\WrongFilePathException.cs" />
-    <Compile Include="Mapper\DataTransferMapper.cs" />
-    <Compile Include="Model\AssemblyModel.cs" />
-    <Compile Include="Model\FieldModel.cs" />
-    <Compile Include="Model\MethodModel.cs" />
-    <Compile Include="Model\NamespaceModel.cs" />
-    <Compile Include="Model\ParameterModel.cs" />
-    <Compile Include="Model\PropertyModel.cs" />
-    <Compile Include="Model\TypeModel.cs" />
-    <Compile Include="XmlSerializer.cs" />
+    <Compile Include="LoggerContext.cs" />
+    <Compile Include="DbLogger.cs" />
+    <Compile Include="LogItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\DataTransferGraph\DataTransferGraph.csproj">
-      <Project>{6386b87d-23da-4c2e-81e0-090f123803b6}</Project>
-      <Name>DataTransferGraph</Name>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj">
+      <Project>{860a43e1-c86e-48ce-bc74-9c51c207ca30}</Project>
+      <Name>BusinessLogic</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

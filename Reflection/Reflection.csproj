@@ -62,6 +62,10 @@
     <Compile Include="TypeDictionarySingletone.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DatabaseBus\DatabaseBus.csproj">
+      <Project>{7c222c3a-d22e-4984-b826-6ce2f47f45f6}</Project>
+      <Name>DatabaseBus</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DataTransferGraph\DataTransferGraph.csproj">
       <Project>{6386B87D-23DA-4C2E-81E0-090F123803B6}</Project>
       <Name>DataTransferGraph</Name>

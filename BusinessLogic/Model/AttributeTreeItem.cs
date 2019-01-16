@@ -4,11 +4,11 @@ using Reflection.Model;
 
 namespace BusinessLogic.Model
 {
-    public class TypeTreeItem : MetadataTreeItem
+    public class AttributeTreeItem : MetadataTreeItem
     {
         public TypeModel TypeModel { get; }
 
-        public TypeTreeItem(TypeModel typeModel)
+        public AttributeTreeItem(TypeModel typeModel)
         {
             TypeModel = typeModel;
         }
@@ -36,7 +36,7 @@ namespace BusinessLogic.Model
 
             if (TypeModel.DeclaringType != null)
             {
-                Children.Add(new TypeTreeItem(TypeModel.DeclaringType));
+                Children.Add(new TypeTreeItem((TypeModel)TypeModel.DeclaringType));
             }
 
             if (TypeModel.Properties != null)
@@ -44,14 +44,6 @@ namespace BusinessLogic.Model
                 foreach (PropertyModel propertyModel in TypeModel.Properties)
                 {
                     Children.Add(new PropertyTreeItem(propertyModel));
-                }
-            }
-
-            if (TypeModel.Attributes != null)
-            {
-                foreach (TypeModel typeModel in TypeModel.Attributes)
-                {
-                    Children.Add(new AttributeTreeItem(typeModel));
                 }
             }
 
@@ -84,6 +76,14 @@ namespace BusinessLogic.Model
                 foreach (TypeModel typeModel in TypeModel.NestedTypes)
                 {
                     Children.Add(new TypeTreeItem(typeModel));
+                }
+            }
+
+            if (TypeModel.Attributes != null)
+            {
+                foreach (TypeModel typeModel in TypeModel.Attributes)
+                {
+                    Children.Add(new AttributeTreeItem(typeModel));
                 }
             }
 

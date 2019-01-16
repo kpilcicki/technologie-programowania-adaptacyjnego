@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{30047B88-7959-4A79-8098-8DC77D5ABCEE}</ProjectGuid>
+    <ProjectGuid>{7C222C3A-D22E-4984-B826-6CE2F47F45F6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FileSerializer</RootNamespace>
-    <AssemblyName>FileSerializer</AssemblyName>
+    <RootNamespace>DatabaseBus</RootNamespace>
+    <AssemblyName>DatabaseBus</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,11 +30,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,8 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyContext.cs" />
+    <Compile Include="DatabaseConnection.cs" />
     <Compile Include="DictionaryTypeSingleton.cs" />
-    <Compile Include="Exception\WrongFilePathException.cs" />
     <Compile Include="Mapper\DataTransferMapper.cs" />
     <Compile Include="Model\AssemblyModel.cs" />
     <Compile Include="Model\FieldModel.cs" />
@@ -53,10 +60,12 @@
     <Compile Include="Model\ParameterModel.cs" />
     <Compile Include="Model\PropertyModel.cs" />
     <Compile Include="Model\TypeModel.cs" />
-    <Compile Include="XmlSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataTransferGraph\DataTransferGraph.csproj">
       <Project>{6386b87d-23da-4c2e-81e0-090f123803b6}</Project>

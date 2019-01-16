@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using DataTransferGraph.Enums;
 using DataTransferGraph.Model;
 
 namespace Reflection.Model
@@ -20,5 +21,6 @@ namespace Reflection.Model
             Name = propertyInfo.Name;
             Type = TypeModel.LoadType(propertyInfo.Type);
         }
+
     }
 }

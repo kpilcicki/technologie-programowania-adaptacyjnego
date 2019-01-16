@@ -18,6 +18,8 @@ namespace Reflection.Model
 
         public List<TypeModel> GenericArguments { get; set; }
 
+        public List<TypeModel> Attributes { get; set; }
+
         public AccessLevel Accessibility { get; set; }
 
         public bool IsSealed { get; set; }
@@ -42,26 +44,37 @@ namespace Reflection.Model
 
         public List<FieldModel> Fields { get; set; }
 
-        public TypeModel(Type type)
+        private TypeModel(Type type)
         {
-            DictionaryTypeSingleton.Instance.RegisterType(type.Name, this);
-            Name = type.Name;
+            string name = type.Name;
+            if (type.ContainsGenericParameters)
+            {
+                name = $"{name.Split('`')[0]} <{string.Join(",", type.GetGenericArguments().Select(t => t.Name).ToArray())}>";
+            }
             NamespaceName = type.GetNamespace();
             Accessibility = GetAccessibility(type);
             Type = GetTypeKind(type);
             IsStatic = type.IsSealed && type.IsAbstract;
             IsAbstract = type.IsAbstract;
             IsSealed = type.IsSealed;
+            Name = name;
+            
+            DictionaryTypeSingleton.Instance.RegisterType(type.Name, this);
 
-            BaseType = GetBaseType(type);
-            DeclaringType = GetDeclaringType(type);
-            NestedTypes = GetNestedTypes(type);
-            GenericArguments = GetGenericArguments(type);
-            ImplementedInterfaces = GetImplementedInterfaces(type);
-            Properties = GetProperties(type);
-            Fields = GetFields(type);
-            Constructors = GetConstructors(type);
-            Methods = GetMethods(type);
+
+            if (type.Assembly.ManifestModule.FullyQualifiedName == AssemblyModel.CurrentAssemblyName)
+            {
+                BaseType = GetBaseType(type);
+                Attributes = GetAttributes(type);
+                DeclaringType = GetDeclaringType(type);
+                NestedTypes = GetNestedTypes(type);
+                GenericArguments = GetGenericArguments(type);
+                ImplementedInterfaces = GetImplementedInterfaces(type);
+                Properties = GetProperties(type);
+                Fields = GetFields(type);
+                Constructors = GetConstructors(type);
+                Methods = GetMethods(type);
+            }
         }
 
         public TypeModel(TypeDtg type)
@@ -108,6 +121,11 @@ namespace Reflection.Model
                 .OrderBy(t => t.Name)
                 .Select(LoadType)
                 .ToList();
+        }
+
+        private static List<TypeModel> GetAttributes(Type type)
+        {
+            return type.GetCustomAttributes(false).Select(attr => LoadType(attr.GetType())).ToList();
         }
 
         private static List<MethodModel> GetConstructors(Type type)
