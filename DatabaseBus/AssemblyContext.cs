@@ -1,8 +1,5 @@
 ﻿using DatabaseBus.Model;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Text;
 
 namespace DatabaseBus
 {
@@ -13,13 +10,18 @@ namespace DatabaseBus
             Database.SetInitializer<AssemblyContext>(new DropCreateDatabaseAlways<AssemblyContext>());
         }
 
-        public DbSet<AssemblyModel> AssemblyModels { get; set; }
-        public DbSet<FieldModel> FieldModels { get; set; }
-        public DbSet<MethodModel> MethodModels { get; set; }
-        public DbSet<NamespaceModel> NamespaceModels { get; set; }
-        public DbSet<ParameterModel> ParameterModels { get; set; }
-        public DbSet<PropertyModel> PropertyModels { get; set; }
-        public DbSet<TypeModel> TypeModels { get; set; }
+        public virtual DbSet<AssemblyModel> AssemblyModels { get; set; }
+        public virtual DbSet<FieldModel> FieldModels { get; set; }
+        public virtual DbSet<MethodModel> MethodModels { get; set; }
+        public virtual DbSet<NamespaceModel> NamespaceModels { get; set; }
+        public virtual DbSet<ParameterModel> ParameterModels { get; set; }
+        public virtual DbSet<PropertyModel> PropertyModels { get; set; }
+        public virtual DbSet<TypeModel> TypeModels { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+
+        }
 
     }
 }

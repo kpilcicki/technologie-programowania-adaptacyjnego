@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
 using DataTransferGraph.Model;
 
 namespace DatabaseBus.Model
@@ -7,7 +7,7 @@ namespace DatabaseBus.Model
     {
         public PropertyModel()
         {
-
+            TypeProperties = new HashSet<TypeModel>();
         }
         public int PropertyModelId { get; set; }
         public string Name { get; set; }
@@ -19,5 +19,8 @@ namespace DatabaseBus.Model
             Name = propertyModel.Name;
             Type = TypeModel.LoadType(propertyModel.Type);
         }
+
+        public ICollection<TypeModel> TypeProperties { get; set; }
+
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
 using DataTransferGraph.Model;
 
 namespace DatabaseBus.Model
@@ -7,7 +7,7 @@ namespace DatabaseBus.Model
     {
         public FieldModel()
         {
-
+            TypeFields = new HashSet<TypeModel>();
         }
         public int FieldModelId { get; set; }
 
@@ -20,5 +20,7 @@ namespace DatabaseBus.Model
             Name = fieldModel.Name;
             Type = TypeModel.LoadType(fieldModel.Type);
         }
+
+        public ICollection<TypeModel> TypeFields { get; set; }
     }
 }

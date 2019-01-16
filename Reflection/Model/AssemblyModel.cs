@@ -11,10 +11,12 @@ namespace Reflection.Model
 
         public List<NamespaceModel> NamespaceModels { get; set; }
 
+        public static string CurrentAssemblyName;
+
         public AssemblyModel(Assembly assembly)
         {
             DictionaryTypeSingleton.Instance.Clear();
-
+            CurrentAssemblyName = assembly.ManifestModule.FullyQualifiedName;
             Name = assembly.ManifestModule.Name;
             NamespaceModels = assembly
                 .GetTypes()?

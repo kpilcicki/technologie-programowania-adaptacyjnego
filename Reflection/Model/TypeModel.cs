@@ -51,25 +51,30 @@ namespace Reflection.Model
             {
                 name = $"{name.Split('`')[0]} <{string.Join(",", type.GetGenericArguments().Select(t => t.Name).ToArray())}>";
             }
-            DictionaryTypeSingleton.Instance.RegisterType(type.Name, this);
-            Name = name;
             NamespaceName = type.GetNamespace();
             Accessibility = GetAccessibility(type);
             Type = GetTypeKind(type);
             IsStatic = type.IsSealed && type.IsAbstract;
             IsAbstract = type.IsAbstract;
             IsSealed = type.IsSealed;
+            Name = name;
+            
+            DictionaryTypeSingleton.Instance.RegisterType(type.Name, this);
 
-            BaseType = GetBaseType(type);
-            Attributes = GetAttributes(type);
-            DeclaringType = GetDeclaringType(type);
-            NestedTypes = GetNestedTypes(type);
-            GenericArguments = GetGenericArguments(type);
-            ImplementedInterfaces = GetImplementedInterfaces(type);
-            Properties = GetProperties(type);
-            Fields = GetFields(type);
-            Constructors = GetConstructors(type);
-            Methods = GetMethods(type);
+
+            if (type.Assembly.ManifestModule.FullyQualifiedName == AssemblyModel.CurrentAssemblyName)
+            {
+                BaseType = GetBaseType(type);
+                Attributes = GetAttributes(type);
+                DeclaringType = GetDeclaringType(type);
+                NestedTypes = GetNestedTypes(type);
+                GenericArguments = GetGenericArguments(type);
+                ImplementedInterfaces = GetImplementedInterfaces(type);
+                Properties = GetProperties(type);
+                Fields = GetFields(type);
+                Constructors = GetConstructors(type);
+                Methods = GetMethods(type);
+            }
         }
 
         public TypeModel(TypeDtg type)

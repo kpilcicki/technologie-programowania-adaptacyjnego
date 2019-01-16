@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using DataTransferGraph.Enums;
 using DataTransferGraph.Model;
 
@@ -10,7 +9,6 @@ namespace DatabaseBus.Model
     {
         public MethodModel()
         {
-
         }
         public int MethodModelId { get; set; }
         public string Name { get; set; }
@@ -43,5 +41,7 @@ namespace DatabaseBus.Model
             IsExtensionMethod = methodModel.IsExtensionMethod;
             Parameters = methodModel.Parameters?.Select(p => new ParameterModel(p)).ToList();
         }
+
+
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Runtime.Serialization;
-using DataTransferGraph.Model;
+﻿using DataTransferGraph.Model;
 
 namespace DatabaseBus.Model
 {
@@ -7,7 +6,6 @@ namespace DatabaseBus.Model
     {
         public ParameterModel()
         {
-                
         }
         public int ParameterModelId { get; set; }
         public string Name { get; set; }
