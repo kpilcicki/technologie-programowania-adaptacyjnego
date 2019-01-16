@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTransferGraph", "DataTr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseBus", "DatabaseBus\DatabaseBus.csproj", "{7C222C3A-D22E-4984-B826-6CE2F47F45F6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbLogger", "DbLogger\DbLogger.csproj", "{C675D1CF-5BC3-47AF-B73B-AF3CD2DDBDA4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{7C222C3A-D22E-4984-B826-6CE2F47F45F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C222C3A-D22E-4984-B826-6CE2F47F45F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C222C3A-D22E-4984-B826-6CE2F47F45F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C675D1CF-5BC3-47AF-B73B-AF3CD2DDBDA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C675D1CF-5BC3-47AF-B73B-AF3CD2DDBDA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C675D1CF-5BC3-47AF-B73B-AF3CD2DDBDA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C675D1CF-5BC3-47AF-B73B-AF3CD2DDBDA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

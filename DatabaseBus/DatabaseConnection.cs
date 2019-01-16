@@ -43,17 +43,5 @@ namespace DatabaseBus
                 SystemSounds.Question.Play();
             }
         }
-
-//        private string GetValidConnectionString()
-//        {
-//            string connectionString = ConfigurationManager.AppSettings["connectionString"];
-//
-//            if (string.IsNullOrEmpty(connectionString))
-//            {
-//                throw new SavingMetadataException("Provided connection string to database is null or empty");
-//            }
-//
-//            return connectionString;
-//        }
     }
 }
