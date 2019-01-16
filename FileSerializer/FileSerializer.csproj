@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
@@ -43,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DictionaryTypeSingleton.cs" />
+    <Compile Include="Exception\WrongFilePathException.cs" />
     <Compile Include="Mapper\DataTransferMapper.cs" />
     <Compile Include="Model\AssemblyModel.cs" />
     <Compile Include="Model\FieldModel.cs" />

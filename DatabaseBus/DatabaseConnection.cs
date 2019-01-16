@@ -2,10 +2,7 @@
 using DatabaseBus.Model;
 using DataTransferGraph.Model;
 using DataTransferGraph.Services;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.ComponentModel.Composition;
 
 namespace DatabaseBus
@@ -13,7 +10,7 @@ namespace DatabaseBus
     [Export(typeof(IAssemblySerialization))]
     public class DatabaseConnection : IAssemblySerialization
     {
-        public AssemblyDtg Deserialize(string connectionString)
+        public AssemblyDtg Deserialize()
         {
             using (AssemblyContext ctx = new AssemblyContext())
             {
@@ -26,7 +23,7 @@ namespace DatabaseBus
             }
         }
 
-        public void Serialize(string connectionString, AssemblyDtg assemblyDtg)
+        public void Serialize(AssemblyDtg assemblyDtg)
         {
             using (AssemblyContext ctx = new AssemblyContext())
             {
@@ -36,5 +33,17 @@ namespace DatabaseBus
                 ctx.SaveChanges();
             }
         }
+
+//        private string GetValidConnectionString()
+//        {
+//            string connectionString = ConfigurationManager.AppSettings["connectionString"];
+//
+//            if (string.IsNullOrEmpty(connectionString))
+//            {
+//                throw new SavingMetadataException("Provided connection string to database is null or empty");
+//            }
+//
+//            return connectionString;
+//        }
     }
 }

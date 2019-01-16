@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="Enums\AccessLevel.cs" />
     <Compile Include="Enums\TypeKind.cs" />
+    <Compile Include="Exception\ReadingMetadataException.cs" />
+    <Compile Include="Exception\SavingMetadataException.cs" />
     <Compile Include="Model\AssemblyDtg.cs" />
     <Compile Include="Model\FieldDtg.cs" />
     <Compile Include="Model\MethodDtg.cs" />

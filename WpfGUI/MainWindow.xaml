@@ -131,5 +131,14 @@
                 MaxWidth="200175"
                 Margin="10 0 0 0" />
 
+        <Button Grid.Row="2"
+                Grid.Column="0"
+                Content="Load saved metadata"
+                Command="{Binding LoadMetadataFromDataSource}"
+                MaxWidth="230"
+                Margin="0 0 0 0"
+                HorizontalAlignment="Left"
+                />
+
     </Grid>
 </Window>

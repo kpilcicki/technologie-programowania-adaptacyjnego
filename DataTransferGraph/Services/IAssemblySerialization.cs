@@ -4,7 +4,7 @@ namespace DataTransferGraph.Services
 {
     public interface IAssemblySerialization
     {
-        AssemblyDtg Deserialize(string connectionString);
-        void Serialize(string connectionString, AssemblyDtg assemblyDtg);
+        AssemblyDtg Deserialize();
+        void Serialize(AssemblyDtg assemblyDtg);
     }
 }

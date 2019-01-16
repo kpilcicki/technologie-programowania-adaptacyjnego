@@ -10,7 +10,7 @@ namespace DatabaseBus
     {
         public AssemblyContext(): base("name=AssemblyDatabase")
         {
-            Database.SetInitializer<AssemblyContext>(new DropCreateDatabaseIfModelChanges<AssemblyContext>());
+            Database.SetInitializer<AssemblyContext>(new DropCreateDatabaseAlways<AssemblyContext>());
         }
 
         public DbSet<AssemblyModel> AssemblyModels { get; set; }

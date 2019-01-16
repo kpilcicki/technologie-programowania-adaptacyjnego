@@ -11,18 +11,16 @@ namespace Reflection.Persistence
     {
         [Import]
         public IAssemblySerialization Serializator = new DatabaseBus.DatabaseConnection();
-        public void Serialize(AssemblyModel assemblyModel, string connectionString)
+        public void Serialize(AssemblyModel assemblyModel)
         {
             AssemblyDtg assemblyDtg = DataTransferMapper.AssemblyDtg(assemblyModel);
 
-            Serializator.Serialize(connectionString, assemblyDtg);
-
-
+            Serializator.Serialize(assemblyDtg);
         }
 
-        public AssemblyModel Deserialize(string connectionString)
+        public AssemblyModel Deserialize()
         {
-            AssemblyDtg assemblyDtg = Serializator.Deserialize(connectionString);
+            AssemblyDtg assemblyDtg = Serializator.Deserialize();
 
             AssemblyModel assemblyModel = new AssemblyModel(assemblyDtg);
 
