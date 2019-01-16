@@ -4,11 +4,11 @@ using Reflection.Model;
 
 namespace BusinessLogic.Model
 {
-    public class TypeTreeItem : MetadataTreeItem
+    public class DerivedTypeTreeItem : MetadataTreeItem
     {
         public TypeModel TypeModel { get; }
 
-        public TypeTreeItem(TypeModel typeModel)
+        public DerivedTypeTreeItem(TypeModel typeModel)
         {
             TypeModel = typeModel;
         }
@@ -36,7 +36,7 @@ namespace BusinessLogic.Model
 
             if (TypeModel.DeclaringType != null)
             {
-                Children.Add(new TypeTreeItem(TypeModel.DeclaringType));
+                Children.Add(new TypeTreeItem((TypeModel)TypeModel.DeclaringType));
             }
 
             if (TypeModel.Properties != null)

@@ -18,6 +18,8 @@ namespace Reflection.Model
 
         public List<TypeModel> GenericArguments { get; set; }
 
+        public List<TypeModel> Attributes { get; set; }
+
         public AccessLevel Accessibility { get; set; }
 
         public bool IsSealed { get; set; }
@@ -42,10 +44,15 @@ namespace Reflection.Model
 
         public List<FieldModel> Fields { get; set; }
 
-        public TypeModel(Type type)
+        private TypeModel(Type type)
         {
+            string name = type.Name;
+            if (type.ContainsGenericParameters)
+            {
+                name = $"{name.Split('`')[0]} <{string.Join(",", type.GetGenericArguments().Select(t => t.Name).ToArray())}>";
+            }
             DictionaryTypeSingleton.Instance.RegisterType(type.Name, this);
-            Name = type.Name;
+            Name = name;
             NamespaceName = type.GetNamespace();
             Accessibility = GetAccessibility(type);
             Type = GetTypeKind(type);
@@ -54,6 +61,7 @@ namespace Reflection.Model
             IsSealed = type.IsSealed;
 
             BaseType = GetBaseType(type);
+            Attributes = GetAttributes(type);
             DeclaringType = GetDeclaringType(type);
             NestedTypes = GetNestedTypes(type);
             GenericArguments = GetGenericArguments(type);
@@ -108,6 +116,11 @@ namespace Reflection.Model
                 .OrderBy(t => t.Name)
                 .Select(LoadType)
                 .ToList();
+        }
+
+        private static List<TypeModel> GetAttributes(Type type)
+        {
+            return type.GetCustomAttributes(false).Select(attr => LoadType(attr.GetType())).ToList();
         }
 
         private static List<MethodModel> GetConstructors(Type type)

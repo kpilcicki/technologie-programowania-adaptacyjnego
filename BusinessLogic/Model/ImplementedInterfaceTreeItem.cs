@@ -4,11 +4,11 @@ using Reflection.Model;
 
 namespace BusinessLogic.Model
 {
-    public class TypeTreeItem : MetadataTreeItem
+    public class ImplementedInterfaceTreeItem : MetadataTreeItem
     {
         public TypeModel TypeModel { get; }
 
-        public TypeTreeItem(TypeModel typeModel)
+        public ImplementedInterfaceTreeItem(TypeModel typeModel)
         {
             TypeModel = typeModel;
         }
@@ -71,14 +71,6 @@ namespace BusinessLogic.Model
                 }
             }
 
-            if (TypeModel.ImplementedInterfaces != null)
-            {
-                foreach (TypeModel typeModel in TypeModel.ImplementedInterfaces)
-                {
-                    Children.Add(new ImplementedInterfaceTreeItem(typeModel));
-                }
-            }
-
             if (TypeModel.NestedTypes != null)
             {
                 foreach (TypeModel typeModel in TypeModel.NestedTypes)
@@ -90,14 +82,6 @@ namespace BusinessLogic.Model
             if (TypeModel.Methods != null)
             {
                 foreach (MethodModel methodModel in TypeModel.Methods)
-                {
-                    Children.Add(new MethodTreeItem(methodModel));
-                }
-            }
-
-            if (TypeModel.Constructors != null)
-            {
-                foreach (MethodModel methodModel in TypeModel.Constructors)
                 {
                     Children.Add(new MethodTreeItem(methodModel));
                 }
