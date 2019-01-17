@@ -50,12 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\AsyncCommand.cs" />
-    <Compile Include="Base\IAsyncCommand.cs" />
     <Compile Include="Base\IControllableCommand.cs" />
-    <Compile Include="Base\IErrorHandler.cs" />
     <Compile Include="Base\RelayCommand.cs" />
-    <Compile Include="Base\TaskUtility.cs" />
     <Compile Include="Model\AssemblyTreeItem.cs" />
     <Compile Include="Model\AttributeTreeItem.cs" />
     <Compile Include="Model\MetadataTreeItem.cs" />
@@ -64,7 +60,7 @@
     <Compile Include="Model\ParameterTreeItem.cs" />
     <Compile Include="Model\FieldTreeItem.cs" />
     <Compile Include="Model\PropertyTreeItem.cs" />
-    <Compile Include="Model\DerivedTypeTreeItem.cs" />
+    <Compile Include="Model\BaseTypeTreeItem.cs" />
     <Compile Include="Model\ImplementedInterfaceTreeItem.cs" />
     <Compile Include="Model\TypeTreeItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -77,10 +73,6 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DataTransferGraph\DataTransferGraph.csproj">
-      <Project>{6386B87D-23DA-4C2E-81E0-090F123803B6}</Project>
-      <Name>DataTransferGraph</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Reflection\Reflection.csproj">
       <Project>{0F44BF6A-2A53-4607-B0F6-FDDA2EAAFFDB}</Project>
       <Name>Reflection</Name>

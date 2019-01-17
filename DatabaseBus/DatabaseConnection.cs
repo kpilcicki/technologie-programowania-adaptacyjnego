@@ -9,10 +9,10 @@ using System.Media;
 
 namespace DatabaseBus
 {
-    [Export(typeof(IAssemblySerialization))]
-    public class DatabaseConnection : IAssemblySerialization
+    [Export(typeof(IAssemblyPersist))]
+    public class DatabaseConnection : IAssemblyPersist
     {
-        public AssemblyDtg Deserialize()
+        public AssemblyDtg Read()
         {
             using (AssemblyContext ctx = new AssemblyContext())
             {
@@ -31,7 +31,7 @@ namespace DatabaseBus
             }
         }
 
-        public void Serialize(AssemblyDtg assemblyDtg)
+        public void Persist(AssemblyDtg assemblyDtg)
         {
             Database.SetInitializer(new DropCreateDatabaseAlways<AssemblyContext>());
             using (AssemblyContext ctx = new AssemblyContext())

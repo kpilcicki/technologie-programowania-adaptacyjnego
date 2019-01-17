@@ -5,7 +5,6 @@ using System.IO;
 using BusinessLogic.Base;
 using BusinessLogic.Model;
 using BusinessLogic.Services;
-using DataTransferGraph.Exception;
 using Reflection;
 using Reflection.Exceptions;
 using Reflection.Model;
@@ -30,6 +29,7 @@ namespace BusinessLogic.ViewModel
                 _isBusy = value;
                 LoadMetadataCommand.RaiseCanExecuteChanged();
                 SaveMetadataCommand.RaiseCanExecuteChanged();
+                LoadMetadataFromDataSource.RaiseCanExecuteChanged();
             }
         }
 
@@ -125,8 +125,7 @@ namespace BusinessLogic.ViewModel
             }
             catch (AssemblyBlockedException e)
             {
-                _userInfo.PromptUser("Unblock the selected assembly if you want to read its content!",
-                    "Expected Error");
+                _userInfo.PromptUser("Unblock the selected assembly if you want to read its content!", "Expected Error");
                 Logger?.Trace($"AssemblyBlockedException thrown, message: {e.Message}");
             }
             catch (ReflectionException e)
@@ -149,10 +148,9 @@ namespace BusinessLogic.ViewModel
                 AssemblyModel = PersistenceService?.Deserialize();
                 Logger?.Trace($"Successfully read metadata from data source;");
             }
-            catch (ReadingMetadataException e)
+            catch (PersistenceException e)
             {
-                _userInfo.PromptUser($"An error occurred during reading from data source. {e.Message}",
-                    "Unexpected exception");
+                _userInfo.PromptUser($"An error occurred during reading from data source. {e.Message}", "Unexpected exception");
                 Logger?.Trace($"ReadingMetadataException thrown, message: {e.Message}");
             }
             finally
@@ -172,7 +170,7 @@ namespace BusinessLogic.ViewModel
                 Logger?.Trace($"Serialization of assembly: {AssemblyModel.Name} succeeded");
                 _userInfo.PromptUser("Saving succeeded", "Saving operation");
             }
-            catch (SavingMetadataException ex)
+            catch (PersistenceException ex)
             {
                Logger?.Trace($"Serialization of assembly: {AssemblyModel.Name} failed");
                _userInfo.PromptUser(ex.Message, "Serialization failed");

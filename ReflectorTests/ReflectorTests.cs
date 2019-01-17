@@ -9,14 +9,11 @@ using Reflection.Model;
 namespace ReflectorTests
 {
     [TestClass]
-    public class ReflectorTests 
+    public class ReflectorTests
     {
         private const string DllFilePath = @"..\..\TPA.ApplicationArchitecture.dll";
         private const string FirstNamespace = "TPA.ApplicationArchitecture.Data";
         private const string SecondNamespace = "TPA.ApplicationArchitecture.Data.CircularReference";
-        public const string BasicNamespace = "ExampleLib";
-        private const string NamespaceCircle = "ExampleLib.Circle";
-        private const string NamespaceTitleplane = "ExampleLib.Titleplane";
         private AssemblyModel _assemblyModel;
 
         [TestInitialize]
@@ -47,7 +44,7 @@ namespace ReflectorTests
             List<TypeModel> staticClasses = _assemblyModel.NamespaceModels
                 .Find(t => t.Name == FirstNamespace).Types
                 .Where(t => t.IsStatic).ToList();
-           staticClasses.Count.Should().Be(1);
+            staticClasses.Count.Should().Be(1);
         }
 
         [TestMethod]
@@ -56,7 +53,7 @@ namespace ReflectorTests
             List<TypeModel> abstractClasses = _assemblyModel.NamespaceModels
                 .Find(t => t.Name == FirstNamespace).Types
                 .Where(t => t.IsAbstract && t.Type == TypeKind.Class && !t.IsStatic).ToList();
-             abstractClasses.Count.Should().Be(1);
+            abstractClasses.Count.Should().Be(1);
         }
 
         [TestMethod]

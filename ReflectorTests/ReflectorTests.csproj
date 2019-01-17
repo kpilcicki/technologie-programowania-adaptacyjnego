@@ -56,9 +56,6 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
@@ -73,10 +70,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ExampleLib\ExampleLib.csproj">
-      <Project>{604260e1-1bb1-4e32-b736-0fdf6d1b6ffa}</Project>
-      <Name>ExampleLib</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Reflection\Reflection.csproj">
       <Project>{0f44bf6a-2a53-4607-b0f6-fdda2eaaffdb}</Project>
       <Name>Reflection</Name>

@@ -31,7 +31,7 @@ namespace BusinessLogic.Model
         {
             if (TypeModel.BaseType != null)
             {
-                Children.Add(new DerivedTypeTreeItem(TypeModel.BaseType));
+                Children.Add(new BaseTypeTreeItem(TypeModel.BaseType));
             }
 
             if (TypeModel.DeclaringType != null)

@@ -46,6 +46,7 @@
     <Compile Include="Enums\EnumMapper.cs" />
     <Compile Include="Enums\TypeKind.cs" />
     <Compile Include="Exceptions\AssemblyBlockedException.cs" />
+    <Compile Include="Exceptions\PersistenceException.cs" />
     <Compile Include="Exceptions\ReflectionException.cs" />
     <Compile Include="Extensions\ExtensionMethods.cs" />
     <Compile Include="Mapper\DataTransferMapper.cs" />
@@ -62,10 +63,6 @@
     <Compile Include="TypeDictionarySingletone.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DatabaseBus\DatabaseBus.csproj">
-      <Project>{7c222c3a-d22e-4984-b826-6ce2f47f45f6}</Project>
-      <Name>DatabaseBus</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DataTransferGraph\DataTransferGraph.csproj">
       <Project>{6386B87D-23DA-4C2E-81E0-090F123803B6}</Project>
       <Name>DataTransferGraph</Name>

@@ -6,7 +6,7 @@ namespace DbLogger
     {
         public LoggerContext() : base ("name=Logs")
         {
-            
+            Database.CommandTimeout = 900;
         }
 
         public virtual DbSet<LogItem> Logs { get; set; }

@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using DataTransferGraph.Exception;
 using DataTransferGraph.Model;
 using DataTransferGraph.Services;
+using Reflection.Exceptions;
 using Reflection.Mapper;
 using Reflection.Model;
 
@@ -10,21 +12,37 @@ namespace Reflection.Persistence
     public class PersistenceManager
     {
         [Import]
-        public IAssemblySerialization Serializator = new DatabaseBus.DatabaseConnection();
+        public IAssemblyPersist Serializator { get; set; }
         public void Serialize(AssemblyModel assemblyModel)
         {
-            AssemblyDtg assemblyDtg = DataTransferMapper.AssemblyDtg(assemblyModel);
+            try
+            {
+                AssemblyDtg assemblyDtg = DataTransferMapper.AssemblyDtg(assemblyModel);
 
-            Serializator.Serialize(assemblyDtg);
+                Serializator.Persist(assemblyDtg);
+            }
+            catch (SavingMetadataException e)
+            {
+                throw new PersistenceException("Saving metadata to data source failed.", e);
+            }
+            
         }
 
         public AssemblyModel Deserialize()
         {
-            AssemblyDtg assemblyDtg = Serializator.Deserialize();
+            try
+            {
+                AssemblyDtg assemblyDtg = Serializator.Read();
 
-            AssemblyModel assemblyModel = new AssemblyModel(assemblyDtg);
+                AssemblyModel assemblyModel = new AssemblyModel(assemblyDtg);
 
-            return assemblyModel;
+                return assemblyModel;
+            }
+            catch (ReadingMetadataException e)
+            {
+                throw new PersistenceException("Reading metadata from data source failed.", e);
+            }
+            
         }
 
         public static PersistenceManager GetComposedPersistenceManager()

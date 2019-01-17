@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using DataTransferGraph.Enums;
 using DataTransferGraph.Model;
 
 namespace Reflection.Model

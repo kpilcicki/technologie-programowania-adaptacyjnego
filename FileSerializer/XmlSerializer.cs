@@ -13,10 +13,10 @@ using FileSerializer.Model;
 
 namespace FileSerializer
 {
-    [Export(typeof(IAssemblySerialization))]
-    public class XmlSerializer : IAssemblySerialization
+    [Export(typeof(IAssemblyPersist))]
+    public class XmlSerializer : IAssemblyPersist
     {
-        public void Serialize(AssemblyDtg assemblyDtg)
+        public void Persist(AssemblyDtg assemblyDtg)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace FileSerializer
             }
         }
 
-        public AssemblyDtg Deserialize()
+        public AssemblyDtg Read()
         {
             try
             {

@@ -7,6 +7,7 @@ namespace DatabaseBus
     {
         public AssemblyContext(): base("name=AssemblyDatabase")
         {
+            Database.CommandTimeout = 900;
             Database.SetInitializer<AssemblyContext>(new DropCreateDatabaseAlways<AssemblyContext>());
         }
 

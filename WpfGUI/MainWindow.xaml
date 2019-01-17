@@ -73,7 +73,7 @@
                 <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding}" />
             </StackPanel>
         </HierarchicalDataTemplate>
-        <HierarchicalDataTemplate DataType="{x:Type model:DerivedTypeTreeItem}" ItemsSource="{Binding Children}">
+        <HierarchicalDataTemplate DataType="{x:Type model:BaseTypeTreeItem}" ItemsSource="{Binding Children}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="Icons/NamespaceIcon.png" />
                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="Base type" />
