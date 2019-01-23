@@ -61,7 +61,7 @@
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate DataType="{x:Type model:AttributeTreeItem}" ItemsSource="{Binding Children}">
             <StackPanel Orientation="Horizontal">
-                <Image Source="Icons/PropertyIcon.png" />
+                <Image Source="Icons/AttributeIcon.png" />
                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="Attribute" />
                 <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding}" />
             </StackPanel>
@@ -75,7 +75,7 @@
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate DataType="{x:Type model:BaseTypeTreeItem}" ItemsSource="{Binding Children}">
             <StackPanel Orientation="Horizontal">
-                <Image Source="Icons/NamespaceIcon.png" />
+                <Image Source="Icons/BaseType.png" />
                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="Base type" />
                 <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding}" />
             </StackPanel>
@@ -89,7 +89,7 @@
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate DataType="{x:Type model:ImplementedInterfaceTreeItem}" ItemsSource="{Binding Children}">
             <StackPanel Orientation="Horizontal">
-                <Image Source="Icons/FieldIcon.png" />
+                <Image Source="Icons/InterfaceIcon.png" />
                 <TextBlock Style="{StaticResource InfoTextBlock}" Text="Implemented interface" />
                 <TextBlock Style="{StaticResource NameTextBlock}" Text="{Binding}" />
             </StackPanel>
