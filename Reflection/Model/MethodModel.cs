@@ -82,7 +82,7 @@ namespace Reflection.Model
 
         private static bool IsExtension(MethodBase method)
         {
-            return method.IsDefined(typeof(ExtensionAttribute), true);
+            return method.CustomAttributes.Count(x => x.AttributeType == typeof(ExtensionAttribute)) == 1;
         }
 
         private static AccessLevel GetAccessibility(MethodBase method)

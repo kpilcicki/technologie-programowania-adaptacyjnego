@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using BusinessLogic;
 
 namespace WpfGUI
 {
@@ -7,5 +8,10 @@ namespace WpfGUI
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+            Composer.Instance.Dispose();
+        }
     }
 }

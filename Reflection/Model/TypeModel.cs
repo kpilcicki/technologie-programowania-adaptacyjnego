@@ -125,7 +125,7 @@ namespace Reflection.Model
 
         private static List<TypeModel> GetAttributes(Type type)
         {
-            return type.GetCustomAttributes(false).Select(attr => LoadType(attr.GetType())).ToList();
+            return type.GetCustomAttributesData().Select(a => LoadType(a.AttributeType)).ToList();
         }
 
         private static List<MethodModel> GetConstructors(Type type)

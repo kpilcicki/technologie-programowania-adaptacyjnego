@@ -44,18 +44,5 @@ namespace Reflection.Persistence
             }
             
         }
-
-        public static PersistenceManager GetComposedPersistenceManager()
-        {
-            PersistenceManager pm = new PersistenceManager();
-
-            AggregateCatalog catalog = new AggregateCatalog();
-            catalog.Catalogs.Add(new DirectoryCatalog("../../../plugins"));
-            CompositionContainer container = new CompositionContainer(catalog);
-
-            container.ComposeParts(pm);
-
-            return pm;
-        }
     }
 }

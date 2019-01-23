@@ -50,8 +50,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\AsyncCommand.cs" />
+    <Compile Include="Base\DisplayErrorHandler.cs" />
+    <Compile Include="Base\IAsyncCommand.cs" />
     <Compile Include="Base\IControllableCommand.cs" />
+    <Compile Include="Base\IErrorHandler.cs" />
     <Compile Include="Base\RelayCommand.cs" />
+    <Compile Include="Base\TaskUtility.cs" />
     <Compile Include="Model\AssemblyTreeItem.cs" />
     <Compile Include="Model\AttributeTreeItem.cs" />
     <Compile Include="Model\MetadataTreeItem.cs" />

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
-using System.IO;
+using System.Threading.Tasks;
 using BusinessLogic.Base;
 using BusinessLogic.Model;
 using BusinessLogic.Services;
@@ -17,33 +17,6 @@ namespace BusinessLogic.ViewModel
         private readonly IFilePathGetter _filePathGetter;
         private readonly IUserInfo _userInfo;
         private readonly Reflector _reflector;
-
-        private bool _isBusy;
-
-        public bool IsBusy
-        {
-            get => _isBusy;
-
-            private set
-            {
-                _isBusy = value;
-                LoadMetadataCommand.RaiseCanExecuteChanged();
-                SaveMetadataCommand.RaiseCanExecuteChanged();
-                LoadMetadataFromDataSource.RaiseCanExecuteChanged();
-            }
-        }
-
-        [Import(typeof(ILogger), AllowDefault = false)]
-        public ILogger Logger { get; set; }
-
-        public PersistenceManager PersistenceService { get; set; }
-
-        public IControllableCommand LoadMetadataCommand { get; }
-
-        public IControllableCommand SaveMetadataCommand { get; }
-
-        public IControllableCommand LoadMetadataFromDataSource { get; }
-
         private AssemblyModel _assemblyModel;
 
         public AssemblyModel AssemblyModel
@@ -56,16 +29,30 @@ namespace BusinessLogic.ViewModel
                 {
                     new AssemblyTreeItem(_assemblyModel)
                 };
-                SaveMetadataCommand.RaiseCanExecuteChanged();
             }
         }
+
+        [Import(typeof(ILogger), AllowDefault = false)]
+        public ILogger Logger { get; set; }
+
+        public PersistenceManager PersistenceService { get; set; }
+
+        public AsyncCommand LoadMetadataCommand { get; }
+
+        public AsyncCommand LoadMetadataFromDataSource { get; }
+
+        public AsyncCommand SaveMetadataCommand { get; set; }
 
         private ObservableCollection<MetadataTreeItem> _metadataHierarchy;
 
         public ObservableCollection<MetadataTreeItem> MetadataHierarchy
         {
             get => _metadataHierarchy;
-            private set => SetProperty(ref _metadataHierarchy, value);
+            private set
+            {
+                SetProperty(ref _metadataHierarchy, value);
+                SaveMetadataCommand.RaiseCanExecuteChanged();
+            }
         }
 
         private string _filePath;
@@ -76,6 +63,20 @@ namespace BusinessLogic.ViewModel
             set => SetProperty(ref _filePath, value);
         }
 
+        private bool _isBusy;
+
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set
+            {
+                _isBusy = value;
+                LoadMetadataCommand.RaiseCanExecuteChanged();
+                LoadMetadataFromDataSource.RaiseCanExecuteChanged();
+                SaveMetadataCommand.RaiseCanExecuteChanged();
+            }
+        }
+
         public MainViewModel(
             IUserInfo userInfo,
             IFilePathGetter filePathGetter)
@@ -84,54 +85,44 @@ namespace BusinessLogic.ViewModel
             _filePathGetter = filePathGetter ?? throw new ArgumentNullException(nameof(filePathGetter));
             _userInfo = userInfo ?? throw new ArgumentNullException(nameof(userInfo));
 
+            LoadMetadataCommand = new AsyncCommand(ReadMetadata, () => !IsBusy, new DisplayErrorHandler(_userInfo));
+            LoadMetadataFromDataSource = new AsyncCommand(ReadFromDataSource, () => !IsBusy, new DisplayErrorHandler(_userInfo));
+            SaveMetadataCommand = new AsyncCommand(Save, () => !IsBusy && AssemblyModel != null, new DisplayErrorHandler(_userInfo));
+
             MetadataHierarchy = new ObservableCollection<MetadataTreeItem>();
-            LoadMetadataCommand = new RelayCommand(ReadMetadata, () => !IsBusy);
-            SaveMetadataCommand = new RelayCommand(Save, () => !IsBusy && AssemblyModel != null);
-            LoadMetadataFromDataSource = new RelayCommand(ReadFromDataSource, () => !IsBusy);
         }
 
-        private void ReadMetadata()
+        private async Task ReadMetadata()
         {
             try
             {
                 IsBusy = true;
 
-                Logger?.Trace($"Reading file path for .dll file...");
-
-                string filePath = _filePathGetter.GetFilePath();
-
-                if (string.IsNullOrEmpty(filePath))
+                Task<AssemblyModel> metadataReading = Task.Run(() =>
                 {
-                    _userInfo.PromptUser("Provided filepath was empty", "Filepath Error");
-                    Logger?.Trace($"Provided filepath was null or empty");
-                    return;
-                }
+                    Logger.Trace("Reading metadata from .dll file command fired");
+                    string filePath = _filePathGetter.GetFilePath();
+                    Logger.Trace($"Provided filepath: {filePath}");
 
-                FilePath = filePath;
+                    if (string.IsNullOrEmpty(filePath) || !filePath.EndsWith(".dll", StringComparison.InvariantCulture))
+                    {
+                        Logger.Trace($"Provided filepath {filePath} was invalid");
+                        throw new Exception("Provided filepath was invalid. Only .dll files are allowed.");
+                    }
+                    else
+                    {
+                        Logger.Trace($"Provided filepath {filePath} was valid");
+                        FilePath = filePath;
 
-                if (filePath.EndsWith(".dll", StringComparison.InvariantCulture))
-                {
-                    Logger?.Trace($"Reading metadata from {filePath}; .dll");
-                    AssemblyModel = _reflector.ReflectDll(filePath);
-                    Logger?.Trace($"Successfully read metadata from {filePath}; .dll");
-                }
-                else
-                {
-                    _userInfo.PromptUser(
-                        "Provided file has unknown extension. Program accepts files only with .dll extensions",
-                        "File Error");
-                    Logger?.Trace($"Provided file has unknown extension {Path.GetExtension(filePath)}");
-                }
-            }
-            catch (AssemblyBlockedException e)
-            {
-                _userInfo.PromptUser("Unblock the selected assembly if you want to read its content!", "Expected Error");
-                Logger?.Trace($"AssemblyBlockedException thrown, message: {e.Message}");
-            }
-            catch (ReflectionException e)
-            {
-                _userInfo.PromptUser($"Something unexpected happened.\nError message: {e.Message}", "Unexpected Error");
-                Logger?.Trace($"ReflectionException thrown, message: {e.Message}");
+                        Logger.Trace($"Reading metadata from file: {filePath}");
+                        AssemblyModel assemblyModel = _reflector.ReflectDll(filePath);
+                        Logger.Trace($"Successfully read metadata from .dll file: {filePath}");
+                        return assemblyModel;
+                    }
+                });
+
+                await metadataReading;
+                AssemblyModel = metadataReading.Result;
             }
             finally
             {
@@ -139,19 +130,29 @@ namespace BusinessLogic.ViewModel
             }
         }
 
-        private void ReadFromDataSource()
+        private async Task ReadFromDataSource()
         {
             try
             {
                 IsBusy = true;
-                Logger?.Trace($"Reading metadata from data source;");
-                AssemblyModel = PersistenceService?.Deserialize();
-                Logger?.Trace($"Successfully read metadata from data source;");
-            }
-            catch (PersistenceException e)
-            {
-                _userInfo.PromptUser($"An error occurred during reading from data source. {e.Message}", "Unexpected exception");
-                Logger?.Trace($"ReadingMetadataException thrown, message: {e.Message}");
+
+                Task<AssemblyModel> metadataReading = Task.Run(() =>
+                {
+                        try
+                        {
+                            Logger.Trace($"Reading metadata from data source;");
+                            AssemblyModel assemblyModel = PersistenceService.Deserialize();
+                            Logger.Trace($"Successfully read metadata from data source;");
+                            return assemblyModel;
+                        }
+                        catch (PersistenceException e)
+                        {
+                            Logger.Trace($"{typeof(PersistenceException)} thrown, message: {e.Message}");
+                            throw new Exception($"An error occurred during reading from data source. {e.Message}", e);
+                        }
+                });
+                await metadataReading;
+                AssemblyModel = metadataReading.Result;
             }
             finally
             {
@@ -159,23 +160,26 @@ namespace BusinessLogic.ViewModel
             }
         }
 
-        private void Save()
+        private async Task Save()
         {
             try
             {
                 IsBusy = true;
-                Logger?.Trace($"Serializing metadata...");
-
-                PersistenceService?.Serialize(AssemblyModel);
-                Logger?.Trace($"Serialization of assembly: {AssemblyModel.Name} succeeded");
+                await Task.Run(() =>
+                {
+                    try
+                    {
+                        Logger.Trace($"Saving metadata started");
+                        PersistenceService.Serialize(AssemblyModel);
+                        Logger.Trace($"Saving process of assembly: {AssemblyModel.Name} succeeded");
+                    }
+                    catch (PersistenceException ex)
+                    {
+                       Logger.Trace($"{typeof(PersistenceException)} thrown; message: {ex.Message}");
+                       throw new Exception("Saving to data source failed");
+                    }
+                });
                 _userInfo.PromptUser("Saving succeeded", "Saving operation");
-            }
-            catch (PersistenceException ex)
-            {
-               Logger?.Trace($"Serialization of assembly: {AssemblyModel.Name} failed");
-               _userInfo.PromptUser(ex.Message, "Serialization failed");
-               Logger?.Trace(
-                   $"Serialization of assembly: {AssemblyModel.Name} failed: exception thrown: {ex.Message}");
             }
             finally
             {

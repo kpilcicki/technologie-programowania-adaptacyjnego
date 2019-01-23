@@ -16,7 +16,7 @@ namespace Reflection
                 if (string.IsNullOrEmpty(dllFilePath))
                     throw new ArgumentNullException(nameof(dllFilePath));
 
-                Assembly assembly = Assembly.LoadFrom(dllFilePath);
+                Assembly assembly = Assembly.ReflectionOnlyLoadFrom(dllFilePath);
                 AssemblyModel assemblyModel = new AssemblyModel(assembly);
 
                 return assemblyModel;

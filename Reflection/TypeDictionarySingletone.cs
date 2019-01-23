@@ -35,11 +35,6 @@ namespace Reflection
             _data.Add(name, type);
         }
 
-        public bool ContainsKey(string name)
-        {
-            return _data.ContainsKey(name);
-        }
-
         public TypeModel GetType(string key)
         {
             _data.TryGetValue(key, out TypeModel value);

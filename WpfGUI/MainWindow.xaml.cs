@@ -10,14 +10,12 @@ namespace WpfGUI
         public MainWindow()
         {
             InitializeComponent();
-
-            var x = InitializeViewModel();
-            DataContext = x;
+            DataContext = InitializeViewModel();
         }
 
         private MainViewModel InitializeViewModel()
         {
-            return Composer.GetComposedMainViewModel(
+            return Composer.Instance.GetComposedMainViewModel(
                 new InfoDialog(),
                 new FileDialog(),
                 new FatalErrorHandler());

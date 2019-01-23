@@ -14,7 +14,7 @@ namespace CommandLineGUI
 
         private static MainViewModel InitializeViewModel()
         {
-            return Composer.GetComposedMainViewModel(
+            return Composer.Instance.GetComposedMainViewModel(
                 new ConsoleUserInfo(),
                 new ConsoleFilePathGetter(),
                 new ConsoleFatalErrorHandler());
